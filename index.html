@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+><!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8"/>
@@ -9,48 +9,45 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { font-family: 'Inter', sans-serif; }
-        body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #070a1f 0%, #050710 100%); color: #e2e8f0; }
-        .glass { background: rgba(10, 14, 34, 0.86); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.06); }
-        .soft-card { background: rgba(15, 23, 42, 0.82); border: 1px solid rgba(148,163,184,0.18); }
-        .neon-btn { background: linear-gradient(135deg, #7c3aed, #3b82f6); box-shadow: 0 16px 40px rgba(124, 58, 237, 0.18); }
+        body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #070a1f 0%, #04060f 100%); color: #e2e8f0; }
+        .glass { background: rgba(10, 14, 34, 0.88); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); }
+        .soft-card { background: rgba(15, 23, 42, 0.86); border: 1px solid rgba(148,163,184,0.18); }
+        .neon-btn { background: linear-gradient(135deg, #7c3aed, #3b82f6); box-shadow: 0 16px 40px rgba(124, 58, 237, 0.18); color: white; }
         .neon-btn:hover { opacity: 0.95; }
         .tab-btn { transition: all .25s ease; }
         .tab-active { background: linear-gradient(135deg, rgba(124, 58, 237, 0.95), rgba(59, 130, 246, 0.95)); color: #fff; box-shadow: 0 18px 40px rgba(124,58,237,0.22); }
         .badge-new { background: #ef4444; color: white; padding: 4px 10px; border-radius: 999px; font-size: 11px; }
-        .game-card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; border: 1px solid rgba(148,163,184,0.18); }
-        .game-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(124,58,237,0.15); }
-        .game-card.selected { border-color: rgba(124, 58, 237, 0.8); }
+        .product-card, .game-card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; border: 1px solid rgba(148,163,184,0.18); }
+        .product-card:hover, .game-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(124,58,237,0.15); }
+        .selected { border-color: rgba(124, 58, 237, 0.8); }
         .discount-pill { position: absolute; top: 14px; right: 14px; background: linear-gradient(135deg,#f97316,#ef4444); color:#fff; font-size:11px; font-weight:700; border-radius:999px; padding:6px 11px; }
-        .bottom-nav { position: fixed; left:0; right:0; bottom:0; z-index: 30; }
+        .bottom-nav { position: fixed; left:0; right:0; bottom:0; z-index: 30; background: rgba(10, 14, 34, 0.97); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.06); }
         .bottom-nav button { transition: all .2s ease; }
         .bottom-nav button.active { color:#fff; }
-        .bottom-nav::before { content:''; position:absolute; left:0; right:0; top:0; height:1px; background: rgba(255,255,255,0.08); }
-        .toast-wrapper { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 50; width: calc(100% - 40px); max-width: 420px; }
+        .toast-wrapper { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 50; width: calc(100% - 40px); max-width: 420px; }
         .toast { background: rgba(15,23,42,0.98); border:1px solid rgba(124,58,237,0.25); border-radius: 18px; padding: 14px 16px; box-shadow: 0 18px 40px rgba(0,0,0,0.35); margin-bottom: 10px; display:flex; align-items:flex-start; gap:12px; }
         .toast .type { font-size: 12px; color: #a5b4fc; }
         .carousel { display:flex; gap: 12px; overflow-x:auto; padding-bottom:8px; }
         .carousel::-webkit-scrollbar { height: 6px; }
         .carousel::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 999px; }
-        .badge-icon { width: 44px; height: 44px; border-radius: 14px; background: rgba(15,23,42,0.8); display:flex; align-items:center; justify-content:center; }
-        input::placeholder { color: rgba(226,232,240,0.45); }
+        .badge-icon { width: 48px; height: 48px; border-radius: 16px; background: rgba(15,23,42,0.85); display:flex; align-items:center; justify-content:center; }
+        .input-field { background: rgba(147, 112, 219, 0.08); border: 1px solid rgba(147, 112, 219, 0.15); border-radius: 20px; padding: 14px 16px; color: white; outline: none; }
+        .input-field::placeholder { color: rgba(226,232,240,0.45); }
+        .game-card img, .badge-icon img { width: 64px; height: 64px; object-fit: contain; }
+        .cart-item { border: 1px solid rgba(148,163,184,0.14); }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 <div class="px-5 pt-6 pb-32">
     <div class="glass rounded-[32px] p-6 shadow-[0_35px_80px_rgba(0,0,0,0.35)]">
-        <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-            <div class="max-w-xl">
+        <div class="flex flex-col gap-5">
+            <div>
                 <p class="text-xs uppercase tracking-[0.35em] text-slate-400">GhostMarket</p>
                 <h1 class="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Твой выгодный мир игровой валюты</h1>
-                <p class="mt-4 text-slate-300 leading-7">Самые низкие цены на игровые товары, проверенные продажи и быстрая доставка. Выбери игру, плати в Telegram и получай моментально.</p>
+                <p class="mt-4 text-slate-300 leading-7">Низкие цены на гемы, боевой пропуск и подарочные наборы. Быстро выбирай игру, пополняй баланс и получай доставку в Telegram.</p>
             </div>
-            <div class="rounded-[24px] bg-[#111827] px-4 py-3 text-sm text-slate-300">Premium</div>
-        </div>
-
-        <div class="mt-6 grid grid-cols-3 gap-3">
-            <button class="tab-btn tab-active rounded-[24px] py-3 text-sm font-semibold" data-tab="shop">Магазин</button>
-            <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="chat">Чат <span id="chatBadge" class="badge-new ml-2 hidden">1</span></button>
-            <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="notifications">Уведомления</button>
+            <div class="rounded-[24px] bg-[#111827] px-4 py-3 text-sm text-slate-300 w-max">Premium</div>
         </div>
     </div>
 
@@ -83,43 +80,38 @@
         <div class="soft-card rounded-[32px] p-5">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <p class="text-sm text-slate-400">Выбор игры и товара</p>
-                    <h2 class="mt-2 text-2xl font-bold text-white">Купить валюту быстро</h2>
+                    <p class="text-sm text-slate-400">Выбор игры</p>
+                    <h2 class="mt-2 text-2xl font-bold text-white">Популярные предложения</h2>
                 </div>
                 <span class="rounded-full bg-[#111827] px-4 py-2 text-sm text-slate-300">Скидка 15%</span>
             </div>
 
             <div class="mt-5 overflow-x-auto pb-2">
-                <div class="flex gap-3 min-w-[720px]">
-                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="genshin">
-                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="Genshin Impact" class="h-12 w-12 rounded-2xl object-cover"/>
+                <div class="flex gap-3 min-w-[660px]">
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left selected" data-game="genshin">
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="Genshin Impact"/>
                         <p class="mt-4 text-sm text-slate-300">Genshin Impact</p>
                         <p class="mt-2 text-lg font-bold text-white">Primogems</p>
                     </button>
                     <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="brawl">
-                        <img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="Brawl Stars" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="Brawl Stars"/>
                         <p class="mt-4 text-sm text-slate-300">Brawl Stars</p>
                         <p class="mt-2 text-lg font-bold text-white">Gems / Pass</p>
                     </button>
                     <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="pubg">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="PUBG Mobile" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="PUBG Mobile"/>
                         <p class="mt-4 text-sm text-slate-300">PUBG Mobile</p>
                         <p class="mt-2 text-lg font-bold text-white">UC / Pass</p>
                     </button>
                     <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="freefire">
-                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="Free Fire" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="Free Fire"/>
                         <p class="mt-4 text-sm text-slate-300">Free Fire</p>
                         <p class="mt-2 text-lg font-bold text-white">Diamonds</p>
                     </button>
                     <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="standoff">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="Standoff 2" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="Standoff 2"/>
                         <p class="mt-4 text-sm text-slate-300">Standoff 2</p>
                         <p class="mt-2 text-lg font-bold text-white">Coins</p>
-                    </button>
-                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="blackrush">
-                        <img src="https://img.icons8.com/color/512/cyber-security.png" alt="Black Rush" class="h-12 w-12 rounded-2xl object-cover"/>
-                        <p class="mt-4 text-sm text-slate-300">Black Rush</p>
-                        <p class="mt-2 text-lg font-bold text-white">Скины</p>
                     </button>
                 </div>
             </div>
@@ -133,7 +125,23 @@
                 <div id="productList" class="grid gap-4 lg:grid-cols-2"></div>
             </div>
 
-            <button id="buyButton" class="neon-btn w-full rounded-[24px] py-4 text-base font-semibold mt-1">Купить выбранное</button>
+            <div class="soft-card rounded-[28px] p-4 mt-5">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="text-sm text-slate-400">Корзина</p>
+                        <h3 class="text-white text-lg font-semibold">Твои выбранные товары</h3>
+                    </div>
+                    <span id="cartCount" class="badge-new">0</span>
+                </div>
+                <div id="cartList" class="space-y-3">
+                    <div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="text-sm text-slate-400">Итог</span>
+                    <span id="cartTotal" class="text-xl font-bold text-white">0 ₽</span>
+                </div>
+                <button id="checkoutButton" class="neon-btn w-full rounded-[24px] py-4 text-base font-semibold mt-4">Оплатить сразу</button>
+            </div>
         </div>
 
         <div class="soft-card rounded-[32px] p-5">
@@ -146,22 +154,19 @@
             </div>
             <div class="carousel mt-4">
                 <div class="carousel-item">
-                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="Genshin" class="h-8 w-8"/></div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="Genshin"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="Brawl" class="h-8 w-8"/></div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="Brawl"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="PUBG" class="h-8 w-8"/></div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="PUBG"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="Free Fire" class="h-8 w-8"/></div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="Free Fire"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="Standoff" class="h-8 w-8"/></div>
-                </div>
-                <div class="carousel-item">
-                    <div class="badge-icon"><img src="https://img.icons8.com/color/512/cyber-security.png" alt="Black Rush" class="h-8 w-8"/></div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="Standoff"/></div>
                 </div>
             </div>
         </div>
@@ -219,9 +224,9 @@
     </div>
 </div>
 
-<div class="bottom-nav glass py-3 px-5">
+<div class="bottom-nav py-3 px-5">
     <div class="grid grid-cols-3 gap-3">
-        <button class="tab-btn active rounded-[24px] py-3 text-sm font-semibold" data-tab="shop">Магазин</button>
+        <button class="tab-btn tab-active rounded-[24px] py-3 text-sm font-semibold" data-tab="shop">Магазин</button>
         <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="chat">Чат</button>
         <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="notifications">Уведомления</button>
     </div>
@@ -235,20 +240,16 @@
 
     const games = {
         genshin: {
-            id: 'genshin',
             name: 'Genshin Impact',
-            subtitle: 'Primogems',
             image: 'https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png',
             products: [
-                { title: '50 Primogems', price: 250 },
+                { title: '50 Primogems', price: 249 },
                 { title: '120 Primogems', price: 499 },
                 { title: '280 Primogems', price: 999 }
             ]
         },
         brawl: {
-            id: 'brawl',
             name: 'Brawl Stars',
-            subtitle: 'Gems / Pass',
             image: 'https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png',
             products: [
                 { title: '80 Gems', price: 99 },
@@ -257,20 +258,16 @@
             ]
         },
         pubg: {
-            id: 'pubg',
             name: 'PUBG Mobile',
-            subtitle: 'UC / Pass',
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png',
             products: [
                 { title: '100 UC', price: 199 },
                 { title: '300 UC', price: 499 },
-                { title: 'Elite Pass', price: 169 }
+                { title: 'Elite Pass', price: 179 }
             ]
         },
         freefire: {
-            id: 'freefire',
             name: 'Free Fire',
-            subtitle: 'Diamonds',
             image: 'https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png',
             products: [
                 { title: '50 Diamonds', price: 139 },
@@ -279,25 +276,12 @@
             ]
         },
         standoff: {
-            id: 'standoff',
             name: 'Standoff 2',
-            subtitle: 'Coins',
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png',
             products: [
                 { title: '200 Coins', price: 149 },
                 { title: '500 Coins', price: 329 },
                 { title: 'Diamond Case', price: 179 }
-            ]
-        },
-        blackrush: {
-            id: 'blackrush',
-            name: 'Black Rush',
-            subtitle: 'Скины',
-            image: 'https://img.icons8.com/color/512/cyber-security.png',
-            products: [
-                { title: 'Skin Pack', price: 129 },
-                { title: 'Premium Skin', price: 229 },
-                { title: 'Starter Bundle', price: 179 }
             ]
         }
     };
@@ -307,16 +291,20 @@
         selectedGame: 'genshin',
         selectedProduct: null,
         selectedPrice: 0,
+        cart: [],
         chatUnread: parseInt(localStorage.getItem('gm_chat_unread') || '1', 10),
         notifications: JSON.parse(localStorage.getItem('gm_notifications') || '[]'),
         messages: JSON.parse(localStorage.getItem('gm_messages') || '[]')
     };
 
     const balanceEl = document.getElementById('balanceValue');
-    const chatBadge = document.getElementById('chatBadge');
     const productList = document.getElementById('productList');
+    const cartList = document.getElementById('cartList');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartCount = document.getElementById('cartCount');
     const notificationsList = document.getElementById('notificationsList');
     const chatHistory = document.getElementById('chatHistory');
+    const chatBadge = document.getElementById('chatBadge');
     const toastWrapper = document.getElementById('toastWrapper');
 
     function saveState() {
@@ -324,6 +312,21 @@
         localStorage.setItem('gm_chat_unread', state.chatUnread.toString());
         localStorage.setItem('gm_notifications', JSON.stringify(state.notifications));
         localStorage.setItem('gm_messages', JSON.stringify(state.messages));
+    }
+
+    function playClickSound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = 520;
+            gain.gain.value = 0.03;
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.05);
+        } catch (e) { }
     }
 
     function renderBalance() {
@@ -339,42 +342,66 @@
     function renderProducts() {
         const game = games[state.selectedGame];
         productList.innerHTML = game.products.map((item, index) => `
-            <button class="game-card relative rounded-[28px] p-4 text-left bg-[#101828] hover:bg-[#111b33]" data-index="${index}">
+            <div class="product-card relative rounded-[28px] p-4 bg-[#101828]">
                 <div class="absolute left-4 top-4 rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">Скидка 15%</div>
                 <div class="flex items-center gap-4">
-                    <div class="badge-icon">
-                        <img src="${game.image}" alt="${game.name}" class="h-9 w-9 object-contain"/>
-                    </div>
+                    <div class="badge-icon"><img src="${game.image}" alt="${game.name}"/></div>
                     <div>
                         <p class="text-sm text-slate-400">${game.name}</p>
                         <p class="mt-1 text-lg font-semibold text-white">${item.title}</p>
                     </div>
                 </div>
                 <div class="mt-5 flex items-center justify-between">
-                    <span class="text-sm text-slate-400">Цена</span>
+                    <span class="text-sm text-slate-400">${game.subtitle || 'Покупка'}</span>
                     <span class="text-xl font-bold text-white">${item.price} ₽</span>
                 </div>
-            </button>
-        `).join('');
-
-        productList.querySelectorAll('.game-card').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('.game-card').forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                const product = games[state.selectedGame].products[Number(card.dataset.index)];
-                state.selectedProduct = product.title;
-                state.selectedPrice = product.price;
+                <button class="neon-btn mt-4 w-full rounded-[22px] py-3 text-sm font-semibold add-to-cart" data-index="${index}">Добавить в корзину</button>
+            </div>`).join('');
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const product = games[state.selectedGame].products[Number(btn.dataset.index)];
+                state.cart.push({
+                    game: games[state.selectedGame].name,
+                    title: product.title,
+                    price: product.price
+                });
+                renderCart();
+                addNotification('Товар в корзине', `${product.title} добавлен`, 'info');
+                showToast('Добавлено в корзину', 'success');
+                playClickSound();
             });
         });
     }
 
-    function renderChatBadge() {
-        if (state.chatUnread > 0) {
-            chatBadge.classList.remove('hidden');
-            chatBadge.textContent = state.chatUnread;
-        } else {
-            chatBadge.classList.add('hidden');
+    function renderCart() {
+        if (!state.cart.length) {
+            cartList.innerHTML = '<div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>';
+            cartTotal.textContent = '0 ₽';
+            cartCount.textContent = '0';
+            return;
         }
+        cartList.innerHTML = state.cart.map((item, index) => `
+            <div class="cart-item rounded-[24px] bg-[#0f172a] p-4 flex items-center justify-between gap-4">
+                <div>
+                    <p class="text-sm text-slate-400">${item.game}</p>
+                    <p class="text-white font-semibold mt-1">${item.title}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-white font-bold">${item.price} ₽</p>
+                    <button class="text-xs text-slate-400 mt-2 remove-cart-item" data-index="${index}">Удалить</button>
+                </div>
+            </div>`).join('');
+        const total = state.cart.reduce((sum, item) => sum + item.price, 0);
+        cartTotal.textContent = `${total} ₽`;
+        cartCount.textContent = String(state.cart.length);
+        document.querySelectorAll('.remove-cart-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.cart.splice(Number(btn.dataset.index), 1);
+                renderCart();
+                showToast('Товар удален', 'info');
+                playClickSound();
+            });
+        });
     }
 
     function renderNotifications() {
@@ -391,21 +418,19 @@
                     </div>
                     <span class="text-xs ${note.read ? 'text-slate-500' : 'text-violet-300'}">${note.read ? 'Прочитано' : 'Новое'}</span>
                 </div>
-            </div>
-        `).join('');
+            </div>`).join('');
     }
 
     function renderChat() {
         if (!state.messages.length) {
-            chatHistory.innerHTML = '<div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Здесь появятся подсказки и ответы помощника.</div>';
+            chatHistory.innerHTML = '<div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Здесь появятся подсказки и ответы AI-помощника.</div>';
             return;
         }
         chatHistory.innerHTML = state.messages.map(item => `
             <div class="rounded-[24px] bg-[#0f172a] p-4">
                 <p class="text-sm font-semibold text-slate-200">${item.title}</p>
                 <p class="text-sm text-slate-400 mt-1">${item.text}</p>
-            </div>
-        `).join('');
+            </div>`).join('');
     }
 
     function showToast(message, type = 'info') {
@@ -417,23 +442,29 @@
                 <p class="text-white font-medium">${message}</p>
             </div>`;
         toastWrapper.appendChild(toast);
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function addNotification(title, text, type = 'info') {
+        state.notifications.unshift({ title, text, type, read: false });
+        renderNotifications();
+        saveState();
+    }
+
+    function addMessage(title, text) {
+        state.messages.push({ title, text });
+        renderChat();
+        saveState();
     }
 
     function selectTab(name) {
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.toggle('tab-active', btn.dataset.tab === name);
-            btn.classList.toggle('bg-transparent', btn.dataset.tab !== name);
-        });
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('tab-active', btn.dataset.tab === name));
         document.getElementById('shopPage').classList.toggle('hidden', name !== 'shop');
         document.getElementById('chatPage').classList.toggle('hidden', name !== 'chat');
         document.getElementById('notificationsPage').classList.toggle('hidden', name !== 'notifications');
-
         if (name === 'chat') {
             state.chatUnread = 0;
-            renderChatBadge();
+            chatBadge.classList.add('hidden');
             saveState();
         }
         if (name === 'notifications') {
@@ -450,61 +481,60 @@
             const amount = Number(btn.dataset.amount);
             state.balance += amount;
             renderBalance();
-            addNotification('Баланс пополнен', `На счёт пришло ${amount} ₽`, 'success');
-            addMessage('Баланс', `Вы пополнили +${amount} ₽, теперь можно купить товар.`);
+            addNotification('Баланс пополнен', `На счёт поступило ${amount} ₽`, 'success');
+            addMessage('Баланс', `Вы пополнили +${amount} ₽`);
             showToast(`Баланс +${amount} ₽`, 'success');
             saveState();
+            playClickSound();
         });
     });
 
     document.querySelectorAll('[data-game]').forEach(btn => {
         btn.addEventListener('click', () => {
             state.selectedGame = btn.dataset.game;
-            state.selectedProduct = null;
-            state.selectedPrice = 0;
             renderGameSelection();
             renderProducts();
+            playClickSound();
         });
     });
 
-    document.getElementById('buyButton').addEventListener('click', () => {
+    document.getElementById('checkoutButton').addEventListener('click', () => {
         const uid = document.getElementById('inputUid').value.trim();
         const zone = document.getElementById('inputZone').value.trim();
         if (!uid || !zone) {
             showToast('Заполните User ID и Zone ID', 'warning');
             return;
         }
-        if (!state.selectedProduct) {
-            showToast('Выберите товар', 'warning');
+        if (!state.cart.length) {
+            showToast('Корзина пуста', 'warning');
             return;
         }
-        if (state.balance < state.selectedPrice) {
-            state.chatUnread += 1;
-            renderChatBadge();
-            addNotification('Недостаточно средств', `Для ${state.selectedProduct} нужно ${state.selectedPrice} ₽`, 'warning');
-            addMessage('Ошибка', `Не хватает средств для покупки ${state.selectedProduct}. Пополните баланс.`);
+        const total = state.cart.reduce((sum, item) => sum + item.price, 0);
+        state.balance -= total;
+        if (state.balance < 0) {
+            state.balance += total;
             showToast('Недостаточно средств', 'warning');
-            saveState();
+            addNotification('Недостаточно средств', `Пополните баланс на ${Math.abs(state.balance - total)} ₽`, 'warning');
             return;
         }
-        state.balance -= state.selectedPrice;
         renderBalance();
-        addNotification('Покупка оформлена', `${state.selectedProduct} куплен за ${state.selectedPrice} ₽`, 'info');
-        addMessage('Покупка', `Заказ ${state.selectedProduct} оформлен успешно.`);
-        showToast('Покупка оформлена', 'success');
+        addNotification('Оплата прошла успешно', `Вы купили ${state.cart.length} товар(ов) за ${total} ₽`, 'success');
+        addMessage('Покупка', `Оплата ${total} ₽ выполнена. Товар будет доставлен.`);
+        showToast('Оплата прошла успешно', 'success');
+        state.cart = [];
+        renderCart();
         saveState();
+        playClickSound();
     });
 
     document.querySelectorAll('[data-action]').forEach(btn => {
         btn.addEventListener('click', () => {
             let text = '';
             if (btn.dataset.action === 'howToTopUp') text = 'Нажмите на одну из кнопок пополнения. Деньги моментально появятся в балансе.';
-            if (btn.dataset.action === 'needMoney') text = 'Если не хватает средств, пополните баланс и повторите покупку.';
-            if (btn.dataset.action === 'whatIsUid') text = 'User ID — это уникальный номер вашего аккаунта в игре. Он нужен для доставки товара.';
+            if (btn.dataset.action === 'needMoney') text = 'Если не хватает средств, пополните баланс и повторите оплату.';
+            if (btn.dataset.action === 'whatIsUid') text = 'User ID — это игровой идентификатор. Он нужен для быстрой доставки товара.';
             addMessage('AI-помощник', text);
-            state.chatUnread = 0;
-            renderChatBadge();
-            saveState();
+            playClickSound();
         });
     });
 
@@ -520,21 +550,12 @@
         saveState();
     });
 
-    function addNotification(title, text, type = 'info') {
-        state.notifications.unshift({ title, text, type, read: false });
-        renderNotifications();
-    }
-    function addMessage(title, text) {
-        state.messages.push({ title, text });
-        renderChat();
-    }
-
     renderBalance();
     renderGameSelection();
     renderProducts();
-    renderChatBadge();
-    renderNotifications();
+    renderCart();
     renderChat();
+    renderNotifications();
     selectTab('shop');
 </script>
 </body>
