@@ -4,9 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>GhostMarket — Premium Game Store</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --bg-dark: #070814;
@@ -18,28 +16,39 @@
       --price-green: #10b981;
       --discount-red: #ef4444;
       --border-color: rgba(124, 58, 237, 0.08);
-      --gap: 16px;
     }
 
-    .light {
-      --bg-dark: #f4f6fa;
-      --card-dark: #ffffff;
-      --text-light: #111827;
-      --text-muted: #6b7280;
-      --border-color: rgba(124, 58, 237, 0.06);
+    * {
+      box-sizing: border-box;
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; background: var(--bg-dark); color: var(--text-light); -webkit-font-smoothing: antialiased; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      -webkit-font-smoothing: antialiased;
+    }
 
-    body { overflow-x: hidden; }
-    .container { max-width: 980px; margin: 0 auto; padding: 0; }
-    .app { display: flex; flex-direction: column; height: 100vh; }
-    .scroll-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
+    body {
+      overflow-x: hidden;
+    }
 
-    /* Page Transitions */
-    .page-content {
-      animation: fadeIn 0.3s ease-in-out;
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px;
+      padding-bottom: 120px;
+      -webkit-overflow-scrolling: touch;
     }
 
     @keyframes fadeIn {
@@ -53,16 +62,20 @@
       }
     }
 
-    /* Header */
+    .page-content {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    /* ===== HEADER ===== */
     .header {
       background: var(--card-dark);
       border-bottom: 1px solid var(--border-color);
-      padding: 14px 16px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      backdrop-filter: blur(16px);
       gap: 12px;
+      backdrop-filter: blur(16px);
       z-index: 30;
     }
 
@@ -83,79 +96,95 @@
     }
 
     .btn-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       background: rgba(124, 58, 237, 0.08);
       border: 1px solid var(--border-color);
       cursor: pointer;
       display: grid;
       place-items: center;
       color: var(--text-light);
+      font-size: 18px;
       transition: all 0.24s;
-      font-size: 20px;
       -webkit-user-select: none;
       user-select: none;
+      position: relative;
     }
 
-    .btn-icon:active { transform: scale(0.92); background: rgba(124, 58, 237, 0.16); }
+    .btn-icon:active {
+      transform: scale(0.92);
+      background: rgba(124, 58, 237, 0.16);
+    }
 
     .btn-premium {
-      padding: 8px 14px;
-      border-radius: 10px;
-      background: rgba(124, 58, 237, 0.12);
-      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(99, 102, 241, 0.2));
+      border: 1px solid var(--accent-purple);
       color: var(--accent-purple);
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       transition: all 0.24s;
       white-space: nowrap;
       -webkit-user-select: none;
       user-select: none;
+      animation: pulse 2s infinite;
     }
 
-    .btn-premium:active { background: rgba(124, 58, 237, 0.2); }
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
 
-    /* Banner */
+    .btn-premium:active {
+      transform: scale(0.96);
+    }
+
+    /* ===== BANNER ===== */
     .banner {
       background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
       border: 1px solid var(--border-color);
-      border-radius: 18px;
-      padding: 24px 16px;
-      margin: 0 0 16px 0;
+      border-radius: 16px;
+      padding: 20px 16px;
+      margin-bottom: 16px;
       text-align: center;
     }
 
     .banner-title {
       font-weight: 800;
-      font-size: 20px;
+      font-size: 18px;
       margin-bottom: 8px;
       line-height: 1.3;
     }
 
     .banner-subtitle {
       color: var(--text-muted);
-      font-size: 13px;
-      margin-bottom: 16px;
+      font-size: 12px;
+      margin-bottom: 14px;
     }
 
     .banner-buttons {
       display: flex;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
     .btn-banner {
       flex: 1;
-      padding: 14px 16px;
-      border-radius: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 13px;
       border: none;
       cursor: pointer;
       transition: all 0.24s;
-      min-height: 48px;
+      min-height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -168,7 +197,10 @@
       color: white;
     }
 
-    .btn-banner-primary:active { transform: scale(0.96); opacity: 0.8; }
+    .btn-banner-primary:active {
+      transform: scale(0.96);
+      opacity: 0.8;
+    }
 
     .btn-banner-secondary {
       background: rgba(124, 58, 237, 0.08);
@@ -176,65 +208,261 @@
       color: var(--text-light);
     }
 
-    .btn-banner-secondary:active { background: rgba(124, 58, 237, 0.16); }
+    .btn-banner-secondary:active {
+      background: rgba(124, 58, 237, 0.16);
+    }
 
-    /* Balance Block */
-    .balance-block {
+    /* ===== CONSTRUCTOR SECTION ===== */
+    .constructor-section {
       background: var(--card-dark);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
-    .balance-header {
+    .constructor-title {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .game-selector {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      gap: 8px;
+      overflow-x: auto;
       margin-bottom: 14px;
+      padding-bottom: 8px;
+      scrollbar-width: none;
     }
 
-    .balance-amount {
-      font-weight: 800;
-      font-size: 28px;
-      color: var(--price-green);
+    .game-selector::-webkit-scrollbar {
+      display: none;
     }
 
-    .balance-btn-add {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+    .game-btn {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.24s;
+      white-space: nowrap;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .game-btn:active {
+      transform: scale(0.95);
+    }
+
+    .game-btn.active {
       background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
       color: white;
-      font-weight: 800;
-      font-size: 20px;
+      border-color: var(--accent-purple);
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .field-input {
+      background: rgba(124, 58, 237, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text-light);
+      font-size: 13px;
+      font-family: Inter;
+      outline: none;
+      transition: all 0.24s;
+    }
+
+    .field-input:focus {
+      border-color: var(--accent-purple);
+      background: rgba(124, 58, 237, 0.08);
+    }
+
+    .pack-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .pack-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(124, 58, 237, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px;
       cursor: pointer;
       transition: all 0.24s;
       -webkit-user-select: none;
       user-select: none;
     }
 
-    .balance-btn-add:active { transform: scale(0.92); }
+    .pack-item:active {
+      background: rgba(124, 58, 237, 0.12);
+    }
+
+    .pack-item.selected {
+      background: rgba(124, 58, 237, 0.16);
+      border-color: var(--accent-purple);
+    }
+
+    .pack-name {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .pack-price {
+      font-weight: 800;
+      color: var(--price-green);
+      font-size: 13px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.24s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .btn-cart {
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid var(--border-color);
+      color: var(--text-light);
+    }
+
+    .btn-cart:active {
+      background: rgba(124, 58, 237, 0.2);
+    }
+
+    .btn-buy-now {
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: white;
+    }
+
+    .btn-buy-now:active {
+      transform: scale(0.96);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--discount-red);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    /* ===== BALANCE BLOCK ===== */
+    .balance-block {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .balance-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .balance-amount {
+      font-weight: 800;
+      font-size: 24px;
+      color: var(--price-green);
+    }
+
+    .balance-btn-add {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      border: none;
+      color: white;
+      font-weight: 800;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .balance-btn-add:active {
+      transform: scale(0.92);
+    }
 
     .balance-stats {
       display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      font-size: 12px;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 11px;
     }
 
     .stat-item {
       background: rgba(124, 58, 237, 0.08);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 8px 10px;
+      border-radius: 8px;
+      padding: 6px 10px;
       flex: 1;
       text-align: center;
     }
 
-    .stat-label { color: var(--text-muted); display: block; font-size: 11px; }
-    .stat-value { font-weight: 800; color: var(--text-light); display: block; margin-top: 2px; }
+    .stat-label {
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .stat-value {
+      font-weight: 800;
+      color: var(--text-light);
+      display: block;
+      margin-top: 2px;
+    }
 
     .balance-buttons {
       display: grid;
@@ -245,10 +473,10 @@
     .btn-amount {
       background: rgba(124, 58, 237, 0.08);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 12px 10px;
+      border-radius: 10px;
+      padding: 10px;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-light);
       cursor: pointer;
       transition: all 0.24s;
@@ -256,413 +484,11 @@
       user-select: none;
     }
 
-    .btn-amount:active { background: rgba(124, 58, 237, 0.16); }
-
-    /* Popular Games Section */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 20px 0 12px 0;
-      gap: 8px;
+    .btn-amount:active {
+      background: rgba(124, 58, 237, 0.16);
     }
 
-    .section-title {
-      font-weight: 800;
-      font-size: 16px;
-    }
-
-    .btn-view-all {
-      background: transparent;
-      border: none;
-      color: var(--accent-purple);
-      font-weight: 700;
-      font-size: 12px;
-      cursor: pointer;
-      padding: 4px 8px;
-      transition: all 0.2s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .btn-view-all:active { opacity: 0.7; }
-
-    .games-carousel {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      margin: 0 -16px 16px -16px;
-      padding: 0 16px 12px 16px;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .games-carousel::-webkit-scrollbar { display: none; }
-
-    .game-card {
-      flex: 0 0 160px;
-      min-width: 160px;
-      max-width: 160px;
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.24s;
-      position: relative;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .game-card:active { transform: scale(0.97); background: rgba(124, 58, 237, 0.12); }
-
-    .game-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      margin: 0 auto 10px;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-    }
-
-    .game-name {
-      font-weight: 700;
-      font-size: 12px;
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-
-    .game-price {
-      color: var(--price-green);
-      font-weight: 800;
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .game-discount {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--discount-red);
-      color: white;
-      font-weight: 800;
-      font-size: 10px;
-      padding: 4px 6px;
-      border-radius: 6px;
-    }
-
-    /* Categories Grid */
-    .categories-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin: 20px 0 16px 0;
-    }
-
-    .category-card {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
-      cursor: pointer;
-      transition: all 0.24s;
-      position: relative;
-      overflow: hidden;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .category-card:active { transform: scale(0.96); background: rgba(124, 58, 237, 0.12); }
-
-    .category-card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 140%;
-      height: 140%;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(99, 102, 241, 0.05));
-      border-radius: 50%;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .category-card:active::before { opacity: 1; }
-
-    .category-icon {
-      font-size: 28px;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .category-name {
-      font-weight: 700;
-      font-size: 13px;
-      position: relative;
-      z-index: 1;
-      line-height: 1.3;
-    }
-
-    /* AI Banner */
-    .ai-banner {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(99, 102, 241, 0.1));
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 16px;
-      margin: 20px 0 16px 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .ai-banner:active { transform: scale(0.98); background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.15)); }
-
-    .ai-icon {
-      font-size: 36px;
-      flex: 0 0 auto;
-    }
-
-    .ai-text {
-      flex: 1;
-      font-weight: 700;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    /* Catalog Page */
-    .game-filter {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      margin: 0 -16px 12px -16px;
-      padding: 12px 16px 0 16px;
-      scrollbar-width: none;
-    }
-
-    .game-filter::-webkit-scrollbar { display: none; }
-
-    .filter-btn {
-      flex: 0 0 auto;
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--text-light);
-      cursor: pointer;
-      transition: all 0.24s;
-      white-space: nowrap;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .filter-btn.active {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border-color: var(--accent-purple);
-      color: white;
-    }
-
-    .filter-btn:active { transform: scale(0.96); }
-
-    .product-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .product-card {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .product-card:active { background: rgba(124, 58, 237, 0.08); }
-
-    .product-image {
-      flex: 0 0 60px;
-      width: 60px;
-      height: 60px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
-
-    .product-info {
-      flex: 1;
-    }
-
-    .product-name {
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-
-    .product-details {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .product-rating {
-      display: flex;
-      gap: 2px;
-      align-items: center;
-      font-size: 12px;
-    }
-
-    .product-pricing {
-      display: flex;
-      gap: 6px;
-      align-items: baseline;
-      font-size: 12px;
-    }
-
-    .product-price {
-      font-weight: 800;
-      color: var(--price-green);
-      font-size: 15px;
-    }
-
-    .product-price-old {
-      color: var(--text-muted);
-      text-decoration: line-through;
-      font-size: 12px;
-    }
-
-    .product-discount {
-      background: var(--discount-red);
-      color: white;
-      font-weight: 800;
-      font-size: 10px;
-      padding: 2px 5px;
-      border-radius: 4px;
-    }
-
-    .product-actions {
-      flex: 0 0 auto;
-      display: flex;
-      gap: 6px;
-      flex-direction: column;
-    }
-
-    .btn-buy {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .btn-buy:active { transform: scale(0.88); }
-
-    /* Order Tracker */
-    .order-tracker {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .tracker-title {
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 16px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .tracker-steps {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .step {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      text-align: center;
-    }
-
-    .step-dot {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(124, 58, 237, 0.12);
-      border: 2px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: var(--text-muted);
-      transition: all 0.24s;
-      font-size: 14px;
-    }
-
-    .step.active .step-dot {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border-color: var(--accent-purple);
-      color: white;
-    }
-
-    .step-line {
-      flex: 1;
-      height: 2px;
-      background: var(--border-color);
-      margin: 0 4px;
-      transition: all 0.24s;
-    }
-
-    .step-line.active {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-    }
-
-    .step-label { color: var(--text-muted); font-weight: 600; font-size: 10px; }
-    .step.active .step-label { color: var(--accent-purple); font-weight: 700; }
-
-    /* Orders Page */
+    /* ===== ORDERS PAGE ===== */
     .orders-page {
       display: none;
     }
@@ -675,9 +501,9 @@
     .order-item {
       background: var(--card-dark);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -689,23 +515,23 @@
 
     .order-name {
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       margin-bottom: 4px;
     }
 
     .order-status {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--price-green);
       font-weight: 600;
     }
 
     .order-price {
       font-weight: 800;
-      font-size: 15px;
+      font-size: 14px;
       color: var(--accent-purple);
     }
 
-    /* Profile Page */
+    /* ===== PROFILE PAGE ===== */
     .profile-page {
       display: none;
     }
@@ -718,39 +544,39 @@
     .profile-header {
       background: var(--card-dark);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 14px;
+      padding: 18px;
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .profile-avatar {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(99, 102, 241, 0.2));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 40px;
-      margin: 0 auto 12px;
+      font-size: 32px;
+      margin: 0 auto 10px;
     }
 
     .profile-name {
       font-weight: 800;
-      font-size: 18px;
-      margin-bottom: 4px;
+      font-size: 16px;
+      margin-bottom: 2px;
     }
 
     .profile-username {
       color: var(--text-muted);
-      font-size: 13px;
-      margin-bottom: 14px;
+      font-size: 12px;
+      margin-bottom: 12px;
     }
 
     .profile-stats {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
       flex-wrap: wrap;
     }
@@ -758,7 +584,7 @@
     .profile-stat {
       background: rgba(124, 58, 237, 0.08);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 8px 12px;
       text-align: center;
       flex: 0 0 auto;
@@ -766,7 +592,7 @@
 
     .profile-stat-value {
       font-weight: 800;
-      font-size: 16px;
+      font-size: 14px;
       color: var(--accent-purple);
       display: block;
     }
@@ -778,17 +604,104 @@
       margin-top: 2px;
     }
 
+    .premium-section {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(99, 102, 241, 0.1));
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .premium-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .premium-btn {
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.24s;
+      width: 100%;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .premium-btn:active {
+      transform: scale(0.96);
+    }
+
+    .promo-section {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .promo-label {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .promo-input {
+      width: 100%;
+      background: rgba(124, 58, 237, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text-light);
+      font-size: 13px;
+      font-family: Inter;
+      outline: none;
+      margin-bottom: 8px;
+      transition: all 0.24s;
+    }
+
+    .promo-input:focus {
+      border-color: var(--accent-purple);
+      background: rgba(124, 58, 237, 0.08);
+    }
+
+    .promo-btn {
+      width: 100%;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px;
+      color: var(--text-light);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .promo-btn:active {
+      background: rgba(124, 58, 237, 0.2);
+    }
+
     .profile-menu {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .profile-menu-item {
       background: var(--card-dark);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -804,14 +717,69 @@
 
     .profile-menu-label {
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .profile-menu-icon {
-      font-size: 18px;
+      font-size: 16px;
     }
 
-    /* Bottom Tab Bar */
+    /* ===== ADMIN PANEL ===== */
+    .admin-panel {
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .admin-panel.visible {
+      display: block;
+    }
+
+    .admin-title {
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 10px;
+      color: #ffc107;
+    }
+
+    .admin-btn {
+      width: 100%;
+      background: #ffc107;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .admin-btn:active {
+      transform: scale(0.96);
+      opacity: 0.8;
+    }
+
+    .admin-code {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 12px;
+      color: #ffc107;
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    /* ===== TAB BAR ===== */
     .tab-bar {
       position: fixed;
       left: 0;
@@ -832,31 +800,33 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      padding: 10px 0;
+      gap: 3px;
+      padding: 8px 0;
       background: transparent;
       border: none;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.24s;
-      font-size: 22px;
+      font-size: 20px;
       -webkit-user-select: none;
       user-select: none;
     }
 
-    .tab-item:active { transform: scale(0.88); }
+    .tab-item:active {
+      transform: scale(0.88);
+    }
 
     .tab-item.active {
       color: var(--accent-purple);
     }
 
     .tab-label {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       display: block;
     }
 
-    /* Modal & Popup */
+    /* ===== MODAL ===== */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -875,28 +845,34 @@
     .modal-content {
       background: var(--card-dark);
       border: 1px solid var(--border-color);
-      border-radius: 18px;
-      padding: 22px;
+      border-radius: 16px;
+      padding: 20px;
       width: 88%;
-      max-width: 420px;
+      max-width: 400px;
       animation: slideUp 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     @keyframes slideUp {
-      from { transform: translateY(40px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .modal-title {
       font-weight: 800;
-      font-size: 17px;
+      font-size: 16px;
       margin-bottom: 10px;
     }
 
     .modal-body {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       line-height: 1.5;
     }
 
@@ -907,10 +883,10 @@
 
     .modal-btn {
       flex: 1;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 12px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       border: none;
       cursor: pointer;
       transition: all 0.24s;
@@ -928,9 +904,31 @@
       color: white;
     }
 
-    .modal-btn:active { transform: scale(0.96); }
+    .modal-btn:active {
+      transform: scale(0.96);
+    }
 
-    /* Toast */
+    /* ===== TOAST ===== */
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes toastOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
     .toast {
       position: fixed;
       bottom: 100px;
@@ -938,39 +936,53 @@
       transform: translateX(-50%);
       background: rgba(10, 10, 14, 0.95);
       color: white;
-      padding: 14px 18px;
-      border-radius: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       z-index: 120;
       opacity: 0;
       animation: toastIn 0.24s forwards, toastOut 0.24s forwards 1.76s;
       border: 1px solid rgba(124, 58, 237, 0.2);
     }
 
-    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+    /* ===== UTILITIES ===== */
+    .hidden {
+      display: none !important;
+    }
 
-    /* Utilities */
-    .hidden { display: none !important; }
-    .no-scrollbar { scrollbar-width: none; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 12px 0;
+      gap: 8px;
+    }
 
-    /* Light Mode Toggle */
-    body.light-mode {
-      --bg-dark: #f4f6fa;
-      --card-dark: #ffffff;
-      --text-light: #111827;
-      --text-muted: #6b7280;
-      --border-color: rgba(124, 58, 237, 0.06);
+    .section-title {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .btn-view-all {
+      background: transparent;
+      border: none;
+      color: var(--accent-purple);
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 0;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     @media (max-width: 420px) {
-      .logo { font-size: 16px; }
-      .banner-title { font-size: 18px; }
-      .balance-amount { font-size: 26px; }
-      .categories-grid { grid-template-columns: repeat(2, 1fr); }
-      .product-list { padding-bottom: 0; }
+      .logo {
+        font-size: 15px;
+      }
+      .banner-title {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -979,10 +991,13 @@
     <!-- HEADER -->
     <header class="header">
       <div class="logo">💜 GhostMarket</div>
-      <button class="btn-premium" id="btnPremium">★ Premium</button>
+      <button class="btn-premium" id="btnPremiumHeader">⭐ Premium</button>
       <div class="header-actions">
-        <button class="btn-icon" aria-label="Notifications" id="btnNotifications">🔔</button>
-        <button class="btn-icon" aria-label="Profile" id="btnHeaderProfile">👤</button>
+        <button class="btn-icon" id="btnNotifications">🔔</button>
+        <button class="btn-icon" id="btnCartHeader" style="position: relative;">
+          🛒
+          <span class="cart-badge" id="cartBadgeEl" style="display: none;">0</span>
+        </button>
       </div>
     </header>
 
@@ -995,29 +1010,27 @@
           <div class="banner-title">Игровая валюта дешевле официальных цен</div>
           <div class="banner-subtitle">PUBG • Brawl Stars • Mobile Legends • Free Fire</div>
           <div class="banner-buttons">
-            <button class="btn-banner btn-banner-primary" id="btnTopup">Пополнить</button>
-            <button class="btn-banner btn-banner-secondary" id="btnCatalog">Каталог</button>
+            <button class="btn-banner btn-banner-primary" id="btnTopup">Пополнить баланс</button>
+            <button class="btn-banner btn-banner-secondary" id="btnConstructorScroll">Конструктор</button>
           </div>
         </div>
 
         <!-- Balance Block -->
         <div class="balance-block">
           <div class="balance-header">
-            <div class="balance-amount" id="balance">150 ₽</div>
+            <div class="balance-amount" id="balanceAmount">0 ₽</div>
             <button class="balance-btn-add" id="btnBalanceAdd">+</button>
           </div>
-
           <div class="balance-stats">
             <div class="stat-item">
               <span class="stat-label">Кешбэк</span>
               <span class="stat-value">5%</span>
             </div>
             <div class="stat-item">
-              <span class="stat-label">Бонусы</span>
-              <span class="stat-value">120</span>
+              <span class="stat-label">Статус</span>
+              <span class="stat-value" id="statusBadge">Обычный</span>
             </div>
           </div>
-
           <div class="balance-buttons">
             <button class="btn-amount" data-amount="100">+100 ₽</button>
             <button class="btn-amount" data-amount="500">+500 ₽</button>
@@ -1026,235 +1039,17 @@
           </div>
         </div>
 
-        <!-- Popular Games -->
-        <div>
-          <div class="section-header">
-            <div class="section-title">Популярные игры</div>
-            <button class="btn-view-all">Смотреть все →</button>
-          </div>
+        <!-- Constructor Section -->
+        <div class="constructor-section">
+          <div class="constructor-title">🎮 Выберите игру</div>
 
-          <div class="games-carousel">
-            <div class="game-card">
-              <div class="game-discount">-21%</div>
-              <div class="game-icon">🎮</div>
-              <div class="game-name">PUBG Mobile</div>
-              <div class="game-price">от 12 ₽</div>
-            </div>
-            <div class="game-card">
-              <div class="game-discount">-15%</div>
-              <div class="game-icon">⭐</div>
-              <div class="game-name">Brawl Stars</div>
-              <div class="game-price">от 8 ₽</div>
-            </div>
-            <div class="game-card">
-              <div class="game-discount">-18%</div>
-              <div class="game-icon">👾</div>
-              <div class="game-name">Mobile Legends</div>
-              <div class="game-price">от 10 ₽</div>
-            </div>
-            <div class="game-card">
-              <div class="game-discount">-12%</div>
-              <div class="game-icon">🔥</div>
-              <div class="game-name">Free Fire</div>
-              <div class="game-price">от 9 ₽</div>
-            </div>
-          </div>
-        </div>
+          <div class="game-selector" id="gameSelector"></div>
+          <div id="fieldsContainer"></div>
+          <div class="pack-selector" id="packSelector"></div>
 
-        <!-- Categories Grid -->
-        <div class="section-header">
-          <div class="section-title">Категории</div>
-        </div>
-        <div class="categories-grid">
-          <div class="category-card">
-            <div class="category-icon">💎</div>
-            <div class="category-name">Игровая валюта</div>
-          </div>
-          <div class="category-card">
-            <div class="category-icon">🎖️</div>
-            <div class="category-name">Battle Pass</div>
-          </div>
-          <div class="category-card">
-            <div class="category-icon">🎁</div>
-            <div class="category-name">Подарочные карты</div>
-          </div>
-          <div class="category-card">
-            <div class="category-icon">🔥</div>
-            <div class="category-name">Горячие скидки</div>
-          </div>
-          <div class="category-card">
-            <div class="category-icon">⚡</div>
-            <div class="category-name">Моментальная</div>
-          </div>
-          <div class="category-card">
-            <div class="category-icon">👑</div>
-            <div class="category-name">Премиум товары</div>
-          </div>
-        </div>
-
-        <!-- AI Banner -->
-        <div class="ai-banner">
-          <div class="ai-icon">🤖</div>
-          <div class="ai-text">Ghost AI поможет подобрать лучший товар</div>
-        </div>
-      </div>
-
-      <!-- CATALOG PAGE -->
-      <div id="catalogPage" class="page-content hidden">
-        <!-- Game Filter -->
-        <div class="game-filter">
-          <button class="filter-btn active" data-filter="all">Все игры</button>
-          <button class="filter-btn" data-filter="pubg">PUBG Mobile</button>
-          <button class="filter-btn" data-filter="mlbb">MLBB</button>
-          <button class="filter-btn" data-filter="ff">Free Fire</button>
-        </div>
-
-        <!-- Products List -->
-        <div class="product-list" id="productList">
-          <div class="product-card">
-            <div class="product-image">🎮</div>
-            <div class="product-info">
-              <div class="product-name">PUBG Mobile UC | 60 UC</div>
-              <div class="product-details">
-                <div class="product-rating">★ 4.9</div>
-                <span>·</span>
-                <span>2.3K продаж</span>
-              </div>
-              <div class="product-pricing">
-                <span class="product-price">15 ₽</span>
-                <span class="product-price-old">19 ₽</span>
-                <span class="product-discount">-20%</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-buy" data-product="pubg-60" data-name="PUBG Mobile UC | 60 UC" data-price="15">🛒</button>
-            </div>
-          </div>
-
-          <div class="product-card">
-            <div class="product-image">⭐</div>
-            <div class="product-info">
-              <div class="product-name">Brawl Stars Gems | 80</div>
-              <div class="product-details">
-                <div class="product-rating">★ 4.8</div>
-                <span>·</span>
-                <span>1.8K продаж</span>
-              </div>
-              <div class="product-pricing">
-                <span class="product-price">18 ₽</span>
-                <span class="product-price-old">22 ₽</span>
-                <span class="product-discount">-18%</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-buy" data-product="brawl-80" data-name="Brawl Stars Gems | 80" data-price="18">🛒</button>
-            </div>
-          </div>
-
-          <div class="product-card">
-            <div class="product-image">👾</div>
-            <div class="product-info">
-              <div class="product-name">Mobile Legends Diamonds | 50</div>
-              <div class="product-details">
-                <div class="product-rating">★ 4.7</div>
-                <span>·</span>
-                <span>3.1K продаж</span>
-              </div>
-              <div class="product-pricing">
-                <span class="product-price">12 ₽</span>
-                <span class="product-price-old">15 ₽</span>
-                <span class="product-discount">-20%</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-buy" data-product="mlbb-50" data-name="Mobile Legends Diamonds | 50" data-price="12">🛒</button>
-            </div>
-          </div>
-
-          <div class="product-card">
-            <div class="product-image">🔥</div>
-            <div class="product-info">
-              <div class="product-name">Free Fire Diamonds | 100</div>
-              <div class="product-details">
-                <div class="product-rating">★ 4.9</div>
-                <span>·</span>
-                <span>4.2K продаж</span>
-              </div>
-              <div class="product-pricing">
-                <span class="product-price">28 ₽</span>
-                <span class="product-price-old">35 ₽</span>
-                <span class="product-discount">-20%</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-buy" data-product="ff-100" data-name="Free Fire Diamonds | 100" data-price="28">🛒</button>
-            </div>
-          </div>
-
-          <div class="product-card">
-            <div class="product-image">💎</div>
-            <div class="product-info">
-              <div class="product-name">PUBG Mobile UC | 300 UC</div>
-              <div class="product-details">
-                <div class="product-rating">★ 4.9</div>
-                <span>·</span>
-                <span>5.1K продаж</span>
-              </div>
-              <div class="product-pricing">
-                <span class="product-price">65 ₽</span>
-                <span class="product-price-old">82 ₽</span>
-                <span class="product-discount">-20%</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-buy" data-product="pubg-300" data-name="PUBG Mobile UC | 300 UC" data-price="65">🛒</button>
-            </div>
-          </div>
-
-          <div class="product-card">
-            <div class="product-image">🎁</div>
-            <div class="product-info">
-              <div class="product-name">PUBG Mobile UC | 600 UC</div>
-              <div class="product-details">
-                <div class="product-rating">★ 4.9</div>
-                <span>·</span>
-                <span>3.7K продаж</span>
-              </div>
-              <div class="product-pricing">
-                <span class="product-price">120 ₽</span>
-                <span class="product-price-old">150 ₽</span>
-                <span class="product-discount">-20%</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-buy" data-product="pubg-600" data-name="PUBG Mobile UC | 600 UC" data-price="120">🛒</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Order Tracker -->
-        <div class="order-tracker">
-          <div class="tracker-title">Статус последнего заказа</div>
-          <div class="tracker-steps">
-            <div class="step active">
-              <div class="step-dot">✓</div>
-              <div class="step-label">Оплачен</div>
-            </div>
-            <div class="step-line active"></div>
-            <div class="step active">
-              <div class="step-dot">✓</div>
-              <div class="step-label">В обработке</div>
-            </div>
-            <div class="step-line"></div>
-            <div class="step">
-              <div class="step-dot">3</div>
-              <div class="step-label">Выполняется</div>
-            </div>
-            <div class="step-line"></div>
-            <div class="step">
-              <div class="step-dot">4</div>
-              <div class="step-label">Завершён</div>
-            </div>
+          <div class="action-buttons">
+            <button class="btn-action btn-cart" id="btnAddToCart">🛒 В корзину</button>
+            <button class="btn-action btn-buy-now" id="btnBuyNow">⚡ Купить сейчас</button>
           </div>
         </div>
       </div>
@@ -1262,41 +1057,10 @@
       <!-- ORDERS PAGE -->
       <div id="ordersPage" class="orders-page">
         <div class="page-content">
-          <div class="section-header" style="margin-bottom: 16px;">
+          <div class="section-header">
             <div class="section-title">Ваши заказы</div>
           </div>
-
-          <div class="order-item">
-            <div class="order-info">
-              <div class="order-name">PUBG Mobile UC | 60 UC</div>
-              <div class="order-status">✓ Доставлено</div>
-            </div>
-            <div class="order-price">15 ₽</div>
-          </div>
-
-          <div class="order-item">
-            <div class="order-info">
-              <div class="order-name">Brawl Stars Gems | 80</div>
-              <div class="order-status">✓ Доставлено</div>
-            </div>
-            <div class="order-price">18 ₽</div>
-          </div>
-
-          <div class="order-item">
-            <div class="order-info">
-              <div class="order-name">Mobile Legends Diamonds | 50</div>
-              <div class="order-status">⏳ В обработке</div>
-            </div>
-            <div class="order-price">12 ₽</div>
-          </div>
-
-          <div class="order-item">
-            <div class="order-info">
-              <div class="order-name">Free Fire Diamonds | 100</div>
-              <div class="order-status">✓ Доставлено</div>
-            </div>
-            <div class="order-price">28 ₽</div>
-          </div>
+          <div id="ordersList"></div>
         </div>
       </div>
 
@@ -1304,39 +1068,52 @@
       <div id="profilePage" class="profile-page">
         <div class="page-content">
           <div class="profile-header">
-            <div class="profile-avatar">👤</div>
-            <div class="profile-name">Пользователь</div>
-            <div class="profile-username">@user_ghostmarket</div>
+            <div class="profile-avatar" id="profileAvatarEl">👤</div>
+            <div class="profile-name" id="profileNameEl">Пользователь</div>
+            <div class="profile-username" id="profileUsernameEl">@user</div>
             <div class="profile-stats">
               <div class="profile-stat">
-                <span class="profile-stat-value">12</span>
+                <span class="profile-stat-value" id="profileOrdersCount">0</span>
                 <span class="profile-stat-label">Покупок</span>
               </div>
               <div class="profile-stat">
-                <span class="profile-stat-value">450 ₽</span>
+                <span class="profile-stat-value" id="profileSpentAmount">0 ₽</span>
                 <span class="profile-stat-label">Потрачено</span>
-              </div>
-              <div class="profile-stat">
-                <span class="profile-stat-value">22 ₽</span>
-                <span class="profile-stat-label">Кешбэк</span>
               </div>
             </div>
           </div>
 
+          <!-- Premium Section -->
+          <div class="premium-section">
+            <div class="premium-label">Текущий статус</div>
+            <button class="premium-btn" id="btnUpgradePremium">⭐ Купить Premium</button>
+          </div>
+
+          <!-- Promo Code Section -->
+          <div class="promo-section">
+            <div class="promo-label">Промокод</div>
+            <input type="text" class="promo-input" id="promoCodeInput" placeholder="Введите промокод...">
+            <button class="promo-btn" id="btnActivatePromo">Активировать</button>
+          </div>
+
+          <!-- Admin Panel -->
+          <div class="admin-panel" id="adminPanelContainer">
+            <div class="admin-title">🎁 Генератор промокодов (ADMIN)</div>
+            <button class="admin-btn" id="btnGeneratePromo">Создать промокод</button>
+            <div class="admin-code" id="adminPromoCodeDisplay"></div>
+          </div>
+
+          <!-- Profile Menu -->
           <div class="profile-menu">
-            <div class="profile-menu-item" id="profileSettings">
+            <div class="profile-menu-item" id="btnSettingsMenu">
               <span class="profile-menu-label">⚙️ Настройки</span>
               <span class="profile-menu-icon">›</span>
             </div>
-            <div class="profile-menu-item" id="profileHistory">
-              <span class="profile-menu-label">📜 История операций</span>
-              <span class="profile-menu-icon">›</span>
-            </div>
-            <div class="profile-menu-item" id="profileSupport">
+            <div class="profile-menu-item" id="btnSupportMenu">
               <span class="profile-menu-label">💬 Поддержка</span>
               <span class="profile-menu-icon">›</span>
             </div>
-            <div class="profile-menu-item" id="profileLogout">
+            <div class="profile-menu-item" id="btnLogoutMenu">
               <span class="profile-menu-label">🚪 Выход</span>
               <span class="profile-menu-icon">›</span>
             </div>
@@ -1348,15 +1125,15 @@
     <!-- TAB BAR -->
     <div class="tab-bar">
       <button class="tab-item active" data-page="home">
-        <span>🛒</span>
+        <span>🛍️</span>
         <span class="tab-label">Магазин</span>
       </button>
-      <button class="tab-item" data-page="support">
-        <span>💬</span>
-        <span class="tab-label">Поддержка</span>
+      <button class="tab-item" data-page="cart">
+        <span>📦</span>
+        <span class="tab-label">Корзина</span>
       </button>
       <button class="tab-item" data-page="orders">
-        <span>📦</span>
+        <span>📋</span>
         <span class="tab-label">Заказы</span>
       </button>
       <button class="tab-item" data-page="profile">
@@ -1367,70 +1144,154 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-backdrop" id="modalBackdropEl">
     <div class="modal-content">
-      <div class="modal-title" id="modalTitle">Подтвердить покупку</div>
-      <div class="modal-body" id="modalBody">Вы собираетесь оплатить товар</div>
+      <div class="modal-title" id="modalTitleEl">Подтвердить</div>
+      <div class="modal-body" id="modalBodyEl">Вы согласны?</div>
       <div class="modal-actions">
-        <button class="modal-btn modal-btn-cancel" id="btnModalCancel">Отменить</button>
-        <button class="modal-btn modal-btn-confirm" id="btnModalConfirm">Оплатить</button>
+        <button class="modal-btn modal-btn-cancel" id="btnModalCancelEl">Отменить</button>
+        <button class="modal-btn modal-btn-confirm" id="btnModalConfirmEl">Подтвердить</button>
       </div>
     </div>
   </div>
 
   <!-- Toast -->
-  <div id="toastContainer"></div>
+  <div id="toastContainerEl"></div>
 
   <script>
-    // ==================== TELEGRAM WEBAPP INTEGRATION ====================
-    const tg = window.Telegram?.WebApp || window.TelegramWebApp || null;
-    
-    try { 
-      tg?.ready?.(); 
-    } catch (e) {}
+    // ==================== TELEGRAM SDK ====================
+    const tg = window.Telegram?.WebApp || {};
+    if (tg.ready) {
+      try {
+        tg.ready();
+      } catch (e) {
+        console.warn('Telegram WebApp not ready');
+      }
+    }
 
     const haptic = (type = 'medium') => {
-      try { 
-        tg?.HapticFeedback?.impactOccurred?.(type); 
+      try {
+        if (tg.HapticFeedback && tg.HapticFeedback.impactOccurred) {
+          tg.HapticFeedback.impactOccurred(type);
+        }
       } catch (e) {}
     };
 
     const hapticNotify = (type = 'success') => {
-      try { 
-        tg?.HapticFeedback?.notificationOccurred?.(type); 
+      try {
+        if (tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) {
+          tg.HapticFeedback.notificationOccurred(type);
+        }
       } catch (e) {}
     };
 
-    // ==================== DOM ELEMENTS ====================
+    // ==================== USER DATA ====================
+    const userData = tg.initDataUnsafe?.user || {
+      id: 0,
+      first_name: 'Guest',
+      username: 'guest'
+    };
+    const isAdminUser = userData.username === 'henotsosal';
+
+    // ==================== STATE ====================
+    const state = {
+      currentPage: 'home',
+      currentGame: 'pubg',
+      selectedPack: null,
+      cartItems: [],
+      userBalance: 0,
+      userPremium: 'free',
+      userOrders: []
+    };
+
+    // ==================== GAME DATA ====================
+    const gamesData = {
+      pubg: {
+        name: 'PUBG Mobile',
+        emoji: '🎮',
+        fields: [
+          { id: 'uid', label: 'Игровой UID', placeholder: 'Введите UID...' },
+          { id: 'zone', label: 'Zone ID', placeholder: 'Введите Zone...' }
+        ],
+        packs: [
+          { id: 'p60', name: '60 UC', price: 15 },
+          { id: 'p300', name: '300 UC', price: 65 },
+          { id: 'p600', name: '600 UC', price: 120 }
+        ]
+      },
+      brawl: {
+        name: 'Brawl Stars',
+        emoji: '⭐',
+        fields: [
+          { id: 'tag', label: 'Тег игрока', placeholder: '#XXXXXX' }
+        ],
+        packs: [
+          { id: 'b80', name: '80 Gems', price: 18 },
+          { id: 'b170', name: '170 Gems', price: 35 },
+          { id: 'b360', name: '360 Gems', price: 69 }
+        ]
+      },
+      mlbb: {
+        name: 'Mobile Legends',
+        emoji: '👾',
+        fields: [
+          { id: 'uid', label: 'User ID', placeholder: 'Введите User ID...' },
+          { id: 'server', label: 'Сервер', placeholder: 'Выберите сервер...' }
+        ],
+        packs: [
+          { id: 'm50', name: '50 Diamonds', price: 12 },
+          { id: 'm100', name: '100 Diamonds', price: 24 },
+          { id: 'm220', name: '220 Diamonds', price: 55 }
+        ]
+      },
+      ff: {
+        name: 'Free Fire',
+        emoji: '🔥',
+        fields: [
+          { id: 'id', label: 'ID аккаунта', placeholder: 'Введите ID...' }
+        ],
+        packs: [
+          { id: 'f100', name: '100 Diamonds', price: 25 },
+          { id: 'f210', name: '210 Diamonds', price: 50 },
+          { id: 'f440', name: '440 Diamonds', price: 99 }
+        ]
+      }
+    };
+
+    // ==================== DOM ELEMENTS (ALL RENAMED) ====================
     const homePage = document.getElementById('homePage');
-    const catalogPage = document.getElementById('catalogPage');
     const ordersPage = document.getElementById('ordersPage');
     const profilePage = document.getElementById('profilePage');
     const scrollContent = document.getElementById('scrollContent');
-    const btnCatalog = document.getElementById('btnCatalog');
-    const btnTopup = document.getElementById('btnTopup');
     const tabItems = document.querySelectorAll('.tab-item');
-    const buyButtons = document.querySelectorAll('.btn-buy');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const btnModalConfirm = document.getElementById('btnModalConfirm');
-    const btnModalCancel = document.getElementById('btnModalCancel');
-    const toastContainer = document.getElementById('toastContainer');
-    const balanceAmount = document.getElementById('balance');
-    const balanceButtons = document.querySelectorAll('.btn-amount');
-    const btnBalanceAdd = document.getElementById('btnBalanceAdd');
-    const btnPremium = document.getElementById('btnPremium');
-    const btnNotifications = document.getElementById('btnNotifications');
-    const btnHeaderProfile = document.getElementById('btnHeaderProfile');
 
-    // ==================== STATE ====================
-    let currentPage = 'home';
-    let pendingPurchase = null;
-    let currentBalance = 150;
+    const gameSelectorContainer = document.getElementById('gameSelector');
+    const fieldsContainer = document.getElementById('fieldsContainer');
+    const packSelectorContainer = document.getElementById('packSelector');
 
-    // ==================== TOAST NOTIFICATIONS ====================
+    const balanceAmount = document.getElementById('balanceAmount');
+    const statusBadge = document.getElementById('statusBadge');
+    const cartBadgeEl = document.getElementById('cartBadgeEl');
+
+    const modalBackdrop = document.getElementById('modalBackdropEl');
+    const modalTitle = document.getElementById('modalTitleEl');
+    const modalBody = document.getElementById('modalBodyEl');
+    const btnModalConfirm = document.getElementById('btnModalConfirmEl');
+    const btnModalCancel = document.getElementById('btnModalCancelEl');
+    const toastContainer = document.getElementById('toastContainerEl');
+
+    const adminPanel = document.getElementById('adminPanelContainer');
+    const adminPromoCodeDisplay = document.getElementById('adminPromoCodeDisplay');
+
+    const profileAvatar = document.getElementById('profileAvatarEl');
+    const profileName = document.getElementById('profileNameEl');
+    const profileUsername = document.getElementById('profileUsernameEl');
+    const profileOrdersCount = document.getElementById('profileOrdersCount');
+    const profileSpentAmount = document.getElementById('profileSpentAmount');
+    const ordersList = document.getElementById('ordersList');
+
+    // ==================== HELPER FUNCTIONS ====================
+
     function showToast(message) {
       const toast = document.createElement('div');
       toast.className = 'toast';
@@ -1439,257 +1300,401 @@
       setTimeout(() => toast.remove(), 2000);
     }
 
-    // ==================== MODAL MANAGEMENT ====================
     function showModal(title, body, onConfirm) {
       modalTitle.textContent = title;
       modalBody.textContent = body;
-      pendingPurchase = onConfirm;
+      btnModalConfirm.onclick = () => {
+        if (onConfirm) {
+          onConfirm();
+        }
+        closeModal();
+      };
       modalBackdrop.classList.add('visible');
       haptic('light');
     }
 
     function closeModal() {
       modalBackdrop.classList.remove('visible');
-      pendingPurchase = null;
+      btnModalConfirm.onclick = null;
     }
 
-    // ==================== PAGE NAVIGATION ====================
-    function switchPage(page) {
-      currentPage = page;
+    function updateBalance() {
+      balanceAmount.textContent = state.userBalance + ' ₽';
+      statusBadge.textContent = state.userPremium === 'free' ? 'Обычный' : 'Premium ⭐';
+    }
+
+    function updateCartBadge() {
+      if (state.cartItems.length > 0) {
+        cartBadgeEl.textContent = state.cartItems.length;
+        cartBadgeEl.style.display = 'flex';
+      } else {
+        cartBadgeEl.style.display = 'none';
+      }
+    }
+
+    function renderGameSelector() {
+      gameSelectorContainer.innerHTML = '';
+      Object.keys(gamesData).forEach(gameKey => {
+        const gameInfo = gamesData[gameKey];
+        const btn = document.createElement('button');
+        btn.className = 'game-btn' + (gameKey === 'pubg' ? ' active' : '');
+        btn.dataset.game = gameKey;
+        btn.textContent = gameInfo.emoji + ' ' + gameInfo.name;
+        btn.addEventListener('click', () => selectGame(gameKey));
+        gameSelectorContainer.appendChild(btn);
+      });
+    }
+
+    function selectGame(gameKey) {
+      state.currentGame = gameKey;
+      state.selectedPack = null;
+      document.querySelectorAll('.game-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[data-game="${gameKey}"]`).classList.add('active');
+      renderFields();
+      renderPacks();
+      haptic('light');
+    }
+
+    function renderFields() {
+      fieldsContainer.innerHTML = '';
+      const gameInfo = gamesData[state.currentGame];
+      gameInfo.fields.forEach(field => {
+        const group = document.createElement('div');
+        group.className = 'field-group';
+        group.innerHTML = `
+          <label class="field-label">${field.label}</label>
+          <input type="text" class="field-input" data-field="${field.id}" placeholder="${field.placeholder}">
+        `;
+        fieldsContainer.appendChild(group);
+      });
+    }
+
+    function renderPacks() {
+      packSelectorContainer.innerHTML = '';
+      const gameInfo = gamesData[state.currentGame];
+      gameInfo.packs.forEach(pack => {
+        const item = document.createElement('div');
+        item.className = 'pack-item';
+        item.dataset.pack = pack.id;
+        item.innerHTML = `
+          <span class="pack-name">${pack.name}</span>
+          <span class="pack-price">${pack.price} ₽</span>
+        `;
+        item.addEventListener('click', () => selectPack(pack.id));
+        packSelectorContainer.appendChild(item);
+      });
+    }
+
+    function selectPack(packId) {
+      document.querySelectorAll('.pack-item').forEach(item => item.classList.remove('selected'));
+      document.querySelector(`[data-pack="${packId}"]`).classList.add('selected');
+      state.selectedPack = packId;
+      haptic('light');
+    }
+
+    function switchPage(pageName) {
+      state.currentPage = pageName;
       haptic('light');
 
-      // Hide all pages
       homePage.classList.add('hidden');
-      catalogPage.classList.add('hidden');
       ordersPage.classList.remove('active');
       profilePage.classList.remove('active');
 
-      // Show selected page
-      if (page === 'home') {
+      if (pageName === 'home') {
         homePage.classList.remove('hidden');
-      } else if (page === 'catalog') {
-        catalogPage.classList.remove('hidden');
-      } else if (page === 'orders') {
+      } else if (pageName === 'orders') {
         ordersPage.classList.add('active');
-      } else if (page === 'profile') {
+        renderOrdersPage();
+      } else if (pageName === 'profile') {
         profilePage.classList.add('active');
-      } else if (page === 'support') {
-        // Try to open Telegram support link
-        try {
-          tg?.openTelegramLink?.('https://t.me/GhostMarket_support');
-        } catch (e) {
-          showToast('💬 Контакт поддержки');
-        }
-        // Stay on current page
-        return;
+        renderProfilePage();
+      } else if (pageName === 'cart') {
+        showCartModal();
       }
 
-      // Update tab items
-      tabItems.forEach((item) => {
-        const isActive = item.dataset.page === page;
-        item.classList.toggle('active', isActive);
+      tabItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.page === pageName);
       });
-
       scrollContent.scrollTop = 0;
     }
 
-    // ==================== PURCHASE HANDLER ====================
-    function sendPurchaseData(productName, price) {
+    function showCartModal() {
+      if (state.cartItems.length === 0) {
+        showToast('📦 Корзина пуста');
+        switchPage('home');
+        return;
+      }
+
+      let total = 0;
+      let msg = '📦 Ваша корзина:\n\n';
+      state.cartItems.forEach((item, idx) => {
+        msg += `${idx + 1}. ${item.gameName} - ${item.packName} (${item.price} ₽)\n`;
+        total += item.price;
+      });
+      msg += `\nИтого: ${total} ₽\n\nПерейти в оформление?`;
+
+      showModal('Корзина', msg, () => {
+        if (state.userBalance >= total) {
+          processCheckout(state.cartItems, total);
+        } else {
+          showToast('❌ Недостаточно средств');
+        }
+      });
+    }
+
+    function processCheckout(items, total) {
       const payload = {
         action: 'checkout',
-        items: [{ 
-          title: productName, 
-          price: parseInt(price), 
-          game: 'Game' 
-        }],
-        total: parseInt(price)
+        items: items.map(item => ({
+          game: state.currentGame.toUpperCase(),
+          title: `${item.gameName} - ${item.packName}`,
+          price: item.price,
+          uid: item.uid || '',
+          zone: item.zone || ''
+        })),
+        total: total
       };
 
       try {
-        if (tg?.sendData) {
+        if (tg.sendData) {
           tg.sendData(JSON.stringify(payload));
         }
       } catch (e) {
-        console.error('Failed to send purchase data', e);
+        console.error('Failed to send data:', e);
       }
 
-      showToast('✓ Заказ отправлен');
-      closeModal();
-    }
+      state.userBalance -= total;
+      updateBalance();
+      state.cartItems = [];
+      updateCartBadge();
 
-    // ==================== TOP-UP HANDLER ====================
-    function showTopupModal(amount) {
-      showModal(
-        'Пополнить баланс',
-        `Пополнить баланс аккаунта на ${amount} ₽ через DonationAlerts?`,
-        () => {
-          hapticNotify('success');
-          currentBalance += amount;
-          balanceAmount.textContent = currentBalance + ' ₽';
-          showToast(`✓ Баланс пополнен на ${amount} ₽`);
-        }
-      );
-    }
-
-    // ==================== EVENT LISTENERS - MAIN NAVIGATION ====================
-    btnCatalog.addEventListener('click', () => {
-      switchPage('catalog');
-    });
-
-    btnTopup.addEventListener('click', () => {
-      haptic('light');
-      switchPage('home');
-    });
-
-    tabItems.forEach((item) => {
-      item.addEventListener('click', () => {
-        haptic('light');
-        const page = item.dataset.page;
-        switchPage(page);
+      items.forEach(item => {
+        state.userOrders.push({
+          name: `${item.gameName} - ${item.packName}`,
+          price: item.price,
+          status: '✓ Доставлено',
+          date: new Date().toLocaleString('ru-RU')
+        });
       });
-    });
 
-    // ==================== EVENT LISTENERS - BALANCE MANAGEMENT ====================
-    btnBalanceAdd.addEventListener('click', () => {
+      hapticNotify('success');
+      showToast('✓ Заказ принят!');
+      switchPage('home');
+    }
+
+    function renderOrdersPage() {
+      if (state.userOrders.length === 0) {
+        ordersList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Нет заказов</p>';
+        return;
+      }
+      ordersList.innerHTML = state.userOrders.map(order => `
+        <div class="order-item">
+          <div class="order-info">
+            <div class="order-name">${order.name}</div>
+            <div class="order-status">${order.status}</div>
+          </div>
+          <div class="order-price">${order.price} ₽</div>
+        </div>
+      `).join('');
+    }
+
+    function renderProfilePage() {
+      const firstLetter = userData.first_name?.[0]?.toUpperCase() || 'U';
+      profileAvatar.textContent = firstLetter;
+      profileName.textContent = userData.first_name || 'Пользователь';
+      profileUsername.textContent = `@${userData.username || 'user'}`;
+      profileOrdersCount.textContent = state.userOrders.length;
+      profileSpentAmount.textContent = (state.userOrders.reduce((sum, o) => sum + o.price, 0)) + ' ₽';
+
+      if (isAdminUser) {
+        adminPanel.classList.add('visible');
+      }
+    }
+
+    function generatePromoCode() {
+      const code = `GHOST-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RAND`;
+      adminPromoCodeDisplay.textContent = code;
+      hapticNotify('success');
+      showToast('✓ Промокод создан: ' + code);
+    }
+
+    // ==================== EVENT LISTENERS ====================
+
+    // Constructor buttons
+    document.getElementById('btnAddToCart').addEventListener('click', () => {
       haptic('light');
-      showToast('💳 Выберите сумму пополнения');
+      if (!state.selectedPack) {
+        showToast('⚠️ Выберите пакет');
+        return;
+      }
+
+      const gameInfo = gamesData[state.currentGame];
+      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
+
+      const fieldValues = {};
+      document.querySelectorAll('.field-input').forEach(input => {
+        fieldValues[input.dataset.field] = input.value;
+      });
+
+      state.cartItems.push({
+        gameName: gameInfo.name,
+        packName: packInfo.name,
+        price: packInfo.price,
+        ...fieldValues
+      });
+
+      updateCartBadge();
+      hapticNotify('success');
+      showToast('✓ Добавлено в корзину');
     });
 
-    balanceButtons.forEach((btn) => {
+    document.getElementById('btnBuyNow').addEventListener('click', () => {
+      haptic('light');
+      if (!state.selectedPack) {
+        showToast('⚠️ Выберите пакет');
+        return;
+      }
+
+      const gameInfo = gamesData[state.currentGame];
+      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
+
+      const fieldValues = {};
+      document.querySelectorAll('.field-input').forEach(input => {
+        fieldValues[input.dataset.field] = input.value;
+      });
+
+      const item = {
+        gameName: gameInfo.name,
+        packName: packInfo.name,
+        price: packInfo.price,
+        ...fieldValues
+      };
+
+      if (state.userBalance >= item.price) {
+        processCheckout([item], item.price);
+      } else {
+        showToast('❌ Недостаточно средств');
+      }
+    });
+
+    // Balance buttons
+    document.querySelectorAll('.btn-amount').forEach(btn => {
       btn.addEventListener('click', () => {
         haptic('light');
         const amount = parseInt(btn.dataset.amount);
-        showTopupModal(amount);
-      });
-    });
-
-    // ==================== EVENT LISTENERS - PURCHASE ====================
-    buyButtons.forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        haptic('light');
-        const productName = btn.dataset.name;
-        const price = btn.dataset.price;
-
+        state.userBalance += amount;
+        updateBalance();
         hapticNotify('success');
-
-        showModal(
-          'Подтвердить покупку',
-          `${productName}\n\nИтого: ${price} ₽`,
-          () => sendPurchaseData(productName, price)
-        );
-
-        haptic('medium');
+        showToast(`✓ Баланс пополнен на ${amount} ₽`);
       });
     });
 
-    // ==================== EVENT LISTENERS - FILTER ====================
-    filterButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        haptic('light');
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        showToast('✓ Фильтр применен');
+    // Premium buttons
+    document.getElementById('btnPremiumHeader').addEventListener('click', () => {
+      haptic('light');
+      showModal('Premium подписка', 'Выберите тариф:\n\n⭐ Premium — 99 ₽/месяц\n👑 Premium+ — 199 ₽/месяц', () => {
+        state.userPremium = 'premium';
+        updateBalance();
+        showToast('⭐ Premium активирован!');
       });
     });
 
-    // ==================== EVENT LISTENERS - MODAL ====================
-    btnModalConfirm.addEventListener('click', () => {
-      if (pendingPurchase) {
-        pendingPurchase();
-        hapticNotify('success');
+    document.getElementById('btnUpgradePremium').addEventListener('click', () => {
+      haptic('light');
+      document.getElementById('btnPremiumHeader').click();
+    });
+
+    // Promo code
+    document.getElementById('btnActivatePromo').addEventListener('click', () => {
+      haptic('light');
+      const code = document.getElementById('promoCodeInput').value.trim();
+      if (!code) {
+        showToast('⚠️ Введите промокод');
+        return;
       }
+      state.userBalance += 50;
+      updateBalance();
+      hapticNotify('success');
+      showToast('✓ Промокод активирован! +50 ₽');
+      document.getElementById('promoCodeInput').value = '';
     });
 
-    btnModalCancel.addEventListener('click', () => {
-      closeModal();
+    // Admin panel
+    document.getElementById('btnGeneratePromo').addEventListener('click', () => {
       haptic('light');
+      generatePromoCode();
     });
 
-    modalBackdrop.addEventListener('click', (e) => {
-      if (e.target === modalBackdrop) {
-        closeModal();
-      }
-    });
-
-    // ==================== EVENT LISTENERS - HEADER ====================
-    btnPremium.addEventListener('click', () => {
-      haptic('light');
-      showToast('⭐ Premium функции');
-    });
-
-    btnNotifications.addEventListener('click', () => {
-      haptic('light');
-      showToast('🔔 Нет новых уведомлений');
-    });
-
-    btnHeaderProfile.addEventListener('click', () => {
-      haptic('light');
-      switchPage('profile');
-    });
-
-    // ==================== EVENT LISTENERS - CATEGORY CARDS ====================
-    document.querySelectorAll('.category-card').forEach(card => {
-      card.addEventListener('click', () => {
-        haptic('light');
-        const categoryName = card.querySelector('.category-name').textContent;
-        showToast(`📂 ${categoryName}`);
-      });
-    });
-
-    // ==================== EVENT LISTENERS - GAME CARDS ====================
-    document.querySelectorAll('.game-card').forEach(card => {
-      card.addEventListener('click', () => {
-        haptic('light');
-        const gameName = card.querySelector('.game-name').textContent;
-        showToast(`🎮 ${gameName}`);
-      });
-    });
-
-    // ==================== EVENT LISTENERS - AI BANNER ====================
-    document.querySelector('.ai-banner').addEventListener('click', () => {
-      haptic('light');
-      showToast('🤖 Ghost AI консультант');
-    });
-
-    // ==================== EVENT LISTENERS - PROFILE MENU ====================
-    document.getElementById('profileSettings').addEventListener('click', () => {
+    // Profile menu
+    document.getElementById('btnSettingsMenu').addEventListener('click', () => {
       haptic('light');
       showToast('⚙️ Настройки профиля');
     });
 
-    document.getElementById('profileHistory').addEventListener('click', () => {
+    document.getElementById('btnSupportMenu').addEventListener('click', () => {
       haptic('light');
-      showToast('📜 История операций');
-    });
-
-    document.getElementById('profileSupport').addEventListener('click', () => {
-      haptic('light');
-      try {
-        tg?.openTelegramLink?.('https://t.me/GhostMarket_support');
-      } catch (e) {
+      if (tg.openTelegramLink) {
+        tg.openTelegramLink('https://t.me/GhostMarket_support');
+      } else {
         showToast('💬 Контакт поддержки');
       }
     });
 
-    document.getElementById('profileLogout').addEventListener('click', () => {
+    document.getElementById('btnLogoutMenu').addEventListener('click', () => {
       haptic('light');
-      showToast('🚪 Выход из аккаунта');
+      showToast('🚪 Выход...');
     });
 
-    // ==================== PREVENT IOS ZOOM ====================
-    document.addEventListener('gesturestart', (e) => e.preventDefault());
+    // Tab bar
+    tabItems.forEach(item => {
+      item.addEventListener('click', () => {
+        haptic('light');
+        switchPage(item.dataset.page);
+      });
+    });
 
-    // ==================== GLOBAL DEBUG ====================
-    window._GM = { 
-      currentPage: () => currentPage, 
-      switchPage,
-      balance: () => currentBalance,
-      addBalance: (amount) => {
-        currentBalance += amount;
-        balanceAmount.textContent = currentBalance + ' ₽';
+    // Header buttons
+    document.getElementById('btnCartHeader').addEventListener('click', () => {
+      haptic('light');
+      switchPage('cart');
+    });
+
+    document.getElementById('btnNotifications').addEventListener('click', () => {
+      haptic('light');
+      showToast('🔔 Нет новых уведомлений');
+    });
+
+    document.getElementById('btnConstructorScroll').addEventListener('click', () => {
+      haptic('light');
+      const constructorElement = document.querySelector('.constructor-section');
+      if (constructorElement) {
+        constructorElement.scrollIntoView({ behavior: 'smooth' });
       }
-    };
+    });
+
+    // Modal
+    btnModalCancel.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    // Balance add button
+    document.getElementById('btnBalanceAdd').addEventListener('click', () => {
+      haptic('light');
+      showToast('💳 Выберите сумму пополнения');
+    });
+
+    document.getElementById('btnTopup').addEventListener('click', () => {
+      haptic('light');
+      showToast('💳 Переход к пополнению...');
+    });
+
+    // Initialize
+    renderGameSelector();
+    renderFields();
+    renderPacks();
+    updateBalance();
+    renderProfilePage();
   </script>
 </body>
 </html>
