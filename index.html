@@ -1,419 +1,592 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>GhostMarket</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <style>
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { margin: 0; min-height: 100vh; background: radial-gradient(circle at top,#0f172a 0%,#020617 55%,#01040e 100%); color: #e2e8f0; }
-        button, input { font: inherit; }
-        .page { padding: 20px 18px 100px; }
-        .card { background: rgba(15,23,42,0.92); border: 1px solid rgba(148,163,184,0.16); border-radius: 28px; }
-        .glass { backdrop-filter: blur(24px); background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.08); }
-        .neon-btn { border: none; border-radius: 20px; background: linear-gradient(135deg,#7c3aed,#2563eb); color: #fff; cursor: pointer; transition: transform .15s ease, opacity .15s ease; }
-        .neon-btn:hover { transform: translateY(-1px); opacity: .96; }
-        .hidden { display: none !important; }
-        .game-card { border: 1px solid rgba(148,163,184,0.16); border-radius: 24px; padding: 18px; min-width: 180px; transition: border-color .15s ease, transform .15s ease; background: rgba(15,23,42,0.95); }
-        .game-card:hover { transform: translateY(-2px); border-color: rgba(124,58,237,0.45); }
-        .game-card.selected { border-color: #7c3aed; box-shadow: 0 18px 38px rgba(124,58,237,0.14); }
-        .input-field { width: 100%; background: rgba(15,23,42,0.95); border: 1px solid rgba(148,163,184,0.18); border-radius: 18px; color: #e2e8f0; padding: 16px; }
-        .input-field::placeholder { color: #94a3b8; }
-        .hint { margin-top: 8px; font-size: 13px; color: #94a3b8; }
-        .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 18px; background: rgba(15,23,42,0.95); border: 1px solid rgba(148,163,184,0.18); border-radius: 18px; padding: 14px 18px; color: #fff; z-index: 90; pointer-events: none; opacity: 0; transition: opacity .2s ease; }
-        #floatingCart { position: fixed; right: 18px; bottom: 24px; z-index: 70; background: linear-gradient(135deg,#7c3aed,#2563eb); color: #fff; border: none; border-radius: 999px; padding: 14px 18px; display: flex; align-items: center; gap: 10px; box-shadow: 0 24px 70px rgba(39,36,127,0.25); cursor: pointer; }
-        #cartModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 80; background: rgba(0,0,0,0.72); padding: 18px; }
-        #cartModal.show { display: flex; }
-        #cartModal .modal { width: 100%; max-width: 720px; border-radius: 24px; background: #0b1226; padding: 22px; border: 1px solid rgba(148,163,184,0.14); }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>GhostMarket — Premium</title>
+
+  <!-- Tailwind CDN + custom config -->
+  <script>
+    tailwind = window.tailwind || {};
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gm-bg': '#090b11',
+            'gm-card': '#121622',
+            'gm-accent-blue': '#3b82f6',
+            'gm-accent-violet': '#8b5cf6',
+            'gm-price': '#10b981',
+            'gm-border': 'rgba(148,163,184,0.06)'
+          },
+          borderRadius: {
+            'xl-2': '16px',
+            'card': '24px'
+          },
+          boxShadow: {
+            'neon-lg': '0 20px 50px rgba(59,130,246,0.12), inset 0 1px 0 rgba(255,255,255,0.02)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#090b11;
+      --card:#121622;
+      --accent-blue:#3b82f6;
+      --accent-violet:#8b5cf6;
+      --price:#10b981;
+      --glass: rgba(255,255,255,0.02);
+    }
+    html,body { height:100%; background:var(--bg); font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; color:#cbd5e1; -webkit-tap-highlight-color: transparent;}
+    .page { max-width:980px; margin:0 auto; padding:18px; padding-bottom:120px; }
+    /* header */
+    .gm-header { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .gm-logo { display:flex; gap:12px; align-items:center; }
+    .gm-logo .gmark{ width:56px; height:56px; border-radius:14px; background:linear-gradient(135deg,var(--accent-violet),var(--accent-blue)); display:grid; place-items:center; box-shadow:0 8px 30px rgba(139,92,246,0.14), inset 0 1px 0 rgba(255,255,255,0.04); transform: perspective(600px) rotateX(6deg) rotateY(-8deg); }
+    .gm-logo .gmark span{ color:white; font-weight:800; font-size:24px; text-shadow: 0 6px 18px rgba(139,92,246,0.26); }
+    .gm-title { line-height:1; }
+    .gm-title h1{ font-size:18px; font-weight:800; color:#e6eef8; }
+    .gm-title p{ font-size:12px; color:#9aa7bf; margin-top:2px; }
+
+    .gm-rate{ background:linear-gradient(90deg,rgba(255,215,110,0.15), rgba(255,215,110,0.06)); color:#ffd77a; padding:6px 10px; border-radius:10px; display:inline-flex; gap:8px; align-items:center; font-weight:600; font-size:12px; box-shadow:0 6px 20px rgba(255,181,51,0.06); }
+
+    .gm-wallet{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px; display:flex; gap:10px; align-items:center; box-shadow: 0 12px 30px rgba(3,7,18,0.6); }
+    .gm-wallet .bal { font-weight:700; color:#e6eef8; font-size:16px; }
+    .gm-wallet .bal .amount { color:var(--price); font-weight:800; margin-left:6px; }
+
+    /* search */
+    .gm-search { margin-top:16px; display:flex; gap:12px; align-items:center; }
+    .gm-input {
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      padding:12px 14px; border-radius:14px; display:flex; gap:10px; align-items:center; width:100%;
+      backdrop-filter: blur(8px);
+      transition: box-shadow .25s ease, border-color .25s ease, transform .18s ease;
+    }
+    .gm-input:focus-within{ box-shadow: 0 6px 28px rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.45); transform:translateY(-2px); }
+    .gm-input input { background:transparent; border:0; outline:0; color:#e6eef8; width:100%; font-size:14px; }
+
+    /* stories carousel */
+    .gm-stories { margin-top:18px; display:flex; gap:12px; overflow-x:auto; padding-bottom:6px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+    .gm-banner { min-width:220px; height:92px; border-radius:16px; padding:14px; color:white; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 18px 50px rgba(11,22,42,0.6); scroll-snap-align:start; transition: transform .3s ease; border:1px solid rgba(255,255,255,0.03); }
+    .gm-banner:active{ transform: translateY(4px); }
+    .banner-grad-1{ background: linear-gradient(135deg, rgba(59,130,246,0.9), rgba(139,92,246,0.85)); }
+    .banner-grad-2{ background: linear-gradient(135deg, rgba(16,185,129,0.9), rgba(59,130,246,0.85)); }
+    .banner-grad-3{ background: linear-gradient(135deg, rgba(139,92,246,0.85), rgba(16,185,129,0.85)); }
+
+    /* games grid */
+    .games-grid{ margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; }
+    .game-tile{ background:var(--card); border-radius:16px; padding:12px; display:flex; align-items:center; gap:10px; border:1px solid var(--gm-border); transition: transform .25s ease, box-shadow .25s ease; box-shadow: 0 8px 30px rgba(2,6,23,0.6); }
+    .game-tile:hover{ transform: translateY(-6px); box-shadow: 0 30px 80px rgba(59,82,230,0.06); border-color: rgba(59,130,246,0.12); }
+    .game-tile.active{ border-color: rgba(139,92,246,0.28); box-shadow: 0 28px 80px rgba(139,92,246,0.08); }
+
+    .game-tile img { width:46px; height:46px; border-radius:10px; object-fit:cover; }
+
+    /* product card / constructor */
+    .product-card { margin-top:18px; background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01)); border-radius:24px; padding:16px; border:1px solid rgba(255,255,255,0.03); box-shadow: var(--gm-card-shadow, 0 14px 40px rgba(2,6,23,0.6)); display:flex; gap:14px; align-items:flex-start; }
+    .pc-left { flex:1; }
+    .pc-right { width:240px; display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
+
+    .field { background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:12px; border-radius:12px; width:100%; transition: box-shadow .18s ease, border-color .18s ease; display:flex; align-items:center; gap:10px; }
+    .field.invalid{ box-shadow: 0 8px 26px rgba(255,45,85,0.07); border-color: rgba(255,45,85,0.22); }
+    .field.valid{ box-shadow: 0 8px 26px rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.24); }
+
+    .select-packs { margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
+    .pack { padding:10px 12px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008)); border:1px solid rgba(255,255,255,0.03); cursor:pointer; transition: transform .18s ease, box-shadow .18s ease; min-width:120px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .pack.selected { transform:translateY(-6px); box-shadow:0 20px 60px rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.18); }
+
+    /* rolling price */
+    .price-slab { font-weight:800; color:var(--price); font-size:20px; display:inline-flex; gap:4px; align-items:baseline; }
+    .price-digit { display:inline-block; transform-origin:center; transition: transform .28s cubic-bezier(.2,.9,.2,1), opacity .28s; }
+
+    /* floating UFO cart */
+    #ufoCart { position:fixed; right:18px; bottom:86px; width:64px; height:64px; border-radius:999px; background:linear-gradient(135deg,var(--accent-violet),var(--accent-blue)); display:grid; place-items:center; box-shadow:0 24px 60px rgba(59,82,230,0.18); cursor:pointer; z-index:90; transform: translateY(140px) scale(.9); opacity:0; transition: transform .45s cubic-bezier(.2,.9,.2,1), opacity .35s; }
+    #ufoCart.visible{ transform: translateY(0) scale(1); opacity:1; }
+    #ufoBadge{ position:absolute; top:-6px; right:-6px; background:linear-gradient(90deg,#ff3b7a,#ffb86b); color:white; width:26px; height:26px; border-radius:999px; display:grid; place-items:center; font-weight:700; box-shadow:0 8px 18px rgba(255,59,122,0.12); font-size:13px; }
+
+    /* cart modal */
+    .cart-sheet { position:fixed; left:0; right:0; bottom:0; z-index:100; transform: translateY(110%); transition: transform .36s cubic-bezier(.2,.9,.25,1); background: linear-gradient(180deg, rgba(18,22,34,0.96), rgba(12,16,24,0.98)); border-top-left-radius:20px; border-top-right-radius:20px; padding:18px; box-shadow:0 -20px 80px rgba(2,6,23,0.8); max-height:84vh; overflow:auto; backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,0.02); }
+    .cart-sheet.visible{ transform: translateY(0); }
+    .cart-item { display:flex; gap:12px; align-items:center; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.02); background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008)); }
+    .cart-actions { display:flex; gap:8px; }
+
+    /* bottom tabbar */
+    .tabbar { position:fixed; left:12px; right:12px; bottom:12px; z-index:95; display:flex; justify-content:space-between; align-items:center; background: linear-gradient(180deg, rgba(12,16,24,0.9), rgba(8,10,16,0.96)); border-radius:18px; padding:10px 18px; border:1px solid rgba(255,255,255,0.02); box-shadow:0 18px 40px rgba(2,6,23,0.6); }
+    .tab-btn { color:#9aa7bf; display:flex; flex-direction:column; align-items:center; gap:6px; padding:8px; border-radius:12px; transition: transform .18s, color .18s; font-size:11px; }
+    .tab-btn.active{ color:var(--accent-blue); transform: translateY(-4px); }
+    .tab-dot { width:6px; height:6px; border-radius:999px; background:transparent; box-shadow:0 6px 18px rgba(59,130,246,0.16); transition: background .18s ease; }
+    .tab-btn.active .tab-dot{ background:var(--accent-blue); box-shadow:0 10px 38px rgba(59,130,246,0.18); }
+
+    /* theme (light toggled) */
+    .light { --bg:#f6f7fb; --card:#ffffff; --accent-blue:#0b67ff; --accent-violet:#7c3aed; --price:#0ea5a0; color:#0b1220; }
+    .light body { background:var(--bg); }
+
+    /* small adjustments */
+    @media (max-width:420px){ .gm-logo .gmark{ width:48px; height:48px } .pc-right{ width:200px } }
+  </style>
 </head>
-<body>
-<div class="page">
-    <div class="card glass p-6">
-        <p class="text-xs uppercase tracking-[0.35em] text-slate-400">GhostMarket</p>
-        <h1 class="mt-3 text-3xl font-extrabold text-white">Покупай быстро и безопасно</h1>
-        <p class="mt-4 text-slate-300 leading-7">Выбирай игру, вводи корректный ID, добавляй товары в корзину и оформляй оплату через бот. Яркий и понятный интерфейс.</p>
+<body class="antialiased">
+  <div class="page">
+    <!-- HEADER -->
+    <header class="gm-header">
+      <div class="gm-logo">
+        <div class="gmark" id="gmark"><span>G</span></div>
+        <div class="gm-title">
+          <h1>GhostMarket</h1>
+          <p>Premium game shop · secure</p>
+        </div>
+        <div class="gm-rate" title="Рейтинг">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="inline-block" xmlns="http://www.w3.org/2000/svg"><path d="M12 17.3L5.6 20l1-6.2L1.8 9.6l6.4-.9L12 3l3.8 5.7 6.4.9-4.8 4.2 1 6.2L12 17.3z" fill="#FFD56F"/></svg>
+          <span style="margin-left:4px">5.0 <small style="opacity:.8; margin-left:6px">· 42k</small></span>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; align-items:center;">
+        <div style="display:flex; flex-direction:column; align-items:flex-end;">
+          <div style="font-size:12px; color:#9aa7bf">Баланс</div>
+          <div class="gm-wallet" id="wallet">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7h14v10H3z" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="bal"> <span class="amount" id="balanceValue">0 ₽</span></div>
+          </div>
+        </div>
+
+        <button id="themeToggle" class="neon-btn px-3 py-2 rounded-xl" title="Light mode">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- SEARCH -->
+    <div class="gm-search">
+      <div class="gm-input" id="searchBox" role="search" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="rgba(255,255,255,0.6)" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="searchInput" placeholder="Найти игру, товар или акцию" />
+        <div style="width:8px"></div>
+      </div>
     </div>
 
-    <div class="card p-5 mt-6">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-                <p class="text-sm text-slate-400">Баланс</p>
-                <h2 id="balanceValue" class="mt-2 text-4xl font-bold text-white">0 ₽</h2>
-            </div>
-            <div class="rounded-[24px] bg-gradient-to-r from-violet-600 to-blue-500 px-4 py-3 text-white">
-                <p class="text-sm font-semibold">Безопасное пополнение</p>
-                <p class="text-xs opacity-80">Данные не сохраняются в браузере</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3 mt-5">
-            <button type="button" class="neon-btn py-4 text-sm font-semibold" data-amount="100">+100 ₽</button>
-            <button type="button" class="neon-btn py-4 text-sm font-semibold" data-amount="300">+300 ₽</button>
-            <button type="button" class="neon-btn py-4 text-sm font-semibold" data-amount="500">+500 ₽</button>
-        </div>
+    <!-- STORIES / BANNERS -->
+    <div class="gm-stories" id="stories">
+      <div class="gm-banner banner-grad-1">
+        <div style="font-weight:700">Stars 2.0</div>
+        <div style="font-size:12px; opacity:.95">Новая система бонусов — получи +20%</div>
+      </div>
+      <div class="gm-banner banner-grad-2">
+        <div style="font-weight:700">Конкурсы</div>
+        <div style="font-size:12px; opacity:.95">Еженедельные розыгрыши и подарки</div>
+      </div>
+      <div class="gm-banner banner-grad-3">
+        <div style="font-weight:700">Скидки дня</div>
+        <div style="font-size:12px; opacity:.95">Лучшие предложения — ограничено</div>
+      </div>
     </div>
 
-    <div class="card p-5 mt-6">
-        <div class="flex flex-col gap-4">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <p class="text-sm text-slate-400">Выберите игру</p>
-                    <h2 class="mt-2 text-2xl font-bold text-white">Топовые товары</h2>
-                </div>
-            </div>
-
-            <div class="flex gap-3 overflow-x-auto pb-2">
-                <button type="button" class="game-card selected" data-game="genshin">
-                    <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="" style="width: 56px; height: 56px;">
-                    <p class="mt-3 text-sm text-slate-300">Genshin Impact</p>
-                    <p class="mt-1 text-lg font-semibold text-white">Primogems</p>
-                </button>
-                <button type="button" class="game-card" data-game="brawl">
-                    <img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="" style="width: 56px; height: 56px;">
-                    <p class="mt-3 text-sm text-slate-300">Brawl Stars</p>
-                    <p class="mt-1 text-lg font-semibold text-white">Gems / Pass</p>
-                </button>
-                <button type="button" class="game-card" data-game="pubg">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="" style="width: 56px; height: 56px;">
-                    <p class="mt-3 text-sm text-slate-300">PUBG Mobile</p>
-                    <p class="mt-1 text-lg font-semibold text-white">UC / Pass</p>
-                </button>
-                <button type="button" class="game-card" data-game="freefire">
-                    <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="" style="width: 56px; height: 56px;">
-                    <p class="mt-3 text-sm text-slate-300">Free Fire</p>
-                    <p class="mt-1 text-lg font-semibold text-white">Diamonds</p>
-                </button>
-                <button type="button" class="game-card" data-game="standoff">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="" style="width: 56px; height: 56px;">
-                    <p class="mt-3 text-sm text-slate-300">Standoff 2</p>
-                    <p class="mt-1 text-lg font-semibold text-white">Coins</p>
-                </button>
-            </div>
-
-            <div class="grid gap-4 sm:grid-cols-2 mt-6">
-                <div>
-                    <label class="text-sm text-slate-400">User ID</label>
-                    <input id="inputUid" type="text" class="input-field mt-2" placeholder="100000000">
-                    <div id="uidHint" class="hint">Пример: 100000000</div>
-                </div>
-                <div>
-                    <label class="text-sm text-slate-400">Zone ID</label>
-                    <input id="inputZone" type="text" class="input-field mt-2" placeholder="zone1">
-                    <div class="hint">Zone ID не обязателен, если игра его не требует</div>
-                </div>
-            </div>
-
-            <div id="productList" class="grid gap-4 lg:grid-cols-2 mt-6"></div>
+    <!-- GAMES GRID -->
+    <div class="games-grid" id="gamesGrid" aria-label="Игры">
+      <div class="game-tile active" data-key="genshin">
+        <img src="https://raw.githubusercontent.com/observely/ghost-assets/main/genshin.png" alt="Genshin" loading="lazy"/>
+        <div>
+          <div style="font-weight:700; color:#e6eef8">Genshin Impact</div>
+          <div style="font-size:12px; color:#9aa7bf">Primogems</div>
         </div>
+      </div>
+      <div class="game-tile" data-key="brawl">
+        <img src="https://raw.githubusercontent.com/observely/ghost-assets/main/brawl.png" alt="Brawl" loading="lazy"/>
+        <div>
+          <div style="font-weight:700; color:#e6eef8">Brawl Stars</div>
+          <div style="font-size:12px; color:#9aa7bf">Gems / Pass</div>
+        </div>
+      </div>
+      <div class="game-tile" data-key="pubg">
+        <img src="https://raw.githubusercontent.com/observely/ghost-assets/main/pubg.png" alt="PUBG" loading="lazy"/>
+        <div>
+          <div style="font-weight:700; color:#e6eef8">PUBG Mobile</div>
+          <div style="font-size:12px; color:#9aa7bf">UC / Pass</div>
+        </div>
+      </div>
+      <div class="game-tile" data-key="ml">
+        <img src="https://raw.githubusercontent.com/observely/ghost-assets/main/ml.png" alt="ML" loading="lazy"/>
+        <div>
+          <div style="font-weight:700; color:#e6eef8">Mobile Legends</div>
+          <div style="font-size:12px; color:#9aa7bf">Diamonds</div>
+        </div>
+      </div>
+      <div class="game-tile" data-key="ff">
+        <img src="https://raw.githubusercontent.com/observely/ghost-assets/main/ff.png" alt="FF" loading="lazy"/>
+        <div>
+          <div style="font-weight:700; color:#e6eef8">Free Fire</div>
+          <div style="font-size:12px; color:#9aa7bf">Diamonds</div>
+        </div>
+      </div>
     </div>
-</div>
 
-<button id="floatingCart" class="hidden">
-    🛒 <span id="floatingCartCount">0</span>
-</button>
+    <!-- PRODUCT / CONSTRUCTOR -->
+    <section class="product-card" id="constructor">
+      <div class="pc-left">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:68px; height:68px; border-radius:12px; background:linear-gradient(135deg,var(--accent-blue),var(--accent-violet)); display:grid; place-items:center; font-weight:800; color:white; box-shadow:0 18px 60px rgba(59,130,246,0.12);">G</div>
+          <div>
+            <div id="selectedGameTitle" style="font-weight:800; color:#e6eef8; font-size:16px">Genshin Impact</div>
+            <div style="font-size:13px; color:#9aa7bf; margin-top:4px">Выберите пакет и введите ID</div>
+          </div>
+        </div>
 
-<div id="cartModal" class="hidden" aria-hidden="true">
-    <div class="modal">
-        <div class="flex items-center justify-between gap-3">
-            <div>
-                <h3 class="text-xl font-semibold text-white">Корзина</h3>
-                <p class="text-sm text-slate-400">Проверьте товары перед оплатой</p>
-            </div>
-            <button id="closeCart" type="button" class="neon-btn px-4 py-2">Закрыть</button>
+        <div style="margin-top:14px; display:flex; gap:10px; flex-direction:column;">
+          <div class="field" id="uidField">
+            <svg id="uidIcon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM3 21v-1a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v1" stroke="rgba(255,255,255,0.6)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="uidInput" placeholder="User ID — пример 100000000" />
+            <svg id="uidOk" width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0"><path d="M20 6L9 17l-5-5" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+
+          <div class="field" id="zoneField">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 18 0" stroke="rgba(255,255,255,0.6)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="zoneInput" placeholder="Zone (если необходимо)" />
+            <svg id="zoneOk" width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0"><path d="M20 6L9 17l-5-5" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+
+          <div style="margin-top:8px; font-size:13px; color:#9aa7bf">Выберите пакет</div>
+
+          <div class="select-packs" id="packs">
+            <!-- packs injected by JS -->
+          </div>
         </div>
-        <div id="cartList" class="mt-4 space-y-3">
-            <div class="rounded-[16px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>
+      </div>
+
+      <div class="pc-right">
+        <div style="width:100%; text-align:right;">
+          <div style="font-size:12px; color:#9aa7bf">Итог</div>
+          <div class="price-slab" id="priceDisplay"><span class="price-digit">0</span> ₽</div>
         </div>
-        <div class="mt-5 flex items-center justify-between">
-            <span class="text-sm text-slate-400">Итог</span>
-            <span id="cartTotal" class="text-xl font-bold text-white">0 ₽</span>
-        </div>
-        <button id="checkoutButton" type="button" class="neon-btn w-full py-4 mt-4">Оформить оплату</button>
+
+        <button id="addToCart" class="neon-btn px-4 py-3 rounded-xl shadow-neon-lg" style="width:100%; margin-top:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <span>Добавить в корзину</span>
+            <strong id="priceOnBtn" style="color:var(--price)">0 ₽</strong>
+          </div>
+        </button>
+
+        <button id="buyNow" class="neon-btn px-4 py-3 rounded-xl" style="width:100%; margin-top:8px; background:linear-gradient(90deg,var(--accent-blue),var(--accent-violet));">
+          Купить сейчас
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- UFO cart -->
+  <div id="ufoCart" aria-label="Корзина">
+    <div id="ufoBadge">0</div>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 3c3 0 5 3.6 5 6.5S15 17 12 17 7 14.4 7 9.5 9 3 12 3z" fill="white" opacity="0.92"/></svg>
+  </div>
+
+  <!-- cart sheet -->
+  <div id="cartSheet" class="cart-sheet" aria-hidden="true">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <div>
+        <div style="font-weight:800; color:#e6eef8">Корзина</div>
+        <div style="font-size:13px; color:#9aa7bf">Проверьте и подтвердите заказ</div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button id="clearCart" class="neon-btn px-3 py-2 rounded-xl" style="background:transparent; border:1px solid rgba(255,255,255,0.03); color:#e6eef8">Очистить</button>
+        <button id="closeSheet" class="neon-btn px-3 py-2 rounded-xl">Готово</button>
+      </div>
     </div>
-</div>
 
-<div id="toast" class="toast"></div>
+    <div id="cartItems" style="display:flex; flex-direction:column; gap:10px;">
+      <!-- items -->
+    </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const tg = window.Telegram?.WebApp;
-    if (tg?.ready) tg.ready();
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+      <div style="color:#9aa7bf">Итого</div>
+      <div style="font-weight:800; color:var(--price)" id="sheetTotal">0 ₽</div>
+    </div>
 
-    const games = {
-        genshin: {
-            name: 'Genshin Impact',
-            uidExample: '100000000',
-            validator: /^\d{8,10}$|^1\d{8,10}$/,
-            products: [
-                { title: '60 Primogems', price: 229 },
-                { title: '180 Primogems', price: 569 },
-                { title: '420 Primogems', price: 1249 }
-            ]
-        },
-        brawl: {
-            name: 'Brawl Stars',
-            uidExample: '#ABC123',
-            validator: /^#?[A-Z0-9\-]{3,12}$/,
-            products: [
-                { title: '80 Gems', price: 99 },
-                { title: '250 Gems', price: 229 },
-                { title: 'Brawl Pass', price: 189 }
-            ]
-        },
-        pubg: {
-            name: 'PUBG Mobile',
-            uidExample: '123456789',
-            validator: /^\d{8,12}$/,
-            products: [
-                { title: '100 UC', price: 199 },
-                { title: '330 UC', price: 499 },
-                { title: 'Elite Pass', price: 179 }
-            ]
-        },
-        freefire: {
-            name: 'Free Fire',
-            uidExample: '12345678',
-            validator: /^\d{6,12}$/,
-            products: [
-                { title: '50 Diamonds', price: 139 },
-                { title: '120 Diamonds', price: 329 },
-                { title: 'Elite Pass', price: 189 }
-            ]
-        },
-        standoff: {
-            name: 'Standoff 2',
-            uidExample: '12345678',
-            validator: /^\d{6,12}$/,
-            products: [
-                { title: '200 Coins', price: 149 },
-                { title: '600 Coins', price: 399 },
-                { title: 'Diamond Case', price: 179 }
-            ]
-        }
+    <div style="margin-top:12px;">
+      <button id="payBtn" class="neon-btn w-full py-3 rounded-2xl" style="background:linear-gradient(90deg,var(--accent-violet),var(--accent-blue));">Оплатить</button>
+    </div>
+  </div>
+
+  <!-- bottom tabbar -->
+  <nav class="tabbar" role="navigation" aria-label="Меню">
+    <button class="tab-btn active" data-tab="search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="tab-dot"></span></button>
+    <button class="tab-btn" data-tab="games"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="tab-dot"></span></button>
+    <button class="tab-btn" data-tab="sell" style="background:linear-gradient(90deg,var(--accent-blue),var(--accent-violet)); color:white; padding:10px 16px; border-radius:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    <button class="tab-btn" data-tab="chats"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span class="tab-dot"></span></button>
+    <button class="tab-btn" data-tab="profile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM3 21v-1a6 6 0 0 1 6-6h6a6 6 0 0 1 6 6v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="tab-dot"></span></button>
+  </nav>
+
+  <!-- SCRIPT: logic, validation, UI behavior, tg integration -->
+  <script>
+    // Telegram WebApp init
+    const tg = window.Telegram?.WebApp || (window.TelegramWebApp && window.TelegramWebApp);
+    try { tg?.ready?.(); } catch(e){ console.warn(e); }
+
+    // Helpers: haptics safe
+    function haptic(kind='light'){ try{ tg?.HapticFeedback?.impactOccurred?.(kind); }catch(e){} }
+
+    // Data
+    const GAMES = {
+      genshin: { title:'Genshin Impact', uidExample:'100000000', uidRe:/^\d{7,11}$/ },
+      brawl:   { title:'Brawl Stars', uidExample:'#ABC123', uidRe:/^#?[A-Z0-9\-]{3,12}$/i },
+      pubg:    { title:'PUBG Mobile', uidExample:'123456789', uidRe:/^\d{7,12}$/ },
+      ml:      { title:'Mobile Legends', uidExample:'UID1234', uidRe:/^\w{4,16}$/ },
+      ff:      { title:'Free Fire', uidExample:'12345678', uidRe:/^\d{6,12}$/ }
     };
 
-    const state = {
-        balance: Number(localStorage.getItem('gm_balance') || 0),
-        selectedGame: 'genshin',
-        cart: JSON.parse(localStorage.getItem('gm_cart') || '[]')
+    const PACKS = [
+      { id:'p1', title:'60 Кристаллов', price:229 },
+      { id:'p2', title:'300 Кристаллов', price:569 },
+      { id:'p3', title:'Луна — Легенда', price:1249 }
+    ];
+
+    // State
+    let state = {
+      theme:'dark',
+      activeGame:'genshin',
+      selectedPack: PACKS[0].id,
+      cart: JSON.parse(localStorage.getItem('gm_cart')||'[]'),
+      balance: Number(localStorage.getItem('gm_balance')||0)
     };
 
+    // Elements
+    const gamesGrid = document.getElementById('gamesGrid');
+    const packsNode = document.getElementById('packs');
+    const uidInput = document.getElementById('uidInput');
+    const zoneInput = document.getElementById('zoneInput');
+    const uidField = document.getElementById('uidField');
+    const zoneField = document.getElementById('zoneField');
+    const uidOk = document.getElementById('uidOk');
+    const zoneOk = document.getElementById('zoneOk');
+    const priceDisplay = document.getElementById('priceDisplay');
+    const priceOnBtn = document.getElementById('priceOnBtn');
+    const priceDigits = document.querySelectorAll('.price-digit');
+    const addToCartBtn = document.getElementById('addToCart');
+    const ufoCart = document.getElementById('ufoCart');
+    const ufoBadge = document.getElementById('ufoBadge');
+    const cartSheet = document.getElementById('cartSheet');
+    const cartItemsNode = document.getElementById('cartItems');
+    const sheetTotal = document.getElementById('sheetTotal');
+    const closeSheet = document.getElementById('closeSheet');
+    const clearCartBtn = document.getElementById('clearCart');
+    const payBtn = document.getElementById('payBtn');
+    const themeToggle = document.getElementById('themeToggle');
     const balanceValue = document.getElementById('balanceValue');
-    const productList = document.getElementById('productList');
-    const uidInput = document.getElementById('inputUid');
-    const zoneInput = document.getElementById('inputZone');
-    const uidHint = document.getElementById('uidHint');
-    const floatingCart = document.getElementById('floatingCart');
-    const floatingCartCount = document.getElementById('floatingCartCount');
-    const cartModal = document.getElementById('cartModal');
-    const closeCart = document.getElementById('closeCart');
-    const cartList = document.getElementById('cartList');
-    const cartTotal = document.getElementById('cartTotal');
-    const checkoutButton = document.getElementById('checkoutButton');
-    const toast = document.getElementById('toast');
+    const selectedGameTitle = document.getElementById('selectedGameTitle');
 
-    function saveState() {
-        localStorage.setItem('gm_balance', String(state.balance));
-        localStorage.setItem('gm_cart', JSON.stringify(state.cart));
-    }
-
-    function renderBalance() {
-        balanceValue.textContent = `${state.balance} ₽`;
-    }
-
-    function renderGames() {
-        document.querySelectorAll('[data-game]').forEach(btn => {
-            btn.classList.toggle('selected', btn.dataset.game === state.selectedGame);
+    // Init UI
+    function renderPacks(){
+      packsNode.innerHTML = PACKS.map(p=>`
+        <div class="pack ${state.selectedPack===p.id ? 'selected' : ''}" data-id="${p.id}">
+          <div style="display:flex; flex-direction:column;">
+            <div style="font-weight:700; color:#e6eef8">${p.title}</div>
+            <div style="font-size:12px; color:#9aa7bf">Популярный</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:800; color:var(--price);">${p.price} ₽</div>
+            <div style="font-size:11px; color:#9aa7bf">Купить</div>
+          </div>
+        </div>
+      `).join('');
+      packsNode.querySelectorAll('.pack').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          state.selectedPack = el.dataset.id;
+          haptic('medium');
+          renderPacks();
+          updatePrice();
         });
-        const game = games[state.selectedGame];
-        uidHint.textContent = `Пример ID: ${game.uidExample}`;
-        uidInput.placeholder = game.uidExample;
-        renderProducts();
+      });
     }
 
-    function renderProducts() {
-        const game = games[state.selectedGame];
-        productList.innerHTML = game.products.map((product, idx) => `
-            <div class="card p-4">
-                <div class="flex items-start gap-4">
-                    <div>
-                        <p class="text-sm text-slate-400">${game.name}</p>
-                        <p class="mt-2 text-lg font-semibold text-white">${product.title}</p>
-                    </div>
-                    <div class="ml-auto text-xl font-bold text-white">${product.price} ₽</div>
-                </div>
-                <button type="button" class="neon-btn w-full py-3 mt-4 add-to-cart" data-index="${idx}">
-                    Добавить в корзину
-                </button>
-            </div>
-        `).join('');
+    function updatePrice(){
+      const pack = PACKS.find(p=>p.id===state.selectedPack) || PACKS[0];
+      // animate price change: fade out -> change -> fade in
+      const newText = pack.price + ' ₽';
+      priceOnBtn.textContent = newText;
+      // simple digit roll: rebuild digits
+      priceDisplay.innerHTML = newText.split('').map(ch=>{
+        return `<span class="price-digit">${ch}</span>`;
+      }).join('');
+      // small animation
+      document.querySelectorAll('.price-digit').forEach((d,i)=>{
+        d.style.transform = 'translateY(8px) scale(.96)';
+        d.style.opacity = '0';
+        setTimeout(()=>{ d.style.transform='translateY(0) scale(1)'; d.style.opacity='1'; }, 30 + i*30);
+      });
+    }
 
-        document.querySelectorAll('.add-to-cart').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const idx = Number(btn.dataset.index);
-                const product = games[state.selectedGame].products[idx];
-                state.cart.push({
-                    gameKey: state.selectedGame,
-                    gameName: games[state.selectedGame].name,
-                    title: product.title,
-                    price: product.price
-                });
-                saveState();
-                renderCart();
-                showToast('Добавлено в корзину');
-            });
+    function refreshCartUI(){
+      const count = state.cart.length;
+      ufoBadge.textContent = count;
+      ufoBadge.style.opacity = count? '1':'0';
+      if(count) ufoCart.classList.add('visible'); else ufoCart.classList.remove('visible');
+
+      cartItemsNode.innerHTML = count ? state.cart.map((it,idx)=>`
+        <div class="cart-item" data-idx="${idx}">
+          <div style="flex:1">
+            <div style="font-weight:700; color:#e6eef8">${it.title}</div>
+            <div style="font-size:12px; color:#9aa7bf">${it.game}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:800; color:var(--price)">${it.price} ₽</div>
+            <button class="neon-btn" data-remove="${idx}" style="margin-top:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); padding:6px 8px">Удалить</button>
+          </div>
+        </div>
+      `).join('') : `<div style="padding:12px; color:#9aa7bf">Корзина пуста</div>`;
+
+      cartItemsNode.querySelectorAll('[data-remove]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const idx = Number(btn.dataset.remove);
+          state.cart.splice(idx,1);
+          saveState(); refreshCartUI(); haptic('light');
         });
+      });
+
+      const total = state.cart.reduce((s,i)=>s+i.price,0);
+      sheetTotal.textContent = total + ' ₽';
+      balanceValue.textContent = state.balance + ' ₽';
     }
 
-    function renderCart() {
-        if (!state.cart.length) {
-            cartList.innerHTML = '<div class="rounded-[16px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>';
-            cartTotal.textContent = '0 ₽';
-            floatingCartCount.textContent = '0';
-            return;
-        }
+    function saveState(){ localStorage.setItem('gm_cart', JSON.stringify(state.cart)); localStorage.setItem('gm_balance', String(state.balance)); }
 
-        cartList.innerHTML = state.cart.map((item, idx) => `
-            <div class="rounded-[16px] bg-[#0f172a] p-4 flex items-center justify-between gap-4">
-                <div>
-                    <p class="text-sm text-slate-400">${item.gameName}</p>
-                    <p class="mt-1 text-white font-semibold">${item.title}</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-white font-bold">${item.price} ₽</p>
-                    <button type="button" class="text-xs text-slate-400 mt-2 remove-item" data-index="${idx}">Удалить</button>
-                </div>
-            </div>
-        `).join('');
-
-        document.querySelectorAll('.remove-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                state.cart.splice(Number(btn.dataset.index), 1);
-                saveState();
-                renderCart();
-                showToast('Товар удалён');
-            });
-        });
-
-        cartTotal.textContent = `${state.cart.reduce((sum, item) => sum + item.price, 0)} ₽`;
-        floatingCartCount.textContent = String(state.cart.length);
+    // Validation live
+    function validateUid(){
+      const g = GAMES[state.activeGame];
+      const ok = g.uidRe.test(uidInput.value.trim());
+      uidField.classList.toggle('valid', ok);
+      uidField.classList.toggle('invalid', !ok && uidInput.value.length>0);
+      uidOk.style.opacity = ok ? '1' : '0';
+      return ok;
+    }
+    function validateZone(){
+      const ok = zoneInput.value.trim().length===0 || zoneInput.value.trim().length>=2;
+      zoneField.classList.toggle('valid', ok && zoneInput.value.length>0);
+      zoneField.classList.toggle('invalid', !ok && zoneInput.value.length>0);
+      zoneOk.style.opacity = ok && zoneInput.value.length>0 ? '1' : '0';
+      return ok;
     }
 
-    function setCartVisible(show) {
-        if (show && state.cart.length) {
-            cartModal.classList.add('show');
-            cartModal.classList.remove('hidden');
-        } else {
-            cartModal.classList.remove('show');
-            cartModal.classList.add('hidden');
-        }
-    }
-
-    function updateFloatingCart() {
-        floatingCart.classList.toggle('hidden', state.cart.length === 0);
-    }
-
-    function showToast(text) {
-        toast.textContent = text;
-        toast.style.opacity = '1';
-        clearTimeout(window.toastTimeout);
-        window.toastTimeout = setTimeout(() => {
-            toast.style.opacity = '0';
-        }, 1800);
-    }
-
-    function sendWebAppData(payload) {
-        try {
-            window.Telegram?.WebApp?.sendData(JSON.stringify(payload));
-        } catch (err) {
-            console.warn('sendData failed', err);
-        }
-    }
-
-    document.querySelectorAll('[data-game]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            state.selectedGame = btn.dataset.game;
-            renderGames();
-        });
+    // Add to cart
+    addToCartBtn.addEventListener('click', ()=>{
+      if(!validateUid()){ uidInput.focus(); showToast('Проверьте User ID'); return; }
+      if(!validateZone()){ zoneInput.focus(); showToast('Проверьте Zone'); return; }
+      const pack = PACKS.find(p=>p.id===state.selectedPack);
+      state.cart.push({ game:GAMES[state.activeGame].title, title:pack.title, price:pack.price, uid:uidInput.value.trim(), zone:zoneInput.value.trim() });
+      saveState(); refreshCartUI(); haptic('medium');
+      // notify Telegram bot locally
+      try{ tg?.sendData?.(JSON.stringify({ type:'cart_add', game:state.activeGame, pack:pack.id, price:pack.price, uid:uidInput.value.trim(), zone:zoneInput.value.trim() })); }catch(e){}
+      showToast('Добавлено в корзину');
     });
 
-    document.querySelectorAll('[data-amount]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            state.balance += Number(btn.dataset.amount);
-            saveState();
-            renderBalance();
-            showToast(`+${btn.dataset.amount} ₽`);
-            sendWebAppData({ type: 'balance_update', amount: Number(btn.dataset.amount) });
-        });
+    // Buy now
+    document.getElementById('buyNow').addEventListener('click', ()=>{
+      if(!validateUid()){ uidInput.focus(); showToast('Проверьте User ID'); return; }
+      if(state.cart.length===0){ showToast('Корзина пуста — добавьте пакет'); return; }
+      haptic('heavy');
+      // send checkout payload
+      const total = state.cart.reduce((s,i)=>s+i.price,0);
+      try{ tg?.sendData?.(JSON.stringify({ type:'checkout', products:state.cart, total })); }catch(e){}
+      showToast('Заказ отправлен в бот');
     });
 
-    floatingCart.addEventListener('click', () => setCartVisible(true));
-    closeCart.addEventListener('click', () => setCartVisible(false));
-    cartModal.addEventListener('click', event => {
-        if (event.target === cartModal) setCartVisible(false);
+    // UFO click open sheet
+    ufoCart.addEventListener('click', ()=>{ cartSheet.classList.add('visible'); cartSheet.setAttribute('aria-hidden','false'); haptic('light'); });
+
+    // sheet controls
+    closeSheet.addEventListener('click', ()=>{ cartSheet.classList.remove('visible'); cartSheet.setAttribute('aria-hidden','true'); haptic('light'); });
+    clearCartBtn.addEventListener('click', ()=>{ state.cart = []; saveState(); refreshCartUI(); haptic('light'); });
+    payBtn.addEventListener('click', ()=>{
+      if(state.cart.length===0){ showToast('Корзина пуста'); return; }
+      const total = state.cart.reduce((s,i)=>s+i.price,0);
+      // optimistic: reduce local balance and send checkout
+      if(state.balance < total){ showToast('Недостаточно баланса'); return; }
+      state.balance -= total; saveState(); refreshCartUI();
+      try{ tg?.sendData?.(JSON.stringify({ type:'checkout', products:state.cart, total })); }catch(e){}
+      state.cart = []; saveState(); refreshCartUI();
+      showToast('Оплата начата'); haptic('heavy');
+      cartSheet.classList.remove('visible');
     });
 
-    checkoutButton.addEventListener('click', () => {
-        const uid = uidInput.value.trim();
-        const zone = zoneInput.value.trim();
-        const game = games[state.selectedGame];
-
-        if (!uid) {
-            showToast('Введите корректный User ID');
-            uidInput.focus();
-            return;
-        }
-        if (game.validator && !game.validator.test(uid)) {
-            showToast('ID введён не по формату');
-            uidInput.focus();
-            return;
-        }
-        if (!state.cart.length) {
-            showToast('Корзина пуста');
-            return;
-        }
-
-        const total = state.cart.reduce((sum, item) => sum + item.price, 0);
-        if (state.balance < total) {
-            showToast('Недостаточно баланса');
-            return;
-        }
-
-        state.balance -= total;
-        saveState();
-        renderBalance();
-
-        const productTitles = state.cart.map(item => item.title).join(', ');
-        state.cart = [];
-        saveState();
-        renderCart();
-        updateFloatingCart();
-        setCartVisible(false);
-
-        sendWebAppData({
-            type: 'checkout',
-            product: productTitles,
-            price: total,
-            uid,
-            zone
-        });
-
-        showToast('Заказ отправлен в бот');
+    // tabs behaviour
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        haptic('light');
+        // we can scroll to relevant section (search/games)
+        const tab = btn.dataset.tab;
+        if(tab==='games'){ document.querySelector('#gamesGrid').scrollIntoView({behavior:'smooth'}); }
+        if(tab==='search'){ document.querySelector('#searchBox').scrollIntoView({behavior:'smooth'}); document.getElementById('searchInput').focus(); }
+      });
     });
 
-    uidInput.addEventListener('input', () => {
-        uidInput.classList.remove('border-red-500');
+    // game selection
+    gamesGrid.querySelectorAll('.game-tile').forEach(tile=>{
+      tile.addEventListener('click', ()=>{
+        gamesGrid.querySelectorAll('.game-tile').forEach(t=>t.classList.remove('active'));
+        tile.classList.add('active');
+        state.activeGame = tile.dataset.key;
+        selectedGameTitle.textContent = GAMES[state.activeGame].title;
+        uidInput.placeholder = 'Пример ' + GAMES[state.activeGame].uidExample;
+        haptic('medium');
+        // notify change
+        try{ tg?.sendData?.(JSON.stringify({ type:'game_change', game:state.activeGame })); }catch(e){}
+      });
     });
 
-    renderBalance();
-    renderGames();
-    renderCart();
-    updateFloatingCart();
-    setCartVisible(false);
-});
-</script>
+    // input listeners
+    uidInput.addEventListener('input', ()=>{ validateUid(); });
+    zoneInput.addEventListener('input', ()=>{ validateZone(); });
+
+    // theme toggle
+    themeToggle.addEventListener('click', ()=>{
+      document.documentElement.classList.toggle('light');
+      state.theme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+      haptic('light');
+    });
+
+    // stories touch smoothing: nothing extra needed — CSS scroll-snap works with finger
+
+    // small toast
+    let toastTimer;
+    function showToast(text){
+      const node = document.createElement('div');
+      node.style.position='fixed'; node.style.left='50%'; node.style.transform='translateX(-50%)'; node.style.bottom='100px';
+      node.style.background='rgba(10,14,22,0.9)'; node.style.color='white'; node.style.padding='10px 14px'; node.style.borderRadius='12px'; node.style.boxShadow='0 18px 50px rgba(3,7,18,0.6)'; node.style.zIndex=200;
+      node.style.fontWeight=700; node.textContent=text;
+      document.body.appendChild(node);
+      clearTimeout(toastTimer); toastTimer=setTimeout(()=>{ node.style.transition='opacity .24s'; node.style.opacity='0'; setTimeout(()=>node.remove(),280); },1600);
+    }
+
+    // initial render
+    renderPacks();
+    updatePrice();
+    refreshCartUI();
+
+    // show ufo if items exist
+    if(state.cart.length) ufoCart.classList.add('visible');
+
+    // keyboard: Enter in search triggers haptic and fake search send
+    document.getElementById('searchInput').addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){ haptic('light'); showToast('Ищем: '+e.target.value); try{ tg?.sendData?.(JSON.stringify({ type:'search', q:e.target.value })); }catch(e){} }
+    });
+
+    // safe on unload
+    window.addEventListener('beforeunload', ()=> saveState() );
+
+    // expose for debug
+    window._gm = { state, GAMES, PACKS };
+
+    /* Accessibility: announce WebApp ready to tg */
+    try{ tg?.sendData?.(JSON.stringify({ type:'webapp_ready' })); }catch(e){}
+
+  </script>
 </body>
 </html>
