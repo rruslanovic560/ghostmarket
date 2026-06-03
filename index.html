@@ -3,194 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GhostMarket Premium</title>
+    <title>GhostMarket</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .active-tab { color: #3b82f6 !important; position: relative; }
-        .active-tab::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: #3b82f6; border-radius: 99px; }
-        .glow-button { background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4); }
-        .glow-button:active { transform: scale(0.98); box-shadow: 0 2px 10px rgba(37, 99, 235, 0.2); }
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0a0e27; color: #f3f4f6; }
+        .glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        .card { background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%); border: 1px solid #2d3748; }
+        .btn-primary { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
+        .btn-primary:active { transform: scale(0.98); }
+        .notify { position: fixed; top: 20px; right: 20px; background: #10b981; padding: 15px 20px; border-radius: 10px; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
     </style>
 </head>
-<body class="bg-[#0e1015] text-[#f3f4f6] antialiased pb-28 select-none">
+<body class="pb-24">
 
-    <header class="p-4 flex justify-between items-center bg-[#141721] border-b border-[#1f2433] sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
-        <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center font-black text-lg text-white shadow-md shadow-blue-500/20">
-                G
-            </div>
+    <div class="p-4 sticky top-0 bg-[#0a0e27]/95 backdrop-blur z-50 border-b border-[#2d3748]">
+        <div class="flex justify-between items-center">
             <div>
-                <div class="flex items-center gap-1.5">
-                    <h1 class="text-base font-black tracking-tight text-white">GhostMarket</h1>
-                    <span class="flex items-center gap-0.5 text-[10px] bg-blue-500/10 text-blue-400 font-bold px-1.5 py-0.5 rounded-md border border-blue-500/20">
-                        ★ 5.0
-                    </span>
-                </div>
-                <p class="text-[11px] text-[#6b7280]">Маркетплейс игр и валюты</p>
+                <h1 class="text-xl font-black">🔥 GHOSTMARKET</h1>
+                <p class="text-xs text-gray-400">Premium Shop</p>
+            </div>
+            <div class="card px-4 py-2 rounded-lg text-center">
+                <p class="text-xs text-gray-400">Баланс</p>
+                <p id="balance" class="text-lg font-black text-emerald-400">0.00 ₽</p>
             </div>
         </div>
-        <div class="bg-[#1c2130] border border-[#2a3147] px-3.5 py-1.5 rounded-xl text-xs font-bold text-white flex items-center gap-1.5">
-            <span class="text-emerald-400">⚡</span> <span id="balance">0.00</span> ₽
-        </div>
-    </header>
-
-    <div class="p-4">
-        <div class="relative flex items-center">
-            <span class="absolute left-4 text-[#6b7280] text-base">🔍</span>
-            <input type="text" id="search-input" placeholder="Поиск игр и приложений" class="w-full bg-[#141721] border border-[#1f2433] text-white rounded-xl py-3.5 pl-12 pr-4 text-xs font-medium placeholder-[#4b5563] focus:outline-none focus:border-blue-500 focus:bg-[#161a26] transition-all">
-        </div>
     </div>
 
-    <div class="px-4 flex gap-5 overflow-x-auto no-scrollbar text-xs font-bold uppercase tracking-wider border-b border-[#1f2433] mb-4">
-        <button class="active-tab pb-3 text-white shrink-0 flex items-center gap-1" data-tab="main">🧭 Главная</button>
-        <button class="text-[#6b7280] pb-3 shrink-0 flex items-center gap-1" data-tab="donate">⚡ Донат</button>
-        <button class="text-[#6b7280] pb-3 shrink-0 flex items-center gap-1" data-tab="subs">📂 Подписки</button>
-        <button class="text-[#6b7280] pb-3 shrink-0 flex items-center gap-1" data-tab="accounts">👑 Аккаунты</button>
-    </div>
-
-    <div class="px-4 mb-6 flex gap-3 overflow-x-auto no-scrollbar">
-        <div class="min-w-[280px] h-36 bg-gradient-to-br from-[#2e1065] to-[#1e1b4b] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shrink-0 shadow-lg">
-            <span class="bg-purple-500/20 text-purple-300 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md w-max border border-purple-500/30">Событие</span>
-            <div>
-                <h3 class="font-extrabold text-sm text-white leading-tight">Новые Баннеры</h3>
-                <p class="text-[11px] text-purple-300/70 mt-0.5">Успей забрать персонажей</p>
-            </div>
-            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
-        </div>
-        <div class="min-w-[280px] h-36 bg-gradient-to-br from-[#064e3b] to-[#022c22] border border-emerald-500/20 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shrink-0 shadow-lg">
-            <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md w-max border border-emerald-500/30">Обновление</span>
-            <div>
-                <h3 class="font-extrabold text-sm text-white leading-tight">Telegram Stars</h3>
-                <p class="text-[11px] text-emerald-300/70 mt-0.5">Автовыдача за 5 секунд</p>
-            </div>
-            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-500/20 rounded-full blur-2xl"></div>
-        </div>
-    </div>
-
-    <div class="px-4 mb-2 flex items-center justify-between">
-        <h2 class="text-sm font-black text-white uppercase tracking-tight">Алмазы MLBB</h2>
-        <span class="text-[11px] text-blue-400 font-bold flex items-center gap-1 bg-blue-500/5 px-2 py-0.5 rounded-md">
-            ⚡ Автовыдача
-        </span>
-    </div>
-
-    <main class="px-4">
-        <div class="bg-[#141721] border border-[#1f2433] rounded-2xl p-4 space-y-4 shadow-xl">
+    <div class="px-4 space-y-4">
+        
+        <!-- MLBB СЕКЦИЯ -->
+        <div class="card p-4 rounded-2xl">
+            <h2 class="font-black text-base mb-3">💠 MLBB АЛМАЗЫ</h2>
             
-            <div class="grid grid-cols-2 gap-3">
-                <div class="space-y-1.5">
-                    <label class="text-[11px] text-[#6b7280] font-bold uppercase tracking-wide">User ID</label>
-                    <input type="number" id="user-id" placeholder="Введите User ID" class="w-full bg-[#1a1e2b] border border-[#252c3d] rounded-xl p-3.5 text-xs font-semibold text-white focus:outline-none focus:border-blue-500 placeholder-[#4b5563] transition-colors">
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-[11px] text-[#6b7280] font-bold uppercase tracking-wide">Zone ID</label>
-                    <input type="number" id="zone-id" placeholder="Zone ID" class="w-full bg-[#1a1e2b] border border-[#252c3d] rounded-xl p-3.5 text-xs font-semibold text-white focus:outline-none focus:border-blue-500 placeholder-[#4b5563] transition-colors">
-                </div>
+            <div class="space-y-3 mb-4">
+                <input type="number" id="game-id" placeholder="User ID" class="w-full bg-[#0f1419] border border-[#2d3748] rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500">
+                <input type="number" id="zone-id" placeholder="Zone ID" class="w-full bg-[#0f1419] border border-[#2d3748] rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="space-y-1.5">
-                    <label class="text-[11px] text-[#6b7280] font-bold uppercase tracking-wide">Регион</label>
-                    <div class="relative">
-                        <select id="region" class="w-full bg-[#1a1e2b] border border-[#252c3d] rounded-xl p-3.5 text-xs font-bold text-white focus:outline-none appearance-none cursor-pointer">
-                            <option>RU</option>
-                            <option>EU</option>
-                            <option>ASIA</option>
-                        </select>
-                        <span class="absolute right-4 top-3.5 text-[#6b7280] pointer-events-none text-[10px]">▼</span>
-                    </div>
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-[11px] text-[#6b7280] font-bold uppercase tracking-wide">Количество</label>
-                    <div class="relative">
-                        <select id="diamonds" class="w-full bg-[#1a1e2b] border border-[#252c3d] rounded-xl p-3.5 text-xs font-bold text-white focus:outline-none appearance-none cursor-pointer">
-                            <option value="59">35 алмазов</option>
-                            <option value="149">85 алмазов</option>
-                            <option value="499">280 алмазов</option>
-                        </select>
-                        <span class="absolute right-4 top-3.5 text-[#6b7280] pointer-events-none text-[10px]">▼</span>
-                    </div>
-                </div>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <button data-product="35" data-price="59" class="product-btn card p-3 rounded-lg text-center hover:border-blue-500 transition">
+                    <p class="font-bold text-sm">35 💠</p>
+                    <p class="text-xs text-emerald-400">59 ₽</p>
+                </button>
+                <button data-product="85" data-price="149" class="product-btn card p-3 rounded-lg text-center hover:border-blue-500 transition">
+                    <p class="font-bold text-sm">85 💠</p>
+                    <p class="text-xs text-emerald-400">149 ₽</p>
+                </button>
             </div>
 
-            <button id="pay-button" class="w-full glow-button text-white font-extrabold text-sm py-4 rounded-xl mt-2 transition-all cursor-pointer">
-                Оплатить 59 ₽
+            <button id="buy-btn" class="w-full btn-primary text-white font-bold py-3 rounded-lg transition">
+                КУПИТЬ
             </button>
         </div>
-    </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-[#141721]/95 backdrop-blur-lg border-t border-[#1f2433] p-2 flex justify-around items-center z-50">
-        <button class="flex flex-col items-center gap-1 text-blue-500 font-bold text-[10px] w-14 transition-colors">
-            <span class="text-base">🔍</span>
-            <span>Поиск</span>
+        <!-- TELEGRAM STARS -->
+        <div class="card p-4 rounded-2xl">
+            <h2 class="font-black text-base mb-3">⭐ TELEGRAM STARS</h2>
+            
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <button data-product="50 Stars" data-price="150" class="product-btn card p-3 rounded-lg text-center hover:border-blue-500 transition">
+                    <p class="font-bold text-sm">50 ⭐</p>
+                    <p class="text-xs text-emerald-400">150 ₽</p>
+                </button>
+                <button data-product="100 Stars" data-price="290" class="product-btn card p-3 rounded-lg text-center hover:border-blue-500 transition">
+                    <p class="font-bold text-sm">100 ⭐</p>
+                    <p class="text-xs text-emerald-400">290 ₽</p>
+                </button>
+            </div>
+
+            <button id="buy-btn-stars" class="w-full btn-primary text-white font-bold py-3 rounded-lg transition">
+                КУПИТЬ
+            </button>
+        </div>
+
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#0a0e27] border-t border-[#2d3748] p-3 flex justify-around">
+        <button class="text-center text-xs font-bold flex flex-col items-center gap-1 text-blue-500">
+            <span class="text-lg">🛍️</span> Магазин
         </button>
-        <button class="flex flex-col items-center gap-1 text-[#4b5563] font-bold text-[10px] w-14 active:text-white transition-colors">
-            <span class="text-base">🎮</span>
-            <span>Steam</span>
+        <button class="text-center text-xs font-bold flex flex-col items-center gap-1 text-gray-400" onclick="goBalance()">
+            <span class="text-lg">💰</span> Баланс
         </button>
-        <button class="flex flex-col items-center gap-1 text-[#4b5563] font-bold text-[10px] w-14 active:text-white transition-colors">
-            <div class="w-5 h-5 bg-[#1f2433] rounded-md flex items-center justify-center text-xs text-gray-400 font-black">+</div>
-            <span>Продать</span>
+        <button class="text-center text-xs font-bold flex flex-col items-center gap-1 text-gray-400" onclick="goSupport()">
+            <span class="text-lg">💬</span> Чат
         </button>
-        <button class="flex flex-col items-center gap-1 text-[#4b5563] font-bold text-[10px] w-14 active:text-white transition-colors">
-            <span class="text-base">💬</span>
-            <span>Чаты</span>
+        <button class="text-center text-xs font-bold flex flex-col items-center gap-1 text-gray-400" onclick="goOrders()">
+            <span class="text-lg">📦</span> Заказы
         </button>
     </nav>
 
     <script>
-        // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
         tg.ready();
 
-        // Получаем данные пользователя
-        const user = tg.initDataUnsafe.user;
-        
-        // Обновляем цену при смене количества
-        document.getElementById('diamonds').addEventListener('change', (e) => {
-            const price = e.target.value;
-            document.getElementById('pay-button').textContent = `Оплатить ${price} ₽`;
+        let selectedProduct = null;
+        let selectedPrice = null;
+
+        document.querySelectorAll('.product-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.product-btn').forEach(b => b.style.borderColor = '#2d3748');
+                this.style.borderColor = '#2563eb';
+                selectedProduct = this.dataset.product;
+                selectedPrice = this.dataset.price;
+            });
         });
 
-        // Обработка клика по кнопке оплаты
-        document.getElementById('pay-button').addEventListener('click', () => {
-            const userId = document.getElementById('user-id').value;
-            const zoneId = document.getElementById('zone-id').value;
-            const diamonds = document.getElementById('diamonds').value;
-            const region = document.getElementById('region').value;
+        document.getElementById('buy-btn').addEventListener('click', purchaseMLBB);
+        document.getElementById('buy-btn-stars').addEventListener('click', purchaseStars);
 
-            if (!userId || !zoneId) {
-                alert('Заполните User ID и Zone ID');
+        function purchaseMLBB() {
+            const gameId = document.getElementById('game-id').value;
+            const zoneId = document.getElementById('zone-id').value;
+
+            if (!gameId || !zoneId || !selectedProduct) {
+                alert('Заполни все поля!');
                 return;
             }
 
-            // Отправляем данные заказа боту
-            tg.sendData(JSON.stringify({
+            const data = {
                 action: 'purchase',
-                userId: userId,
+                product: `${selectedProduct} Алмазов MLBB`,
+                price: selectedPrice,
+                gameId: gameId,
                 zoneId: zoneId,
-                diamonds: diamonds,
-                region: region,
-                telegramId: user?.id || 'unknown'
-            }));
-        });
+                timestamp: new Date().toISOString()
+            };
 
-        // Обработка табов
-        document.querySelectorAll('[data-tab]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('[data-tab]').forEach(b => {
-                    b.classList.remove('active-tab', 'text-white');
-                    b.classList.add('text-[#6b7280]');
-                });
-                btn.classList.add('active-tab', 'text-white');
-                btn.classList.remove('text-[#6b7280]');
-            });
-        });
+            tg.sendData(JSON.stringify(data));
+        }
+
+        function purchaseStars() {
+            if (!selectedProduct || !selectedPrice) {
+                alert('Выбери товар!');
+                return;
+            }
+
+            const data = {
+                action: 'purchase',
+                product: selectedProduct,
+                price: selectedPrice,
+                timestamp: new Date().toISOString()
+            };
+
+            tg.sendData(JSON.stringify(data));
+        }
+
+        function goBalance() {
+            tg.close();
+        }
+
+        function goSupport() {
+            tg.close();
+        }
+
+        function goOrders() {
+            tg.close();
+        }
+
+        // Обновление баланса с сервера
+        setInterval(() => {
+            const balance = localStorage.getItem('balance') || '0.00';
+            document.getElementById('balance').textContent = balance + ' ₽';
+        }, 1000);
+
+        function showNotification(text) {
+            const notify = document.createElement('div');
+            notify.className = 'notify';
+            notify.textContent = text;
+            document.body.appendChild(notify);
+            setTimeout(() => notify.remove(), 3000);
+        }
     </script>
+
 </body>
 </html>
