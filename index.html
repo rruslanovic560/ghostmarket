@@ -9,185 +9,185 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { font-family: 'Inter', sans-serif; }
-        body { margin: 0; min-height: 100vh; background: #050816; color: #e2e8f0; }
-        .app { padding-bottom: 110px; }
-        .panel { background: #0f172a; border: 1px solid rgba(148,163,184,.12); }
-        .tab-btn { transition: .2s; }
-        .tab-btn.active { background: #1e293b; color: #60a5fa; }
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-            height: 20px;
-            border-radius: 999px;
-            background: #e11d48;
-            color: white;
-            font-size: 11px;
-            padding: 0 6px;
-        }
-        .note-card { border: 1px solid rgba(148,163,184,.18); }
-        .btn-primary { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        body { margin: 0; min-height: 100vh; background: #040714; color: #e2e8f0; }
+        .tab { transition: all .2s ease; }
+        .tab.active { background: #1e293b; color: #7c3aed; }
+        .card { background: #0f172a; border: 1px solid rgba(148,163,184,.12); }
+        .btn-primary { background: linear-gradient(135deg, #7c3aed, #4f46e5); }
         .btn-primary:hover { opacity: .95; }
-        .btn-secondary { background: #111827; }
-        .btn-secondary:hover { background: #1f2937; }
+        .badge { min-width: 20px; padding: 0 7px; height: 20px; border-radius: 999px; background: #ef4444; color: #fff; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; }
+        .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 25px; width: calc(100% - 40px); max-width: 420px; z-index: 50; display: grid; gap: 10px; pointer-events: none; }
+        .toast-card { pointer-events: auto; overflow: hidden; border-radius: 24px; padding: 16px 18px; display: flex; align-items: start; gap: 12px; box-shadow: 0 24px 50px rgba(15,23,42,.35); transition: transform .2s ease, opacity .2s ease; }
+        .toast-card.info { background: #111827; border: 1px solid rgba(148,163,184,.12); }
+        .toast-card.success { background: #122b21; border: 1px solid rgba(34,197,94,.18); }
+        .toast-card.warning { background: #2a1f0c; border: 1px solid rgba(245,158,11,.18); }
+        .toast-drag { cursor: grab; }
     </style>
 </head>
 <body>
-<div class="app">
-    <div class="px-5 pt-5">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-xs uppercase tracking-[.24em] text-slate-500">GhostMarket</p>
-                <h1 class="text-3xl font-bold text-white mt-2">Магазин внутри Telegram</h1>
-                <p class="mt-2 text-slate-400">Покупай, пополняй, читай уведомления и получай помощь.</p>
+<div class="px-5 pt-5 pb-28">
+    <div class="flex items-start justify-between gap-4">
+        <div>
+            <p class="text-xs uppercase tracking-[0.35em] text-slate-500">GhostMarket</p>
+            <h1 class="mt-3 text-3xl font-bold text-white">Умный магазин внутри Telegram</h1>
+            <p class="mt-3 text-slate-400 max-w-xl">Здесь есть магазин, поддержка, AI-помощник и уведомления как на iPhone.</p>
+        </div>
+        <div class="rounded-3xl bg-[#111827] px-4 py-3 text-sm text-slate-300">Premium</div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-3 gap-3">
+        <button class="tab rounded-[28px] py-3 text-sm font-semibold text-slate-300" data-tab="shop">Магазин</button>
+        <button class="tab rounded-[28px] py-3 text-sm font-semibold text-slate-300" data-tab="chat">
+            Чат <span id="chatBadge" class="badge ml-2 hidden">1</span>
+        </button>
+        <button class="tab rounded-[28px] py-3 text-sm font-semibold text-slate-300" data-tab="notifications">Уведомления</button>
+    </div>
+
+    <div id="shopPage" class="mt-6 space-y-5">
+        <div class="card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Баланс</p>
+                    <p id="balanceValue" class="mt-2 text-4xl font-semibold text-white">0 ₽</p>
+                </div>
+                <div class="rounded-3xl bg-[#111827] px-4 py-2 text-sm text-slate-300">Игровой кошелёк</div>
             </div>
-            <button id="exitApp" class="btn-secondary rounded-2xl px-4 py-3 text-sm font-semibold text-white">
-                Выйти
-            </button>
+            <div class="mt-5 grid grid-cols-3 gap-3">
+                <button class="topup-btn rounded-3xl border border-slate-700 bg-[#0f172a] py-3 text-sm text-white" data-amount="50">+50 ₽</button>
+                <button class="topup-btn rounded-3xl border border-slate-700 bg-[#0f172a] py-3 text-sm text-white" data-amount="100">+100 ₽</button>
+                <button class="topup-btn rounded-3xl border border-slate-700 bg-[#0f172a] py-3 text-sm text-white" data-amount="200">+200 ₽</button>
+            </div>
+        </div>
+
+        <div class="card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Выберите товар</p>
+                    <h2 class="mt-2 text-2xl font-semibold text-white">MLBB и Stars</h2>
+                </div>
+                <span class="rounded-3xl bg-[#111827] px-4 py-2 text-sm text-slate-300">Лучшие цены</span>
+            </div>
+
+            <div class="mt-5 space-y-4">
+                <input id="inputUid" type="text" placeholder="User ID" class="w-full rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-white outline-none"/>
+                <input id="inputZone" type="text" placeholder="Zone ID" class="w-full rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-white outline-none"/>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="product-card rounded-[28px] border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="35 Алмазов" data-price="59">
+                        <p class="text-sm text-slate-400">35 Алмазов</p>
+                        <p class="mt-3 text-xl font-semibold text-white">59 ₽</p>
+                    </button>
+                    <button class="product-card rounded-[28px] border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="85 Алмазов" data-price="149">
+                        <p class="text-sm text-slate-400">85 Алмазов</p>
+                        <p class="mt-3 text-xl font-semibold text-white">149 ₽</p>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="product-card rounded-[28px] border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="50 Stars" data-price="150">
+                        <p class="text-sm text-slate-400">50 Stars</p>
+                        <p class="mt-3 text-xl font-semibold text-white">150 ₽</p>
+                    </button>
+                    <button class="product-card rounded-[28px] border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="100 Stars" data-price="290">
+                        <p class="text-sm text-slate-400">100 Stars</p>
+                        <p class="mt-3 text-xl font-semibold text-white">290 ₽</p>
+                    </button>
+                </div>
+
+                <button id="buyButton" class="btn-primary w-full rounded-[28px] py-4 text-base font-semibold text-white">Купить выбранное</button>
+                <div id="shopHint" class="rounded-[28px] border border-slate-700 bg-[#08101e] p-4 text-sm text-slate-400 hidden"></div>
+            </div>
         </div>
     </div>
 
-    <div class="mt-6 px-5">
-        <div class="grid grid-cols-3 gap-3">
-            <button class="tab-btn btn-secondary rounded-3xl py-3 font-semibold" data-tab="shop">Магазин</button>
-            <button class="tab-btn btn-secondary rounded-3xl py-3 font-semibold" data-tab="chat">
-                Чат <span id="chatBadge" class="badge ml-2 hidden">1</span>
-            </button>
-            <button class="tab-btn btn-secondary rounded-3xl py-3 font-semibold" data-tab="notifications">Уведомления</button>
+    <div id="chatPage" class="mt-6 hidden space-y-5">
+        <div class="card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Поддержка</p>
+                    <h2 class="mt-2 text-2xl font-semibold text-white">AI-помощник</h2>
+                </div>
+                <span class="rounded-3xl bg-[#111827] px-4 py-2 text-sm text-slate-300">временно офлайн</span>
+            </div>
+            <div class="mt-5 space-y-4">
+                <div class="rounded-[28px] bg-[#0f172a] p-4">
+                    <p class="text-sm text-slate-400">GhostBot</p>
+                    <p class="mt-2 text-white">Привет! Я помогу с пополнением и объясню, что делать дальше.</p>
+                </div>
+                <button class="chat-action w-full rounded-[28px] border border-slate-700 bg-[#111827] px-4 py-4 text-left text-white" data-action="howToTopUp">
+                    <p class="font-semibold">Как пополнить баланс?</p>
+                    <p class="text-sm text-slate-400 mt-1">Пошаговая инструкция</p>
+                </button>
+                <button class="chat-action w-full rounded-[28px] border border-slate-700 bg-[#111827] px-4 py-4 text-left text-white" data-action="needMoreMoney">
+                    <p class="font-semibold">Недостаточно средств</p>
+                    <p class="text-sm text-slate-400 mt-1">Почему не проходит покупка</p>
+                </button>
+                <button class="chat-action w-full rounded-[28px] border border-slate-700 bg-[#111827] px-4 py-4 text-left text-white" data-action="whatIsUid">
+                    <p class="font-semibold">Что такое User ID?</p>
+                    <p class="text-sm text-slate-400 mt-1">Для чего нужен в заказе</p>
+                </button>
+            </div>
+        </div>
+
+        <div class="card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Сообщения</p>
+                    <h2 class="mt-2 text-2xl font-semibold text-white">Последние записи</h2>
+                </div>
+                <button id="clearChatMessages" class="rounded-full bg-slate-800 px-4 py-2 text-sm text-slate-300">Очистить</button>
+            </div>
+            <div id="chatHistory" class="mt-5 space-y-3"></div>
+            <div class="mt-4 rounded-[28px] border border-slate-700 bg-[#08101e] p-4 text-sm text-slate-400">
+                Здесь собраны отметки, уведомления и подсказки по покупкам.
+            </div>
         </div>
     </div>
 
-    <div class="mt-5 px-5">
-        <div id="shopPage" class="panel rounded-[32px] p-5 shadow-xl">
-            <div class="flex flex-col gap-4">
-                <div class="rounded-[28px] bg-[#111827] p-5">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-slate-400">Баланс</p>
-                            <p id="balanceValue" class="text-3xl font-semibold text-white mt-2">0 ₽</p>
-                        </div>
-                        <div class="rounded-3xl bg-slate-800 px-4 py-2 text-sm text-slate-300">Premium</div>
-                    </div>
-                    <div class="mt-4 grid grid-cols-3 gap-3">
-                        <button class="topup-btn rounded-3xl border border-slate-700 bg-[#111827] py-3 text-sm text-white" data-amount="50">+50 ₽</button>
-                        <button class="topup-btn rounded-3xl border border-slate-700 bg-[#111827] py-3 text-sm text-white" data-amount="100">+100 ₽</button>
-                        <button class="topup-btn rounded-3xl border border-slate-700 bg-[#111827] py-3 text-sm text-white" data-amount="200">+200 ₽</button>
-                    </div>
-                </div>
-
-                <div class="rounded-[28px] bg-[#111827] p-5">
-                    <h2 class="text-xl font-semibold text-white mb-4">MLBB / Telegram Stars</h2>
-                    <div class="grid gap-4">
-                        <input id="inputUid" type="text" placeholder="User ID"
-                               class="w-full rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-white outline-none"/>
-                        <input id="inputZone" type="text" placeholder="Zone ID"
-                               class="w-full rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-white outline-none"/>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="product-btn rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="35 Алм." data-price="59">
-                                <p class="text-sm text-slate-400">35 Алмазов</p>
-                                <p class="text-lg font-semibold text-white mt-2">59 ₽</p>
-                            </button>
-                            <button class="product-btn rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="85 Алм." data-price="149">
-                                <p class="text-sm text-slate-400">85 Алмазов</p>
-                                <p class="text-lg font-semibold text-white mt-2">149 ₽</p>
-                            </button>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="product-btn rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="50 Stars" data-price="150">
-                                <p class="text-sm text-slate-400">50 Stars</p>
-                                <p class="text-lg font-semibold text-white mt-2">150 ₽</p>
-                            </button>
-                            <button class="product-btn rounded-3xl border border-slate-700 bg-[#0f172a] p-4 text-left" data-product="100 Stars" data-price="290">
-                                <p class="text-sm text-slate-400">100 Stars</p>
-                                <p class="text-lg font-semibold text-white mt-2">290 ₽</p>
-                            </button>
-                        </div>
-                    </div>
-                    <button id="buyButton" class="mt-5 btn-primary w-full rounded-3xl py-4 text-base font-semibold text-white">
-                        Купить
-                    </button>
-                </div>
-
-                <div id="shopNotice" class="hidden rounded-[28px] border border-[#334155] bg-[#08101e] p-4 text-sm text-slate-300"></div>
-            </div>
-        </div>
-
-        <div id="chatPage" class="panel rounded-[32px] p-5 shadow-xl hidden">
-            <div class="space-y-4">
-                <div class="rounded-[28px] bg-[#111827] p-5">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-slate-400">Виртуальный помощник</p>
-                            <h2 class="text-xl font-semibold text-white mt-2">AI / Чат</h2>
-                        </div>
-                        <span class="rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-black">online</span>
-                    </div>
-                </div>
-
-                <div id="chatHistory" class="space-y-3">
-                    <div class="rounded-[28px] bg-[#0f172a] p-4">
-                        <p class="text-sm text-slate-400">GhostBot</p>
-                        <p class="mt-2 text-white">Привет! Здесь расскажу, как пополнить баланс и что делать дальше.</p>
-                    </div>
-                </div>
-
-                <div class="grid gap-3">
-                    <button class="chat-action btn-secondary rounded-3xl py-4 text-left text-white" data-action="howToTopUp">
-                        <p class="font-semibold">Как пополнить баланс?</p>
-                        <p class="text-sm text-slate-400 mt-1">Пошаговая инструкция</p>
-                    </button>
-                    <button class="chat-action btn-secondary rounded-3xl py-4 text-left text-white" data-action="needMoreMoney">
-                        <p class="font-semibold">Недостаточно средств</p>
-                        <p class="text-sm text-slate-400 mt-1">Что делать, если мало денег</p>
-                    </button>
-                    <button class="chat-action btn-secondary rounded-3xl py-4 text-left text-white" data-action="whatIsUid">
-                        <p class="font-semibold">Что такое User ID?</p>
-                        <p class="text-sm text-slate-400 mt-1">Объяснение нужных данных</p>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="notificationsPage" class="panel rounded-[32px] p-5 shadow-xl hidden">
-            <div class="space-y-4">
-                <div class="rounded-[28px] bg-[#111827] p-5">
+    <div id="notificationsPage" class="mt-6 hidden space-y-5">
+        <div class="card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
                     <p class="text-sm text-slate-400">Уведомления</p>
-                    <h2 class="text-xl font-semibold text-white mt-2">Последние события</h2>
+                    <h2 class="mt-2 text-2xl font-semibold text-white">iPhone style</h2>
                 </div>
-
-                <div id="notificationsList" class="space-y-3"></div>
+                <button id="markAllRead" class="rounded-full bg-slate-800 px-4 py-2 text-sm text-slate-300">Прочитал</button>
             </div>
+            <div id="notificationsList" class="mt-5 space-y-3"></div>
         </div>
     </div>
 </div>
+
+<div id="toastWrapper" class="toast"></div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
 
-    const balanceElement = document.getElementById('balanceValue');
-    const chatBadge = document.getElementById('chatBadge');
-    const shopNotice = document.getElementById('shopNotice');
-    const notificationsList = document.getElementById('notificationsList');
-    const chatHistory = document.getElementById('chatHistory');
-
     const state = {
-        balance: parseFloat(localStorage.getItem('gm_balance') || '0'),
+        balance: parseInt(localStorage.getItem('gm_balance') || '0', 10),
         selectedProduct: null,
         selectedPrice: 0,
         chatUnread: parseInt(localStorage.getItem('gm_chat_unread') || '1', 10),
-        notifications: JSON.parse(localStorage.getItem('gm_notifications') || '[]')
+        notifications: JSON.parse(localStorage.getItem('gm_notifications') || '[]'),
+        messages: JSON.parse(localStorage.getItem('gm_messages') || '[]')
     };
+
+    const balanceValue = document.getElementById('balanceValue');
+    const chatBadge = document.getElementById('chatBadge');
+    const shopHint = document.getElementById('shopHint');
+    const notificationsList = document.getElementById('notificationsList');
+    const chatHistory = document.getElementById('chatHistory');
 
     function saveState() {
         localStorage.setItem('gm_balance', state.balance.toString());
         localStorage.setItem('gm_chat_unread', state.chatUnread.toString());
         localStorage.setItem('gm_notifications', JSON.stringify(state.notifications));
+        localStorage.setItem('gm_messages', JSON.stringify(state.messages));
     }
 
     function renderBalance() {
-        balanceElement.textContent = `${state.balance.toFixed(0)} ₽`;
+        balanceValue.textContent = `${state.balance} ₽`;
     }
 
     function renderChatBadge() {
@@ -201,66 +201,121 @@
 
     function renderNotifications() {
         if (!state.notifications.length) {
-            notificationsList.innerHTML = '<div class="rounded-[28px] bg-[#0f172a] p-4 text-slate-400">Уведомлений нет</div>';
+            notificationsList.innerHTML = '<div class="rounded-[28px] bg-[#08101e] p-4 text-slate-400">Нет уведомлений</div>';
             return;
         }
-
         notificationsList.innerHTML = state.notifications.map(note => `
-            <div class="note-card rounded-[28px] bg-[#0f172a] p-4">
-                <div class="flex items-center justify-between">
+            <div class="rounded-[28px] p-4 ${note.type === 'warning' ? 'border-amber-400/20 bg-[#2c2111]' : 'border-slate-700 bg-[#08101e]'} border">
+                <div class="flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-sm ${note.type === 'warning' ? 'text-amber-300' : 'text-slate-400'}">${note.title}</p>
+                        <p class="text-sm ${note.type === 'warning' ? 'text-amber-200' : 'text-slate-400'}">${note.title}</p>
                         <p class="mt-2 text-white">${note.text}</p>
                     </div>
-                    <span class="text-xs ${note.read ? 'text-slate-500' : 'text-sky-400'}">${note.read ? 'прочитано' : 'новое'}</span>
+                    <span class="rounded-full px-3 py-1 text-[11px] uppercase ${note.read ? 'bg-slate-800 text-slate-400' : 'bg-slate-600 text-white'}">${note.read ? 'прочитано' : 'новое'}</span>
                 </div>
             </div>
         `).join('');
     }
 
+    function renderChat() {
+        if (!state.messages.length) {
+            chatHistory.innerHTML = '<div class="rounded-[28px] bg-[#08101e] p-4 text-slate-400">Пока нет сообщений. Нажми кнопку выше для подсказки.</div>';
+            return;
+        }
+        chatHistory.innerHTML = state.messages.map(item => `
+            <div class="rounded-[28px] p-4 ${item.from === 'bot' ? 'bg-[#0f172a]' : 'bg-[#111827]'}">
+                <p class="text-sm ${item.from === 'bot' ? 'text-slate-400' : 'text-emerald-300'}">${item.title}</p>
+                <p class="mt-2 text-white">${item.text}</p>
+            </div>
+        `).join('');
+    }
+
     function addNotification(title, text, type = 'info') {
-        state.notifications.unshift({ title, text, type, read: false, id: Date.now() });
+        state.notifications.unshift({ title, text, type, read: false, time: Date.now() });
         renderNotifications();
         saveState();
     }
 
-    function markAllNotificationsRead() {
-        state.notifications = state.notifications.map(n => ({ ...n, read: true }));
-        renderNotifications();
+    function addMessage(title, text) {
+        state.messages.push({ from: 'bot', title, text });
+        renderChat();
         saveState();
     }
 
-    function selectTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.tab === tab);
+    function showToast(text, type = 'info') {
+        const wrapper = document.getElementById('toastWrapper');
+        const toast = document.createElement('div');
+        toast.className = `toast-card ${type} toast-drag`;
+        toast.innerHTML = `
+            <div class="flex-1">
+                <p class="text-sm text-slate-400">${type === 'warning' ? 'Внимание' : type === 'success' ? 'Готово' : 'Информация'}</p>
+                <p class="mt-1 text-white">${text}</p>
+            </div>
+            <button class="text-slate-400 text-sm">&times;</button>
+        `;
+        wrapper.prepend(toast);
+
+        let startX = 0;
+        let currentX = 0;
+        let dragging = false;
+
+        const handlePointerDown = (event) => {
+            dragging = true;
+            startX = event.clientX;
+            toast.setPointerCapture(event.pointerId);
+        };
+        const handlePointerMove = (event) => {
+            if (!dragging) return;
+            currentX = event.clientX - startX;
+            toast.style.transform = `translateX(${currentX}px)`;
+            toast.style.opacity = `${1 - Math.min(Math.abs(currentX) / 120, 1)}`;
+        };
+        const handlePointerUp = () => {
+            dragging = false;
+            toast.releasePointerCapture && toast.releasePointerCapture();
+            if (Math.abs(currentX) > 90) {
+                toast.style.transform = `translateX(${currentX > 0 ? 120 : -120}px)`;
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 150);
+            } else {
+                toast.style.transform = '';
+                toast.style.opacity = '1';
+            }
+        };
+
+        toast.addEventListener('pointerdown', handlePointerDown);
+        toast.addEventListener('pointermove', handlePointerMove);
+        toast.addEventListener('pointerup', handlePointerUp);
+        toast.addEventListener('pointercancel', handlePointerUp);
+        toast.querySelector('button').addEventListener('click', () => toast.remove());
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            setTimeout(() => toast.remove(), 250);
+        }, 4500);
+    }
+
+    function selectTab(name) {
+        document.querySelectorAll('.tab').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === name);
         });
-        document.getElementById('shopPage').classList.toggle('hidden', tab !== 'shop');
-        document.getElementById('chatPage').classList.toggle('hidden', tab !== 'chat');
-        document.getElementById('notificationsPage').classList.toggle('hidden', tab !== 'notifications');
-
-        if (tab === 'chat') {
+        document.getElementById('shopPage').classList.toggle('hidden', name !== 'shop');
+        document.getElementById('chatPage').classList.toggle('hidden', name !== 'chat');
+        document.getElementById('notificationsPage').classList.toggle('hidden', name !== 'notifications');
+        if (name === 'chat') {
             state.chatUnread = 0;
-            saveState();
             renderChatBadge();
+            saveState();
         }
-        if (tab === 'notifications') {
-            markAllNotificationsRead();
+        if (name === 'notifications') {
+            state.notifications = state.notifications.map(note => ({ ...note, read: true }));
+            renderNotifications();
+            saveState();
         }
     }
 
-    function showShopNotice(text, type = 'info') {
-        shopNotice.textContent = text;
-        shopNotice.classList.remove('hidden');
-        shopNotice.classList.toggle('text-emerald-400', type === 'success');
-        shopNotice.classList.toggle('text-rose-400', type === 'error');
-        setTimeout(() => shopNotice.classList.add('hidden'), 4500);
-    }
-
-    renderBalance();
-    renderChatBadge();
-    renderNotifications();
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    document.querySelectorAll('.tab').forEach(btn => {
         btn.addEventListener('click', () => selectTab(btn.dataset.tab));
     });
 
@@ -268,21 +323,18 @@
         btn.addEventListener('click', () => {
             const amount = Number(btn.dataset.amount);
             state.balance += amount;
-            addNotification('Пополнение успешно', `Баланс увеличен на ${amount} ₽`, 'info');
             renderBalance();
+            addNotification('Баланс пополнен', `На счёт пришло ${amount} ₽`, 'success');
+            addMessage('Пополнение', `Баланс увеличен на ${amount} ₽. Теперь можно купить товар.`);
+            showToast(`Баланс +${amount} ₽`, 'success');
             saveState();
-            showShopNotice(`Баланс пополнен на ${amount} ₽`, 'success');
         });
     });
 
-    document.querySelectorAll('.product-btn').forEach(btn => {
+    document.querySelectorAll('.product-card').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.product-btn').forEach(el => {
-                el.style.borderColor = '#334155';
-                el.classList.remove('bg-[#1e293b]');
-            });
-            btn.style.borderColor = '#6366f1';
-            btn.classList.add('bg-[#1e293b]');
+            document.querySelectorAll('.product-card').forEach(card => card.classList.remove('border-violet-500', 'bg-[#1e293b]'));
+            btn.classList.add('border-violet-500', 'bg-[#1e293b]');
             state.selectedProduct = btn.dataset.product;
             state.selectedPrice = Number(btn.dataset.price);
         });
@@ -293,50 +345,66 @@
         const zone = document.getElementById('inputZone').value.trim();
 
         if (!uid || !zone || !state.selectedProduct) {
-            showShopNotice('Заполните User ID, Zone ID и выберите товар.', 'error');
+            showToast('Заполните User ID, Zone ID и выберите товар', 'warning');
             return;
         }
 
         if (state.balance < state.selectedPrice) {
             addNotification('Недостаточно средств', `Для покупки ${state.selectedProduct} нужно ${state.selectedPrice} ₽`, 'warning');
-            showShopNotice('Недостаточно средств. Пополните баланс.', 'error');
+            addMessage('Ошибка', `Не хватает средств для ${state.selectedProduct}. Пополните баланс.`);
+            state.chatUnread += 1;
+            renderChatBadge();
+            showToast('Недостаточно средств', 'warning');
+            saveState();
             return;
         }
 
         state.balance -= state.selectedPrice;
-        addNotification('Покупка оформлена', `${state.selectedProduct} за ${state.selectedPrice} ₽ куплен`, 'info');
         renderBalance();
+        addNotification('Покупка успешна', `${state.selectedProduct} куплен за ${state.selectedPrice} ₽`, 'info');
+        addMessage('Покупка', `${state.selectedProduct} оформлен успешно.`);
+        showToast(`Заказ оформлен: ${state.selectedProduct}`, 'success');
         saveState();
-        showShopNotice(`Заказ оформлен: ${state.selectedProduct}`, 'success');
     });
 
     document.querySelectorAll('.chat-action').forEach(btn => {
         btn.addEventListener('click', () => {
             const action = btn.dataset.action;
-            let message = '';
+            let title = 'Совет';
+            let text = '';
 
             if (action === 'howToTopUp') {
-                message = 'Чтобы пополнить: нажми кнопку +50 или +100, после этого сумма добавится автоматически.';
+                text = 'Нажми +50 или +100, и баланс будет пополнен моментально.';
             } else if (action === 'needMoreMoney') {
-                message = 'Если не хватает средств, пополни баланс через кнопки на экране. После пополнения повтори покупку.';
+                text = 'Если не хватает средств, пополни баланс и повтори покупку.';
             } else if (action === 'whatIsUid') {
-                message = 'User ID — это уникальный номер в игре. Он нужен для быстрой доставки товара.';
+                text = 'User ID — это уникальный номер в игре. Он нужен для доставки товара.';
             }
 
-            const bubble = document.createElement('div');
-            bubble.className = 'rounded-[28px] bg-[#0f172a] p-4';
-            bubble.innerHTML = `<p class="text-sm text-slate-400">GhostBot</p><p class="mt-2 text-white">${message}</p>`;
-            chatHistory.appendChild(bubble);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
+            addMessage(title, text);
             state.chatUnread = 0;
-            saveState();
             renderChatBadge();
+            saveState();
         });
     });
 
-    document.getElementById('exitApp').addEventListener('click', () => {
-        tg.close();
+    document.getElementById('markAllRead').addEventListener('click', () => {
+        state.notifications = state.notifications.map(note => ({ ...note, read: true }));
+        renderNotifications();
+        saveState();
     });
+
+    document.getElementById('clearChatMessages').addEventListener('click', () => {
+        state.messages = [];
+        renderChat();
+        saveState();
+    });
+
+    renderBalance();
+    renderChatBadge();
+    renderNotifications();
+    renderChat();
+    selectTab('shop');
 </script>
 </body>
 </html>
