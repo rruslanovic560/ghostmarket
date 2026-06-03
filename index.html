@@ -9,273 +9,408 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { font-family: 'Inter', sans-serif; }
-        body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #070a1f 0%, #04060f 100%); color: #e2e8f0; }
+        body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #070a1f 0%, #03060f 100%); color: #e2e8f0; }
+        .glass { background: rgba(12, 18, 43, 0.88); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); }
+        .soft-card { background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(148,163,184,0.18); }
+        .neon-btn { background: linear-gradient(135deg, #7c3aed, #2563eb); color: white; box-shadow: 0 18px 40px rgba(124,58,237,0.18); border: none; }
+        .game-card.selected { border-color: rgba(124,58,237,0.8); box-shadow: 0 10px 30px rgba(124,58,237,0.08); }
         .hidden { display: none; }
-        .floating-cart { position: fixed; right: 18px; bottom: 86px; z-index: 60; background: linear-gradient(135deg,#7c3aed,#2563eb); color: #fff; padding: 12px 14px; border-radius: 999px; display:flex; gap:8px; align-items:center; box-shadow:0 16px 40px rgba(37,99,235,0.18); cursor:pointer; }
-        .floating-cart .badge { background: rgba(0,0,0,0.18); padding:4px 8px; border-radius:999px; font-weight:700; }
-        .helper { font-size:12px; color:rgba(226,232,240,0.6); margin-top:6px; }
-        .valid { color:#22c55e; }
-        .invalid { color:#f87171; }
-        .cart-modal { position: fixed; left: 12px; right: 12px; bottom: 120px; z-index: 70; max-width:600px; margin:0 auto; }
+        /* floating cart */
+        #floatingCart { position: fixed; right: 18px; bottom: 88px; z-index: 60; background: linear-gradient(90deg,#7c3aed,#2563eb); color: #fff; border: none; padding: 12px 16px; border-radius: 999px; box-shadow: 0 18px 40px rgba(0,0,0,0.4); display:flex; gap:10px; align-items:center; }
+        #cartModal { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:80; background: rgba(0,0,0,0.6); }
+        #cartModal .modal { width: 96%; max-width:720px; background: #0b1226; border-radius:18px; padding:18px; }
+        .input-hint { font-size:12px; color: #9ca3af; margin-top:6px; }
     </style>
 </head>
 <body>
 <div class="px-5 pt-6 pb-36">
-    <!-- ...existing page content... -->
-    <div id="cartSection" class="soft-card rounded-[28px] p-4 mt-5 hidden">
-        <!-- скрытый блок, теперь используется только в модальном окне -->
+    <div class="glass rounded-[32px] p-6 shadow-[0_35px_80px_rgba(0,0,0,0.35)]">
+        <p class="text-xs uppercase tracking-[0.35em] text-slate-400">GhostMarket</p>
+        <h1 class="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Игровая валюта без скама</h1>
+        <p class="mt-4 text-slate-300 leading-7">Заходи в бот, выбирай игру и покупай. На вводе UID показывается пример формата.</p>
+    </div>
+
+    <div id="shopPage" class="mt-7 space-y-6">
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Баланс</p>
+                    <div class="mt-3 flex items-end gap-3">
+                        <h2 id="balanceValue" class="text-4xl font-bold text-white">0 ₽</h2>
+                    </div>
+                </div>
+                <div class="rounded-[24px] bg-gradient-to-r from-violet-600 to-blue-500 px-4 py-3 text-white flex items-center gap-3">
+                    <span class="text-2xl">💼</span>
+                    <div>
+                        <p class="text-xs uppercase text-slate-200">Пополнение</p>
+                        <p class="text-sm font-semibold">Безопасно и быстро</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 grid grid-cols-3 gap-3">
+                <button class="neon-btn rounded-[22px] py-4 text-sm font-semibold" data-amount="100">+100 ₽</button>
+                <button class="neon-btn rounded-[22px] py-4 text-sm font-semibold" data-amount="300">+300 ₽</button>
+                <button class="neon-btn rounded-[22px] py-4 text-sm font-semibold" data-amount="500">+500 ₽</button>
+            </div>
+        </div>
+
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Выбор игры</p>
+                    <h2 class="mt-2 text-2xl font-bold text-white">Популярные</h2>
+                </div>
+            </div>
+
+            <div class="mt-5 overflow-x-auto pb-2">
+                <div class="flex gap-3 min-w-[680px]">
+                    <button class="game-card selected rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="genshin">
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="Genshin" style="width:64px;height:64px;"/>
+                        <p class="mt-4 text-sm text-slate-300">Genshin Impact</p>
+                        <p class="mt-2 text-lg font-bold text-white">Primogems</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="brawl">
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="Brawl" style="width:64px;height:64px;"/>
+                        <p class="mt-4 text-sm text-slate-300">Brawl Stars</p>
+                        <p class="mt-2 text-lg font-bold text-white">Gems / Pass</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="pubg">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="PUBG" style="width:64px;height:64px;"/>
+                        <p class="mt-4 text-sm text-slate-300">PUBG Mobile</p>
+                        <p class="mt-2 text-lg font-bold text-white">UC / Elite Pass</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="freefire">
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="Free Fire" style="width:64px;height:64px;"/>
+                        <p class="mt-4 text-sm text-slate-300">Free Fire</p>
+                        <p class="mt-2 text-lg font-bold text-white">Diamonds / BP</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="standoff">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="Standoff" style="width:64px;height:64px;"/>
+                        <p class="mt-4 text-sm text-slate-300">Standoff 2</p>
+                        <p class="mt-2 text-lg font-bold text-white">Coins / Case</p>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                <div>
+                    <input id="inputUid" type="text" placeholder="User ID" class="input-field h-14 rounded-[20px] px-4 w-full"/>
+                    <div id="uidHint" class="input-hint">Пример: 100000000 (формат зависит от игры)</div>
+                </div>
+                <div>
+                    <input id="inputZone" type="text" placeholder="Zone ID" class="input-field h-14 rounded-[20px] px-4 w-full"/>
+                    <div class="input-hint">Zone ID (если не нужен — оставь пустым)</div>
+                </div>
+            </div>
+
+            <div class="mt-5 grid gap-4">
+                <div id="productList" class="grid gap-4 lg:grid-cols-2"></div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Плавающая кнопка корзины -->
-<div id="floatingCart" class="floating-cart hidden" title="Открыть корзину">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 3h2l.4 2M7 13h10l3-8H6.4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div>Корзина</div>
-    <div id="floatingCount" class="badge">0</div>
-</div>
+<!-- floating cart button -->
+<button id="floatingCart" class="hidden" title="Открыть корзину">
+    <span id="floatingCartIcon">🛒</span>
+    <span id="floatingCartCount">0</span>
+</button>
 
-<!-- Модальное окно корзины -->
-<div id="cartModal" class="cart-modal hidden">
-    <div class="soft-card rounded-[20px] p-4">
-        <div class="flex items-center justify-between mb-3">
-            <div>
-                <p class="text-sm text-slate-400">Корзина</p>
-                <h3 class="text-white text-lg font-semibold">Ваши товары</h3>
-            </div>
-            <button id="closeCart" class="neon-btn px-3 py-2 rounded-[12px]">Закрыть</button>
+<!-- cart modal (hidden) -->
+<div id="cartModal" class="hidden" aria-hidden="true">
+    <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3 class="text-white text-lg font-semibold">Корзина</h3>
+            <button id="closeCart" class="neon-btn px-3 py-1">Закрыть</button>
         </div>
-        <div id="cartListModal" class="space-y-3">
-            <div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>
+        <div id="cartList" class="mt-4 space-y-3">
+            <div class="rounded-[12px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>
         </div>
         <div class="mt-4 flex items-center justify-between">
             <span class="text-sm text-slate-400">Итог</span>
-            <span id="cartTotalModal" class="text-xl font-bold text-white">0 ₽</span>
+            <span id="cartTotal" class="text-xl font-bold text-white">0 ₽</span>
         </div>
-        <div class="mt-4 grid grid-cols-2 gap-3">
-            <button id="checkoutButtonModal" class="neon-btn w-full rounded-[24px] py-3 text-base font-semibold">Оплатить</button>
-            <button id="clearCart" class="bg-slate-700 rounded-[24px] py-3 text-base font-semibold">Очистить</button>
-        </div>
-        <p class="helper mt-3">Если товар не придёт в течение часа — напишите @ghostmarket_support</p>
+        <button id="checkoutButton" class="neon-btn w-full rounded-[24px] py-4 text-base font-semibold mt-4">Оплатить</button>
     </div>
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
     const tg = window.Telegram?.WebApp;
     if (tg?.ready) tg.ready();
-    const userId = tg?.initDataUnsafe?.user?.id || null;
 
-    const gameIdRules = {
-        genshin: { uidExample: 'UID: 9 цифр, например 100123456', uidRegex: /^\d{9}$/, zoneExample: 'Zone: не обязательно' },
-        brawl:  { uidExample: 'Player Tag: начинается с #, напр. #AB12C', uidRegex: /^#?[A-Z0-9]{3,}$/i, zoneExample: 'Zone: не обязательно' },
-        pubg:   { uidExample: 'Player ID: цифры 7-10, напр. 1234567', uidRegex: /^\d{7,10}$/, zoneExample: 'Zone: не обязательно' },
-        freefire:{ uidExample: 'User ID: цифры 6-9, напр. 123456', uidRegex: /^\d{6,9}$/, zoneExample: 'Zone: не обязательно' },
-        standoff:{ uidExample: 'ID/никнейм: цифры или буквы, напр. user123', uidRegex: /^[A-Za-z0-9\-_]{3,20}$/, zoneExample: 'Zone: не обязательно' }
+    // game catalog with UID patterns and examples (simple validators)
+    const games = {
+        genshin: {
+            name: 'Genshin Impact',
+            subtitle: 'Primogems',
+            image: '',
+            uidPattern: /^\d{9,10}$/,
+            uidExample: 'Пример: 100000000 (9-10 цифр)',
+            products: [
+                { title: '60 Primogems', price: 229 },
+                { title: '180 Primogems', price: 569 },
+                { title: '420 Primogems', price: 1249 }
+            ]
+        },
+        brawl: {
+            name: 'Brawl Stars',
+            subtitle: 'Gems / Brawl Pass',
+            uidPattern: /^#?[A-Z0-9\-]{3,12}$/, // тэг вида #ABC123 или ABC123
+            uidExample: 'Пример: #ABC123',
+            products: [
+                { title: '80 Gems', price: 99 },
+                { title: '250 Gems', price: 229 },
+                { title: 'Brawl Pass', price: 189 }
+            ]
+        },
+        pubg: {
+            name: 'PUBG Mobile',
+            subtitle: 'UC / Elite Pass',
+            uidPattern: /^\d{8,12}$/,
+            uidExample: 'Пример: 123456789 (8-12 цифр)',
+            products: [
+                { title: '100 UC', price: 199 },
+                { title: '330 UC', price: 499 },
+                { title: 'Elite Pass', price: 179 }
+            ]
+        },
+        freefire: {
+            name: 'Free Fire',
+            subtitle: 'Diamonds / BP',
+            uidPattern: /^\d{6,12}$/,
+            uidExample: 'Пример: 12345678',
+            products: [
+                { title: '50 Diamonds', price: 139 },
+                { title: '120 Diamonds', price: 329 },
+                { title: 'Elite Pass', price: 189 }
+            ]
+        },
+        standoff: {
+            name: 'Standoff 2',
+            subtitle: 'Coins / Case',
+            uidPattern: /^\d{6,12}$/,
+            uidExample: 'Пример: 12345678',
+            products: [
+                { title: '200 Coins', price: 149 },
+                { title: '600 Coins', price: 399 },
+                { title: 'Diamond Case', price: 179 }
+            ]
+        }
     };
 
-    // ...existing code...
-    // (внутри вашего существующего JS замените/вставьте следующие расширения)
+    const state = {
+        balance: parseInt(localStorage.getItem('gm_balance') || '0', 10),
+        selectedGame: 'genshin',
+        cart: []
+    };
 
-    // элементы
-    const inputUid = document.getElementById('inputUid');
-    const inputZone = document.getElementById('inputZone');
-    // helper-поля под инпутами
-    const uidHelper = document.createElement('div');
-    uidHelper.className = 'helper';
-    inputUid.insertAdjacentElement('afterend', uidHelper);
-
-    // cart UI
+    // elements
+    const balanceValue = document.getElementById('balanceValue');
+    const productList = document.getElementById('productList');
+    const uidInput = document.getElementById('inputUid');
+    const zoneInput = document.getElementById('inputZone');
+    const uidHint = document.getElementById('uidHint');
     const floatingCart = document.getElementById('floatingCart');
-    const floatingCount = document.getElementById('floatingCount');
+    const floatingCartCount = document.getElementById('floatingCartCount');
     const cartModal = document.getElementById('cartModal');
-    const cartListModal = document.getElementById('cartListModal');
-    const cartTotalModal = document.getElementById('cartTotalModal');
-    const checkoutButtonModal = document.getElementById('checkoutButtonModal');
+    const cartList = document.getElementById('cartList');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkoutButton = document.getElementById('checkoutButton');
     const closeCart = document.getElementById('closeCart');
-    const clearCart = document.getElementById('clearCart');
 
-    // state добавлен ранее
-    // Валидация UID по выбранной игре
-    function updateUidHelper() {
-        const rules = gameIdRules[state.selectedGame] || {};
-        if (!inputUid.value) {
-            uidHelper.textContent = rules.uidExample || 'Пример ID';
-            uidHelper.className = 'helper';
-            return;
-        }
-        const valid = rules.uidRegex ? rules.uidRegex.test(inputUid.value.trim()) : true;
-        uidHelper.textContent = valid ? 'ID выглядит корректно' : 'ID неверного формата';
-        uidHelper.className = 'helper ' + (valid ? 'valid' : 'invalid');
+    function saveState(){
+        localStorage.setItem('gm_balance', String(state.balance));
+        localStorage.setItem('gm_cart', JSON.stringify(state.cart));
     }
-    inputUid.addEventListener('input', () => {
-        updateUidHelper();
-    });
-
-    // показывать cart и синхронизировать иконку
-    function updateFloatingCart() {
-        if (state.cart.length) {
-            floatingCart.classList.remove('hidden');
-            floatingCount.textContent = String(state.cart.length);
-            floatingCount.classList.remove('hidden');
-        } else {
-            floatingCart.classList.add('hidden');
-        }
+    function loadState(){
+        state.cart = JSON.parse(localStorage.getItem('gm_cart') || '[]');
     }
+    loadState();
 
-    floatingCart.addEventListener('click', () => {
-        renderCartModal();
-        cartModal.classList.remove('hidden');
-    });
-    closeCart.addEventListener('click', () => cartModal.classList.add('hidden'));
-    clearCart.addEventListener('click', () => {
-        state.cart = [];
-        renderCart();
-        renderCartModal();
-        saveState();
-    });
+    function renderBalance(){ balanceValue.textContent = `${state.balance} ₽`; }
 
-    function renderCartModal() {
-        if (!state.cart.length) {
-            cartListModal.innerHTML = '<div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>';
-            cartTotalModal.textContent = '0 ₽';
-            floatingCount.textContent = '0';
-            updateFloatingCart();
-            return;
-        }
-        cartListModal.innerHTML = state.cart.map((item, i) => `
-            <div class="cart-item rounded-[16px] bg-[#0f172a] p-3 flex items-center justify-between gap-4">
-                <div>
-                    <p class="text-sm text-slate-400">${item.game}</p>
-                    <p class="text-white font-semibold mt-1">${item.title}</p>
-                    <p class="text-xs text-slate-400 mt-1">UID: ${item.uid}</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-white font-bold">${item.price} ₽</p>
-                    <button class="text-xs text-slate-400 mt-2 remove-cart-item" data-index="${i}">Удалить</button>
-                </div>
-            </div>`).join('');
-        const total = state.cart.reduce((sum, item) => sum + item.price, 0);
-        cartTotalModal.textContent = `${total} ₽`;
-        floatingCount.textContent = String(state.cart.length);
-        updateFloatingCart();
-
-        cartListModal.querySelectorAll('.remove-cart-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                state.cart.splice(Number(btn.dataset.index),1);
-                renderCart();
-                renderCartModal();
-                saveState();
-            });
+    function renderGameSelection(){
+        document.querySelectorAll('[data-game]').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.game === state.selectedGame);
         });
+        uidHint.textContent = games[state.selectedGame].uidExample || 'Пример: формат зависит от игры';
+        uidInput.placeholder = games[state.selectedGame].uidExample || 'User ID';
     }
 
-    // override добавления в корзину: проверка uid и добавление uid/zone/game
-    function attachAddToCart() {
+    function renderProducts(){
+        const game = games[state.selectedGame];
+        productList.innerHTML = game.products.map((item, index) => `
+            <div class="product-card relative rounded-[14px] p-4 bg-[#101828]">
+                <div class="flex items-center gap-4">
+                    <div>
+                        <p class="text-sm text-slate-400">${game.name}</p>
+                        <p class="mt-1 text-lg font-semibold text-white">${item.title}</p>
+                    </div>
+                    <div class="ml-auto text-xl font-bold text-white">${item.price} ₽</div>
+                </div>
+                <button class="neon-btn mt-4 w-full rounded-[8px] py-3 text-sm font-semibold add-to-cart" data-index="${index}">
+                    Добавить в корзину
+                </button>
+            </div>`).join('');
+
         document.querySelectorAll('.add-to-cart').forEach(btn => {
             btn.addEventListener('click', () => {
-                const index = Number(btn.dataset.index);
-                const item = games[state.selectedGame].products[index];
-
-                // проверка UID по правилам
-                const rules = gameIdRules[state.selectedGame] || {};
-                const uidVal = inputUid.value.trim();
-                if (!uidVal || (rules.uidRegex && !rules.uidRegex.test(uidVal))) {
-                    showToast('Введите корректный UID для выбранной игры', 'warning');
-                    return;
-                }
-
+                const idx = Number(btn.dataset.index);
+                const prod = games[state.selectedGame].products[idx];
                 state.cart.push({
                     game: games[state.selectedGame].name,
                     gameKey: state.selectedGame,
-                    title: item.title,
-                    price: item.price,
-                    uid: uidVal,
-                    zone: inputZone.value.trim()
+                    title: prod.title,
+                    price: prod.price
                 });
-                renderCart();
-                renderCartModal();
-                showToast('Добавлено в корзину', 'success');
-                playClickSound();
                 saveState();
-                // показываем корзину значок
+                renderCartUI();
+                showToast('Добавлено в корзину', 'success');
+                // show floating cart if first item
                 updateFloatingCart();
-                // синхронизация с ботом (локальные данные)
                 syncWithBot('cart_update');
             });
         });
     }
 
-    // изменить renderProducts() чтобы пересобрать слушатели
-    function renderProducts() {
-        const game = games[state.selectedGame];
-        productList.innerHTML = game.products.map((item, index) => `
-            <div class="product-card relative rounded-[28px] p-4 bg-[#101828]">
-                <div class="absolute left-4 top-4 rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">Скидка 15%</div>
-                <div class="flex items-center gap-4">
-                    <div class="badge-icon"><img src="${game.image}" alt="${game.name}"></div>
-                    <div>
-                        <p class="text-sm text-slate-400">${game.name}</p>
-                        <p class="mt-1 text-lg font-semibold text-white">${item.title}</p>
-                    </div>
+    function renderCartUI(){
+        if (!state.cart.length){
+            cartList.innerHTML = '<div class="rounded-[12px] bg-[#0f172a] p-4 text-slate-400">Корзина пуста</div>';
+            cartTotal.textContent = '0 ₽';
+            floatingCartCount.textContent = '0';
+            return;
+        }
+        cartList.innerHTML = state.cart.map((it, index) => `
+            <div class="rounded-[12px] bg-[#0f172a] p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">${it.game}</p>
+                    <p class="text-white font-semibold mt-1">${it.title}</p>
                 </div>
-                <div class="mt-5 flex items-center justify-between">
-                    <span class="text-sm text-slate-400">${game.subtitle}</span>
-                    <span class="text-xl font-bold text-white">${item.price} ₽</span>
+                <div class="text-right">
+                    <p class="text-white font-bold">${it.price} ₽</p>
+                    <button class="text-xs text-slate-400 mt-2 remove-cart-item" data-index="${index}">Удалить</button>
                 </div>
-                <button class="neon-btn mt-4 w-full rounded-[22px] py-3 text-sm font-semibold add-to-cart" data-index="${index}">
-                    Добавить в корзину
-                </button>
             </div>`).join('');
 
-        // после рендера привязываем слушатели
-        attachAddToCart();
+        document.querySelectorAll('.remove-cart-item').forEach(btn=>{
+            btn.addEventListener('click', ()=>{
+                state.cart.splice(Number(btn.dataset.index),1);
+                saveState();
+                renderCartUI();
+                updateFloatingCart();
+            });
+        });
+
+        const total = state.cart.reduce((s,i)=>s+i.price,0);
+        cartTotal.textContent = `${total} ₽`;
+        floatingCartCount.textContent = String(state.cart.length);
     }
 
-    // checkout из модального окна: отправка подробностей в бота
-    checkoutButtonModal.addEventListener('click', () => {
-        const uidVal = inputUid.value.trim();
-        const zoneVal = inputZone.value.trim();
-        if (!uidVal) { showToast('Укажите UID перед оплатой', 'warning'); return; }
-        if (!state.cart.length) { showToast('Корзина пуста', 'warning'); return; }
-        // final validation: все элементы должны иметь uid = uidVal
-        const total = state.cart.reduce((s,i) => s + i.price, 0);
-        const products = state.cart.map(i => i.title).join(', ');
-        // отправляем в бота
-        if (tg?.sendData) {
-            tg.sendData(JSON.stringify({
-                type: 'checkout',
-                user_id: userId,
-                product: products,
-                price: total,
-                uid: uidVal,
-                zone: zoneVal,
-                game: state.selectedGame
-            }));
+    function updateFloatingCart(){
+        if (state.cart.length > 0){
+            floatingCart.classList.remove('hidden');
+        } else {
+            floatingCart.classList.add('hidden');
+            cartModal.classList.add('hidden');
         }
-        // локальный UX
+    }
+
+    floatingCart.addEventListener('click', ()=> {
+        cartModal.classList.remove('hidden');
+    });
+    closeCart.addEventListener('click', ()=> cartModal.classList.add('hidden'));
+
+    function showToast(message, type='info'){
+        console.log('TOAST', type, message);
+    }
+
+    function syncWithBot(type){
+        const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || null;
+        if (!userId) return;
+        const payload = { type, user_id: userId, local_balance: state.balance, cart_count: state.cart.length };
+        try { window.Telegram.WebApp.sendData(JSON.stringify(payload)); } catch(e){ console.warn(e); }
+    }
+
+    function sendCheckoutToBot(productTitles, price, uid, zone){
+        const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || null;
+        if (!userId) return;
+        const payload = { type: 'checkout', user_id: userId, product: productTitles, price, uid, zone, local_balance: state.balance };
+        try { window.Telegram.WebApp.sendData(JSON.stringify(payload)); } catch(e){ console.warn(e); }
+    }
+
+    // checkout logic (cart modal button)
+    checkoutButton.addEventListener('click', ()=>{
+        const uid = uidInput.value.trim();
+        const zone = zoneInput.value.trim();
+        if (!uid){
+            showToast('Заполните User ID', 'warning');
+            return;
+        }
+        const gameKey = state.cart[0]?.gameKey || state.selectedGame;
+        const validator = games[gameKey].uidPattern;
+        if (validator && !validator.test(uid)){
+            showToast('Проверьте формат User ID. ' + (games[gameKey].uidExample || ''), 'warning');
+            return;
+        }
+        if (!state.cart.length){
+            showToast('Корзина пуста', 'warning');
+            return;
+        }
+        const total = state.cart.reduce((s,i)=>s+i.price,0);
+        if (state.balance < total){
+            showToast('Недостаточно баланса', 'warning');
+            return;
+        }
+
+        // списываем локально и формируем payload
         state.balance -= total;
-        renderBalance();
-        state.cart = [];
-        renderCart();
-        renderCartModal();
         saveState();
-        showToast('Заказ отправлен. Ожидайте подтверждения', 'success');
+
+        const products = state.cart.map(i=>i.title).join(', ');
+        // убираем товары из корзины
+        state.cart = [];
+        saveState();
+        renderCartUI();
+        updateFloatingCart();
+        renderBalance();
+
+        // уведомления локально
+        showToast('Покупка оформлена', 'success');
+
+        // отправляем в бот (через WebApp.sendData) с деталями
+        sendCheckoutToBot(products, total, uid, zone);
     });
 
-    // инициализация
-    function softInit() {
-        renderBalance();
-        renderGameSelection();
-        renderProducts();
-        renderCart();
-        renderChat();
-        renderNotifications();
-        selectPage('shop');
-        setTimeout(() => syncWithBot('sync_request'), 500);
-        updateUidHelper();
-        attachAddToCart();
-    }
+    // game selection
+    document.querySelectorAll('[data-game]').forEach(btn => {
+        btn.addEventListener('click', ()=>{
+            state.selectedGame = btn.dataset.game;
+            renderGameSelection();
+            renderProducts();
+        });
+    });
 
-    softInit();
+    // top-up buttons
+    document.querySelectorAll('[data-amount]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const amount = Number(btn.dataset.amount);
+            state.balance += amount;
+            saveState();
+            renderBalance();
+            showToast(`Баланс +${amount} ₽`, 'success');
+            syncWithBot('balance_update');
+        });
+    });
+
+    // initial render
+    renderBalance();
+    renderGameSelection();
+    renderProducts();
+    renderCartUI();
+    updateFloatingCart();
+});
 </script>
 </body>
 </html>
