@@ -16,55 +16,23 @@
       --price-green: #10b981;
       --discount-red: #ef4444;
       --border-color: rgba(124, 58, 237, 0.08);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg-dark); color: var(--text-light); -webkit-font-smoothing: antialiased; }
+    body { overflow-x: hidden; }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-light);
-      -webkit-font-smoothing: antialiased;
-    }
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    .scroll-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
 
-    body {
-      overflow-x: hidden;
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-    .app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    .scroll-content {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 16px;
-      padding-bottom: 120px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .page-content {
-      animation: fadeIn 0.3s ease-in-out;
-    }
+    .page-content { animation: fadeIn 0.3s ease-in-out; }
 
     /* ===== HEADER ===== */
     .header {
@@ -89,11 +57,7 @@
       flex: 1;
     }
 
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
 
     .btn-icon {
       width: 40px;
@@ -112,10 +76,7 @@
       position: relative;
     }
 
-    .btn-icon:active {
-      transform: scale(0.92);
-      background: rgba(124, 58, 237, 0.16);
-    }
+    .btn-icon:active { transform: scale(0.92); background: rgba(124, 58, 237, 0.16); }
 
     .btn-premium {
       padding: 6px 12px;
@@ -133,18 +94,7 @@
       animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.7;
-      }
-    }
-
-    .btn-premium:active {
-      transform: scale(0.96);
-    }
+    .btn-premium:active { transform: scale(0.96); }
 
     /* ===== BANNER ===== */
     .banner {
@@ -156,24 +106,10 @@
       text-align: center;
     }
 
-    .banner-title {
-      font-weight: 800;
-      font-size: 18px;
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
+    .banner-title { font-weight: 800; font-size: 18px; margin-bottom: 8px; line-height: 1.3; }
+    .banner-subtitle { color: var(--text-muted); font-size: 12px; margin-bottom: 14px; }
 
-    .banner-subtitle {
-      color: var(--text-muted);
-      font-size: 12px;
-      margin-bottom: 14px;
-    }
-
-    .banner-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-    }
+    .banner-buttons { display: flex; gap: 10px; margin-top: 14px; }
 
     .btn-banner {
       flex: 1;
@@ -192,25 +128,11 @@
       user-select: none;
     }
 
-    .btn-banner-primary {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: white;
-    }
+    .btn-banner-primary { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; }
+    .btn-banner-primary:active { transform: scale(0.96); opacity: 0.8; }
 
-    .btn-banner-primary:active {
-      transform: scale(0.96);
-      opacity: 0.8;
-    }
-
-    .btn-banner-secondary {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      color: var(--text-light);
-    }
-
-    .btn-banner-secondary:active {
-      background: rgba(124, 58, 237, 0.16);
-    }
+    .btn-banner-secondary { background: rgba(124, 58, 237, 0.08); border: 1px solid var(--border-color); color: var(--text-light); }
+    .btn-banner-secondary:active { background: rgba(124, 58, 237, 0.16); }
 
     /* ===== CONSTRUCTOR SECTION ===== */
     .constructor-section {
@@ -221,11 +143,7 @@
       margin-bottom: 16px;
     }
 
-    .constructor-title {
-      font-weight: 800;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
+    .constructor-title { font-weight: 800; font-size: 14px; margin-bottom: 12px; }
 
     .game-selector {
       display: flex;
@@ -236,9 +154,7 @@
       scrollbar-width: none;
     }
 
-    .game-selector::-webkit-scrollbar {
-      display: none;
-    }
+    .game-selector::-webkit-scrollbar { display: none; }
 
     .game-btn {
       flex: 0 0 auto;
@@ -256,15 +172,8 @@
       user-select: none;
     }
 
-    .game-btn:active {
-      transform: scale(0.95);
-    }
-
-    .game-btn.active {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: white;
-      border-color: var(--accent-purple);
-    }
+    .game-btn:active { transform: scale(0.95); }
+    .game-btn.active { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; border-color: var(--accent-purple); }
 
     .field-group {
       display: flex;
@@ -273,11 +182,7 @@
       margin-bottom: 12px;
     }
 
-    .field-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
+    .field-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 
     .field-input {
       background: rgba(124, 58, 237, 0.04);
@@ -291,10 +196,12 @@
       transition: all 0.24s;
     }
 
-    .field-input:focus {
-      border-color: var(--accent-purple);
-      background: rgba(124, 58, 237, 0.08);
-    }
+    .field-input:focus { border-color: var(--accent-purple); background: rgba(124, 58, 237, 0.08); }
+    .field-input::placeholder { color: var(--text-muted); opacity: 0.5; }
+
+    .field-input.error { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
+    .field-error { font-size: 11px; color: var(--error); margin-top: 2px; display: none; }
+    .field-error.show { display: block; }
 
     .pack-selector {
       display: flex;
@@ -308,7 +215,7 @@
       justify-content: space-between;
       align-items: center;
       background: rgba(124, 58, 237, 0.04);
-      border: 1px solid var(--border-color);
+      border: 2px solid var(--border-color);
       border-radius: 10px;
       padding: 12px;
       cursor: pointer;
@@ -317,31 +224,15 @@
       user-select: none;
     }
 
-    .pack-item:active {
-      background: rgba(124, 58, 237, 0.12);
-    }
+    .pack-item:active { background: rgba(124, 58, 237, 0.12); }
+    .pack-item.selected { background: rgba(124, 58, 237, 0.2); border-color: var(--accent-purple); }
 
-    .pack-item.selected {
-      background: rgba(124, 58, 237, 0.16);
-      border-color: var(--accent-purple);
-    }
+    .pack-info { display: flex; flex-direction: column; gap: 4px; }
+    .pack-name { font-weight: 700; font-size: 13px; }
+    .pack-description { font-size: 11px; color: var(--text-muted); }
+    .pack-price { font-weight: 800; color: var(--price-green); font-size: 14px; }
 
-    .pack-name {
-      font-weight: 600;
-      font-size: 13px;
-    }
-
-    .pack-price {
-      font-weight: 800;
-      color: var(--price-green);
-      font-size: 13px;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-    }
+    .action-buttons { display: flex; gap: 8px; margin-top: 14px; }
 
     .btn-action {
       flex: 1;
@@ -360,24 +251,13 @@
       user-select: none;
     }
 
-    .btn-cart {
-      background: rgba(124, 58, 237, 0.12);
-      border: 1px solid var(--border-color);
-      color: var(--text-light);
-    }
+    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .btn-cart:active {
-      background: rgba(124, 58, 237, 0.2);
-    }
+    .btn-cart { background: rgba(124, 58, 237, 0.12); border: 1px solid var(--border-color); color: var(--text-light); }
+    .btn-cart:active:not(:disabled) { background: rgba(124, 58, 237, 0.2); }
 
-    .btn-buy-now {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: white;
-    }
-
-    .btn-buy-now:active {
-      transform: scale(0.96);
-    }
+    .btn-buy-now { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; }
+    .btn-buy-now:active:not(:disabled) { transform: scale(0.96); }
 
     .cart-badge {
       position: absolute;
@@ -393,390 +273,7 @@
       justify-content: center;
       font-weight: 800;
       font-size: 11px;
-    }
-
-    /* ===== BALANCE BLOCK ===== */
-    .balance-block {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 16px;
-    }
-
-    .balance-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .balance-amount {
-      font-weight: 800;
-      font-size: 24px;
-      color: var(--price-green);
-    }
-
-    .balance-btn-add {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
-      color: white;
-      font-weight: 800;
-      font-size: 18px;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .balance-btn-add:active {
-      transform: scale(0.92);
-    }
-
-    .balance-stats {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-      font-size: 11px;
-    }
-
-    .stat-item {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 6px 10px;
-      flex: 1;
-      text-align: center;
-    }
-
-    .stat-label {
-      color: var(--text-muted);
-      display: block;
-    }
-
-    .stat-value {
-      font-weight: 800;
-      color: var(--text-light);
-      display: block;
-      margin-top: 2px;
-    }
-
-    .balance-buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
-
-    .btn-amount {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px;
-      font-weight: 700;
-      font-size: 12px;
-      color: var(--text-light);
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .btn-amount:active {
-      background: rgba(124, 58, 237, 0.16);
-    }
-
-    /* ===== ORDERS PAGE ===== */
-    .orders-page {
-      display: none;
-    }
-
-    .orders-page.active {
-      display: block;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .order-item {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .order-info {
-      flex: 1;
-    }
-
-    .order-name {
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .order-status {
-      font-size: 11px;
-      color: var(--price-green);
-      font-weight: 600;
-    }
-
-    .order-price {
-      font-weight: 800;
-      font-size: 14px;
-      color: var(--accent-purple);
-    }
-
-    /* ===== PROFILE PAGE ===== */
-    .profile-page {
-      display: none;
-    }
-
-    .profile-page.active {
-      display: block;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .profile-header {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px;
-      text-align: center;
-      margin-bottom: 14px;
-    }
-
-    .profile-avatar {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(99, 102, 241, 0.2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      margin: 0 auto 10px;
-    }
-
-    .profile-name {
-      font-weight: 800;
-      font-size: 16px;
-      margin-bottom: 2px;
-    }
-
-    .profile-username {
-      color: var(--text-muted);
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-
-    .profile-stats {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .profile-stat {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 8px 12px;
-      text-align: center;
-      flex: 0 0 auto;
-    }
-
-    .profile-stat-value {
-      font-weight: 800;
-      font-size: 14px;
-      color: var(--accent-purple);
-      display: block;
-    }
-
-    .profile-stat-label {
-      font-size: 10px;
-      color: var(--text-muted);
-      display: block;
-      margin-top: 2px;
-    }
-
-    .premium-section {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(99, 102, 241, 0.1));
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
-      text-align: center;
-    }
-
-    .premium-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .premium-btn {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.24s;
-      width: 100%;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .premium-btn:active {
-      transform: scale(0.96);
-    }
-
-    .promo-section {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
-    }
-
-    .promo-label {
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .promo-input {
-      width: 100%;
-      background: rgba(124, 58, 237, 0.04);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px 12px;
-      color: var(--text-light);
-      font-size: 13px;
-      font-family: Inter;
-      outline: none;
-      margin-bottom: 8px;
-      transition: all 0.24s;
-    }
-
-    .promo-input:focus {
-      border-color: var(--accent-purple);
-      background: rgba(124, 58, 237, 0.08);
-    }
-
-    .promo-btn {
-      width: 100%;
-      background: rgba(124, 58, 237, 0.12);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px;
-      color: var(--text-light);
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .promo-btn:active {
-      background: rgba(124, 58, 237, 0.2);
-    }
-
-    .profile-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .profile-menu-item {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .profile-menu-item:active {
-      background: rgba(124, 58, 237, 0.08);
-    }
-
-    .profile-menu-label {
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .profile-menu-icon {
-      font-size: 16px;
-    }
-
-    /* ===== ADMIN PANEL ===== */
-    .admin-panel {
-      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
-      border: 1px solid rgba(255, 193, 7, 0.3);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
-      display: none;
-    }
-
-    .admin-panel.visible {
-      display: block;
-    }
-
-    .admin-title {
-      font-weight: 800;
-      font-size: 13px;
-      margin-bottom: 10px;
-      color: #ffc107;
-    }
-
-    .admin-btn {
-      width: 100%;
-      background: #ffc107;
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      padding: 10px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .admin-btn:active {
-      transform: scale(0.96);
-      opacity: 0.8;
-    }
-
-    .admin-code {
-      background: rgba(255, 193, 7, 0.1);
-      border: 1px solid rgba(255, 193, 7, 0.3);
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 10px;
-      text-align: center;
-      font-weight: 800;
-      font-size: 12px;
-      color: #ffc107;
-      font-family: monospace;
-      word-break: break-all;
+      animation: slideDown 0.3s ease;
     }
 
     /* ===== TAB BAR ===== */
@@ -812,19 +309,44 @@
       user-select: none;
     }
 
-    .tab-item:active {
-      transform: scale(0.88);
+    .tab-item:active { transform: scale(0.88); }
+    .tab-item.active { color: var(--accent-purple); }
+    .tab-label { font-size: 9px; font-weight: 700; display: block; }
+
+    /* ===== CART PAGE ===== */
+    .cart-page { display: none; }
+    .cart-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+    .cart-item {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .tab-item.active {
-      color: var(--accent-purple);
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+    .cart-item-details { font-size: 11px; color: var(--text-muted); }
+    .cart-item-price { font-weight: 800; font-size: 14px; color: var(--price-green); }
+    .cart-remove { background: var(--error); color: white; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 11px; transition: all 0.24s; }
+    .cart-remove:active { transform: scale(0.9); }
+
+    .cart-total {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin: 16px 0;
     }
 
-    .tab-label {
-      font-size: 9px;
-      font-weight: 700;
-      display: block;
-    }
+    .cart-total-amount { font-weight: 800; font-size: 24px; color: var(--price-green); margin-bottom: 12px; }
+    .cart-checkout-btn { width: 100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; border: none; border-radius: 10px; padding: 14px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.24s; }
+    .cart-checkout-btn:active { transform: scale(0.96); }
 
     /* ===== MODAL ===== */
     .modal-backdrop {
@@ -838,9 +360,7 @@
       z-index: 100;
     }
 
-    .modal-backdrop.visible {
-      display: flex;
-    }
+    .modal-backdrop.visible { display: flex; }
 
     .modal-content {
       background: var(--card-dark);
@@ -849,85 +369,20 @@
       padding: 20px;
       width: 88%;
       max-width: 400px;
-      animation: slideUp 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: slideDown 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    @keyframes slideUp {
-      from {
-        transform: translateY(40px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .modal-title {
-      font-weight: 800;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    .modal-body {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .modal-btn {
-      flex: 1;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .modal-btn-cancel {
-      background: rgba(124, 58, 237, 0.08);
-      color: var(--text-light);
-    }
-
-    .modal-btn-confirm {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: white;
-    }
-
-    .modal-btn:active {
-      transform: scale(0.96);
-    }
+    .modal-title { font-weight: 800; font-size: 16px; margin-bottom: 10px; }
+    .modal-body { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; border: none; cursor: pointer; transition: all 0.24s; -webkit-user-select: none; user-select: none; }
+    .modal-btn-cancel { background: rgba(124, 58, 237, 0.08); color: var(--text-light); }
+    .modal-btn-confirm { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; }
+    .modal-btn:active { transform: scale(0.96); }
 
     /* ===== TOAST ===== */
-    @keyframes toastIn {
-      from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
-    }
-
-    @keyframes toastOut {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-      }
-    }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
 
     .toast {
       position: fixed;
@@ -946,43 +401,15 @@
       border: 1px solid rgba(124, 58, 237, 0.2);
     }
 
-    /* ===== UTILITIES ===== */
-    .hidden {
-      display: none !important;
-    }
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--error); }
+    .toast.warning { border-color: var(--warning); }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 18px 0 12px 0;
-      gap: 8px;
-    }
-
-    .section-title {
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    .btn-view-all {
-      background: transparent;
-      border: none;
-      color: var(--accent-purple);
-      font-weight: 700;
-      font-size: 11px;
-      cursor: pointer;
-      padding: 0;
-      -webkit-user-select: none;
-      user-select: none;
-    }
+    .hidden { display: none !important; }
 
     @media (max-width: 420px) {
-      .logo {
-        font-size: 15px;
-      }
-      .banner-title {
-        font-size: 16px;
-      }
+      .logo { font-size: 15px; }
+      .banner-title { font-size: 16px; }
     }
   </style>
 </head>
@@ -1005,37 +432,12 @@
     <div class="scroll-content" id="scrollContent">
       <!-- HOME PAGE -->
       <div id="homePage" class="page-content">
-        <!-- Banner -->
         <div class="banner">
-          <div class="banner-title">Игровая валюта дешевле официальных цен</div>
+          <div class="banner-title">🎮 Игровая валюта дешевле официальных цен</div>
           <div class="banner-subtitle">PUBG • Brawl Stars • Mobile Legends • Free Fire</div>
           <div class="banner-buttons">
             <button class="btn-banner btn-banner-primary" id="btnTopup">Пополнить баланс</button>
             <button class="btn-banner btn-banner-secondary" id="btnConstructorScroll">Конструктор</button>
-          </div>
-        </div>
-
-        <!-- Balance Block -->
-        <div class="balance-block">
-          <div class="balance-header">
-            <div class="balance-amount" id="balanceAmount">0 ₽</div>
-            <button class="balance-btn-add" id="btnBalanceAdd">+</button>
-          </div>
-          <div class="balance-stats">
-            <div class="stat-item">
-              <span class="stat-label">Кешбэк</span>
-              <span class="stat-value">5%</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">Статус</span>
-              <span class="stat-value" id="statusBadge">Обычный</span>
-            </div>
-          </div>
-          <div class="balance-buttons">
-            <button class="btn-amount" data-amount="100">+100 ₽</button>
-            <button class="btn-amount" data-amount="500">+500 ₽</button>
-            <button class="btn-amount" data-amount="1000">+1000 ₽</button>
-            <button class="btn-amount" data-amount="5000">+5000 ₽</button>
           </div>
         </div>
 
@@ -1054,69 +456,17 @@
         </div>
       </div>
 
-      <!-- ORDERS PAGE -->
-      <div id="ordersPage" class="orders-page">
+      <!-- CART PAGE -->
+      <div id="cartPage" class="cart-page">
         <div class="page-content">
-          <div class="section-header">
-            <div class="section-title">Ваши заказы</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 style="margin: 0; font-size: 18px;">🛒 Корзина</h2>
+            <button class="btn-icon" id="btnBackFromCart" style="width: 36px; height: 36px;">←</button>
           </div>
-          <div id="ordersList"></div>
-        </div>
-      </div>
-
-      <!-- PROFILE PAGE -->
-      <div id="profilePage" class="profile-page">
-        <div class="page-content">
-          <div class="profile-header">
-            <div class="profile-avatar" id="profileAvatarEl">👤</div>
-            <div class="profile-name" id="profileNameEl">Пользователь</div>
-            <div class="profile-username" id="profileUsernameEl">@user</div>
-            <div class="profile-stats">
-              <div class="profile-stat">
-                <span class="profile-stat-value" id="profileOrdersCount">0</span>
-                <span class="profile-stat-label">Покупок</span>
-              </div>
-              <div class="profile-stat">
-                <span class="profile-stat-value" id="profileSpentAmount">0 ₽</span>
-                <span class="profile-stat-label">Потрачено</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Premium Section -->
-          <div class="premium-section">
-            <div class="premium-label">Текущий статус</div>
-            <button class="premium-btn" id="btnUpgradePremium">⭐ Купить Premium</button>
-          </div>
-
-          <!-- Promo Code Section -->
-          <div class="promo-section">
-            <div class="promo-label">Промокод</div>
-            <input type="text" class="promo-input" id="promoCodeInput" placeholder="Введите промокод...">
-            <button class="promo-btn" id="btnActivatePromo">Активировать</button>
-          </div>
-
-          <!-- Admin Panel -->
-          <div class="admin-panel" id="adminPanelContainer">
-            <div class="admin-title">🎁 Генератор промокодов (ADMIN)</div>
-            <button class="admin-btn" id="btnGeneratePromo">Создать промокод</button>
-            <div class="admin-code" id="adminPromoCodeDisplay"></div>
-          </div>
-
-          <!-- Profile Menu -->
-          <div class="profile-menu">
-            <div class="profile-menu-item" id="btnSettingsMenu">
-              <span class="profile-menu-label">⚙️ Настройки</span>
-              <span class="profile-menu-icon">›</span>
-            </div>
-            <div class="profile-menu-item" id="btnSupportMenu">
-              <span class="profile-menu-label">💬 Поддержка</span>
-              <span class="profile-menu-icon">›</span>
-            </div>
-            <div class="profile-menu-item" id="btnLogoutMenu">
-              <span class="profile-menu-label">🚪 Выход</span>
-              <span class="profile-menu-icon">›</span>
-            </div>
+          <div id="cartList"></div>
+          <div class="cart-total">
+            <div class="cart-total-amount" id="cartTotalAmount">0 ₽</div>
+            <button class="cart-checkout-btn" id="btnCheckout">Оформить заказ</button>
           </div>
         </div>
       </div>
@@ -1132,13 +482,13 @@
         <span>📦</span>
         <span class="tab-label">Корзина</span>
       </button>
-      <button class="tab-item" data-page="orders">
-        <span>📋</span>
-        <span class="tab-label">Заказы</span>
-      </button>
       <button class="tab-item" data-page="profile">
         <span>👤</span>
         <span class="tab-label">Профиль</span>
+      </button>
+      <button class="tab-item" data-page="settings">
+        <span>⚙️</span>
+        <span class="tab-label">Настройки</span>
       </button>
     </div>
   </div>
@@ -1162,35 +512,19 @@
     // ==================== TELEGRAM SDK ====================
     const tg = window.Telegram?.WebApp || {};
     if (tg.ready) {
-      try {
-        tg.ready();
-      } catch (e) {
-        console.warn('Telegram WebApp not ready');
-      }
+      try { tg.ready(); } catch (e) {}
     }
 
     const haptic = (type = 'medium') => {
-      try {
-        if (tg.HapticFeedback && tg.HapticFeedback.impactOccurred) {
-          tg.HapticFeedback.impactOccurred(type);
-        }
-      } catch (e) {}
+      try { if (tg.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred(type); } catch (e) {}
     };
 
     const hapticNotify = (type = 'success') => {
-      try {
-        if (tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) {
-          tg.HapticFeedback.notificationOccurred(type);
-        }
-      } catch (e) {}
+      try { if (tg.HapticFeedback?.notificationOccurred) tg.HapticFeedback.notificationOccurred(type); } catch (e) {}
     };
 
     // ==================== USER DATA ====================
-    const userData = tg.initDataUnsafe?.user || {
-      id: 0,
-      first_name: 'Guest',
-      username: 'guest'
-    };
+    const userData = tg.initDataUnsafe?.user || { id: 0, first_name: 'Guest', username: 'guest' };
     const isAdminUser = userData.username === 'henotsosal';
 
     // ==================== STATE ====================
@@ -1200,8 +534,7 @@
       selectedPack: null,
       cartItems: [],
       userBalance: 0,
-      userPremium: 'free',
-      userOrders: []
+      userPremium: 'free'
     };
 
     // ==================== GAME DATA ====================
@@ -1210,69 +543,65 @@
         name: 'PUBG Mobile',
         emoji: '🎮',
         fields: [
-          { id: 'uid', label: 'Игровой UID', placeholder: 'Введите UID...' },
-          { id: 'zone', label: 'Zone ID', placeholder: 'Введите Zone...' }
+          { id: 'uid', label: 'Игровой UID', placeholder: 'Введите UID...', required: true, validation: /^\d+$/ },
+          { id: 'zone', label: 'Zone ID', placeholder: 'Введите Zone (0-5)...', required: true, validation: /^[0-5]$/ }
         ],
         packs: [
-          { id: 'p60', name: '60 UC', price: 15 },
-          { id: 'p300', name: '300 UC', price: 65 },
-          { id: 'p600', name: '600 UC', price: 120 }
+          { id: 'p60', name: '60 UC', price: 15, description: 'Базовый пакет' },
+          { id: 'p300', name: '300 UC', price: 65, description: 'Популярный пакет' },
+          { id: 'p600', name: '600 UC', price: 120, description: 'Выгодный пакет' }
         ]
       },
       brawl: {
         name: 'Brawl Stars',
         emoji: '⭐',
         fields: [
-          { id: 'tag', label: 'Тег игрока', placeholder: '#XXXXXX' }
+          { id: 'tag', label: 'Тег игрока', placeholder: '#XXXXXX', required: true, validation: /^#[0-9A-Z]{3,}$/ }
         ],
         packs: [
-          { id: 'b80', name: '80 Gems', price: 18 },
-          { id: 'b170', name: '170 Gems', price: 35 },
-          { id: 'b360', name: '360 Gems', price: 69 }
+          { id: 'b80', name: '80 Gems', price: 18, description: 'Стартовый пакет' },
+          { id: 'b170', name: '170 Gems', price: 35, description: 'Средний пакет' },
+          { id: 'b360', name: '360 Gems', price: 69, description: 'Премиум пакет' }
         ]
       },
       mlbb: {
         name: 'Mobile Legends',
         emoji: '👾',
         fields: [
-          { id: 'uid', label: 'User ID', placeholder: 'Введите User ID...' },
-          { id: 'server', label: 'Сервер', placeholder: 'Выберите сервер...' }
+          { id: 'uid', label: 'User ID', placeholder: 'Введите User ID...', required: true, validation: /^\d+$/ },
+          { id: 'server', label: 'Сервер', placeholder: 'Выберите сервер (1-5)...', required: true, validation: /^[1-5]$/ }
         ],
         packs: [
-          { id: 'm50', name: '50 Diamonds', price: 12 },
-          { id: 'm100', name: '100 Diamonds', price: 24 },
-          { id: 'm220', name: '220 Diamonds', price: 55 }
+          { id: 'm50', name: '50 Diamonds', price: 12, description: 'Мини пакет' },
+          { id: 'm100', name: '100 Diamonds', price: 24, description: 'Стандартный пакет' },
+          { id: 'm220', name: '220 Diamonds', price: 55, description: 'Максимальный пакет' }
         ]
       },
       ff: {
         name: 'Free Fire',
         emoji: '🔥',
         fields: [
-          { id: 'id', label: 'ID аккаунта', placeholder: 'Введите ID...' }
+          { id: 'id', label: 'ID аккаунта', placeholder: 'Введите ID...', required: true, validation: /^\d+$/ }
         ],
         packs: [
-          { id: 'f100', name: '100 Diamonds', price: 25 },
-          { id: 'f210', name: '210 Diamonds', price: 50 },
-          { id: 'f440', name: '440 Diamonds', price: 99 }
+          { id: 'f100', name: '100 Diamonds', price: 25, description: 'Базовый' },
+          { id: 'f210', name: '210 Diamonds', price: 50, description: 'Стандартный' },
+          { id: 'f440', name: '440 Diamonds', price: 99, description: 'Максимальный' }
         ]
       }
     };
 
-    // ==================== DOM ELEMENTS (ALL RENAMED) ====================
-    const homePage = document.getElementById('homePage');
-    const ordersPage = document.getElementById('ordersPage');
-    const profilePage = document.getElementById('profilePage');
+    // ==================== DOM ELEMENTS ====================
     const scrollContent = document.getElementById('scrollContent');
+    const homePage = document.getElementById('homePage');
+    const cartPage = document.getElementById('cartPage');
     const tabItems = document.querySelectorAll('.tab-item');
 
     const gameSelectorContainer = document.getElementById('gameSelector');
     const fieldsContainer = document.getElementById('fieldsContainer');
     const packSelectorContainer = document.getElementById('packSelector');
 
-    const balanceAmount = document.getElementById('balanceAmount');
-    const statusBadge = document.getElementById('statusBadge');
     const cartBadgeEl = document.getElementById('cartBadgeEl');
-
     const modalBackdrop = document.getElementById('modalBackdropEl');
     const modalTitle = document.getElementById('modalTitleEl');
     const modalBody = document.getElementById('modalBodyEl');
@@ -1280,21 +609,14 @@
     const btnModalCancel = document.getElementById('btnModalCancelEl');
     const toastContainer = document.getElementById('toastContainerEl');
 
-    const adminPanel = document.getElementById('adminPanelContainer');
-    const adminPromoCodeDisplay = document.getElementById('adminPromoCodeDisplay');
-
-    const profileAvatar = document.getElementById('profileAvatarEl');
-    const profileName = document.getElementById('profileNameEl');
-    const profileUsername = document.getElementById('profileUsernameEl');
-    const profileOrdersCount = document.getElementById('profileOrdersCount');
-    const profileSpentAmount = document.getElementById('profileSpentAmount');
-    const ordersList = document.getElementById('ordersList');
+    const cartList = document.getElementById('cartList');
+    const cartTotalAmount = document.getElementById('cartTotalAmount');
 
     // ==================== HELPER FUNCTIONS ====================
 
-    function showToast(message) {
+    function showToast(message, type = 'info') {
       const toast = document.createElement('div');
-      toast.className = 'toast';
+      toast.className = `toast ${type}`;
       toast.textContent = message;
       toastContainer.appendChild(toast);
       setTimeout(() => toast.remove(), 2000);
@@ -1304,9 +626,7 @@
       modalTitle.textContent = title;
       modalBody.textContent = body;
       btnModalConfirm.onclick = () => {
-        if (onConfirm) {
-          onConfirm();
-        }
+        if (onConfirm) onConfirm();
         closeModal();
       };
       modalBackdrop.classList.add('visible');
@@ -1316,11 +636,6 @@
     function closeModal() {
       modalBackdrop.classList.remove('visible');
       btnModalConfirm.onclick = null;
-    }
-
-    function updateBalance() {
-      balanceAmount.textContent = state.userBalance + ' ₽';
-      statusBadge.textContent = state.userPremium === 'free' ? 'Обычный' : 'Premium ⭐';
     }
 
     function updateCartBadge() {
@@ -1361,12 +676,80 @@
       gameInfo.fields.forEach(field => {
         const group = document.createElement('div');
         group.className = 'field-group';
-        group.innerHTML = `
-          <label class="field-label">${field.label}</label>
-          <input type="text" class="field-input" data-field="${field.id}" placeholder="${field.placeholder}">
-        `;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'field-input';
+        input.dataset.field = field.id;
+        input.placeholder = field.placeholder;
+        input.dataset.validation = field.validation.toString();
+        input.dataset.required = field.required;
+
+        const label = document.createElement('label');
+        label.className = 'field-label';
+        label.textContent = field.label;
+
+        const error = document.createElement('div');
+        error.className = 'field-error';
+        error.dataset.field = field.id;
+        error.textContent = `Неверный формат ${field.label.toLowerCase()}`;
+
+        input.addEventListener('blur', validateField);
+        input.addEventListener('input', () => {
+          input.classList.remove('error');
+          error.classList.remove('show');
+        });
+
+        group.appendChild(label);
+        group.appendChild(input);
+        group.appendChild(error);
         fieldsContainer.appendChild(group);
       });
+    }
+
+    function validateField(e) {
+      const field = e.target;
+      const value = field.value.trim();
+      const validationStr = field.dataset.validation;
+      const isRequired = field.dataset.required === 'true';
+
+      if (!value && isRequired) {
+        field.classList.add('error');
+        document.querySelector(`[data-field="${field.dataset.field}"]`).nextElementSibling?.classList.add('show');
+        return false;
+      }
+
+      if (value) {
+        try {
+          const regex = new RegExp(validationStr.slice(1, -1));
+          if (!regex.test(value)) {
+            field.classList.add('error');
+            document.querySelector(`.field-error[data-field="${field.dataset.field}"]`)?.classList.add('show');
+            return false;
+          }
+        } catch (e) {}
+      }
+
+      field.classList.remove('error');
+      document.querySelector(`.field-error[data-field="${field.dataset.field}"]`)?.classList.remove('show');
+      return true;
+    }
+
+    function validateAllFields() {
+      let isValid = true;
+      document.querySelectorAll('.field-input').forEach(input => {
+        if (!validateField({ target: input })) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    }
+
+    function getFieldValues() {
+      const values = {};
+      document.querySelectorAll('.field-input').forEach(input => {
+        values[input.dataset.field] = input.value.trim();
+      });
+      return values;
     }
 
     function renderPacks() {
@@ -1377,8 +760,11 @@
         item.className = 'pack-item';
         item.dataset.pack = pack.id;
         item.innerHTML = `
-          <span class="pack-name">${pack.name}</span>
-          <span class="pack-price">${pack.price} ₽</span>
+          <div class="pack-info">
+            <div class="pack-name">${pack.emoji ? pack.emoji + ' ' : ''}${pack.name}</div>
+            <div class="pack-description">${pack.description}</div>
+          </div>
+          <div class="pack-price">${pack.price} ₽</div>
         `;
         item.addEventListener('click', () => selectPack(pack.id));
         packSelectorContainer.appendChild(item);
@@ -1397,19 +783,13 @@
       haptic('light');
 
       homePage.classList.add('hidden');
-      ordersPage.classList.remove('active');
-      profilePage.classList.remove('active');
+      cartPage.classList.remove('active');
 
       if (pageName === 'home') {
         homePage.classList.remove('hidden');
-      } else if (pageName === 'orders') {
-        ordersPage.classList.add('active');
-        renderOrdersPage();
-      } else if (pageName === 'profile') {
-        profilePage.classList.add('active');
-        renderProfilePage();
       } else if (pageName === 'cart') {
-        showCartModal();
+        cartPage.classList.add('active');
+        renderCartPage();
       }
 
       tabItems.forEach(item => {
@@ -1418,34 +798,137 @@
       scrollContent.scrollTop = 0;
     }
 
-    function showCartModal() {
+    function renderCartPage() {
       if (state.cartItems.length === 0) {
-        showToast('📦 Корзина пуста');
-        switchPage('home');
+        cartList.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Корзина пуста 😢</p>';
+        cartTotalAmount.textContent = '0 ₽';
+        document.getElementById('btnCheckout').disabled = true;
         return;
       }
 
+      document.getElementById('btnCheckout').disabled = false;
+
       let total = 0;
-      let msg = '📦 Ваша корзина:\n\n';
+      cartList.innerHTML = '';
+
       state.cartItems.forEach((item, idx) => {
-        msg += `${idx + 1}. ${item.gameName} - ${item.packName} (${item.price} ₽)\n`;
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.gameName} - ${item.packName}</div>
+            <div class="cart-item-details">UID: ${item.uid || 'N/A'}</div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="cart-item-price">${item.price} ₽</div>
+            <button class="cart-remove" onclick="removeFromCart(${idx})">Удалить</button>
+          </div>
+        `;
+        cartList.appendChild(cartItem);
         total += item.price;
       });
-      msg += `\nИтого: ${total} ₽\n\nПерейти в оформление?`;
 
-      showModal('Корзина', msg, () => {
-        if (state.userBalance >= total) {
-          processCheckout(state.cartItems, total);
-        } else {
-          showToast('❌ Недостаточно средств');
-        }
-      });
+      cartTotalAmount.textContent = total + ' ₽';
     }
 
-    function processCheckout(items, total) {
+    function removeFromCart(idx) {
+      state.cartItems.splice(idx, 1);
+      updateCartBadge();
+      renderCartPage();
+      hapticNotify('success');
+      showToast('Товар удален из корзины', 'warning');
+    }
+
+    window.removeFromCart = removeFromCart;
+
+    // ==================== EVENT LISTENERS ====================
+
+    document.getElementById('btnAddToCart').addEventListener('click', () => {
+      haptic('light');
+
+      if (!state.selectedPack) {
+        showToast('⚠️ Выберите пакет', 'warning');
+        return;
+      }
+
+      if (!validateAllFields()) {
+        showToast('❌ Заполните все поля корректно', 'error');
+        return;
+      }
+
+      const gameInfo = gamesData[state.currentGame];
+      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
+      const fieldValues = getFieldValues();
+
+      state.cartItems.push({
+        gameName: gameInfo.name,
+        packName: packInfo.name,
+        price: packInfo.price,
+        ...fieldValues
+      });
+
+      updateCartBadge();
+      hapticNotify('success');
+      showToast('✅ Товар добавлен в корзину', 'success');
+
+      // Clear fields
+      document.querySelectorAll('.field-input').forEach(input => input.value = '');
+      state.selectedPack = null;
+      renderPacks();
+    });
+
+    document.getElementById('btnBuyNow').addEventListener('click', () => {
+      haptic('light');
+
+      if (!state.selectedPack) {
+        showToast('⚠️ Выберите пакет', 'warning');
+        return;
+      }
+
+      if (!validateAllFields()) {
+        showToast('❌ Заполните все поля корректно', 'error');
+        return;
+      }
+
+      const gameInfo = gamesData[state.currentGame];
+      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
+      const fieldValues = getFieldValues();
+
+      const item = {
+        gameName: gameInfo.name,
+        packName: packInfo.name,
+        price: packInfo.price,
+        ...fieldValues
+      };
+
       const payload = {
         action: 'checkout',
-        items: items.map(item => ({
+        items: [item],
+        total: item.price
+      };
+
+      try {
+        if (tg.sendData) {
+          tg.sendData(JSON.stringify(payload));
+        }
+      } catch (e) {
+        console.error('Send failed', e);
+      }
+
+      hapticNotify('success');
+      showToast('✅ Заказ отправлен!', 'success');
+    });
+
+    document.getElementById('btnCheckout').addEventListener('click', () => {
+      haptic('light');
+
+      if (state.cartItems.length === 0) return;
+
+      const total = state.cartItems.reduce((sum, item) => sum + item.price, 0);
+
+      const payload = {
+        action: 'checkout',
+        items: state.cartItems.map(item => ({
           game: state.currentGame.toUpperCase(),
           title: `${item.gameName} - ${item.packName}`,
           price: item.price,
@@ -1460,241 +943,69 @@
           tg.sendData(JSON.stringify(payload));
         }
       } catch (e) {
-        console.error('Failed to send data:', e);
+        console.error('Send failed', e);
       }
 
-      state.userBalance -= total;
-      updateBalance();
       state.cartItems = [];
       updateCartBadge();
-
-      items.forEach(item => {
-        state.userOrders.push({
-          name: `${item.gameName} - ${item.packName}`,
-          price: item.price,
-          status: '✓ Доставлено',
-          date: new Date().toLocaleString('ru-RU')
-        });
-      });
-
+      renderCartPage();
       hapticNotify('success');
-      showToast('✓ Заказ принят!');
+      showToast('✅ Заказ успешно оформлен!', 'success');
       switchPage('home');
-    }
-
-    function renderOrdersPage() {
-      if (state.userOrders.length === 0) {
-        ordersList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Нет заказов</p>';
-        return;
-      }
-      ordersList.innerHTML = state.userOrders.map(order => `
-        <div class="order-item">
-          <div class="order-info">
-            <div class="order-name">${order.name}</div>
-            <div class="order-status">${order.status}</div>
-          </div>
-          <div class="order-price">${order.price} ₽</div>
-        </div>
-      `).join('');
-    }
-
-    function renderProfilePage() {
-      const firstLetter = userData.first_name?.[0]?.toUpperCase() || 'U';
-      profileAvatar.textContent = firstLetter;
-      profileName.textContent = userData.first_name || 'Пользователь';
-      profileUsername.textContent = `@${userData.username || 'user'}`;
-      profileOrdersCount.textContent = state.userOrders.length;
-      profileSpentAmount.textContent = (state.userOrders.reduce((sum, o) => sum + o.price, 0)) + ' ₽';
-
-      if (isAdminUser) {
-        adminPanel.classList.add('visible');
-      }
-    }
-
-    function generatePromoCode() {
-      const code = `GHOST-${Math.random().toString(36).substring(2, 8).toUpperCase()}-RAND`;
-      adminPromoCodeDisplay.textContent = code;
-      hapticNotify('success');
-      showToast('✓ Промокод создан: ' + code);
-    }
-
-    // ==================== EVENT LISTENERS ====================
-
-    // Constructor buttons
-    document.getElementById('btnAddToCart').addEventListener('click', () => {
-      haptic('light');
-      if (!state.selectedPack) {
-        showToast('⚠️ Выберите пакет');
-        return;
-      }
-
-      const gameInfo = gamesData[state.currentGame];
-      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
-
-      const fieldValues = {};
-      document.querySelectorAll('.field-input').forEach(input => {
-        fieldValues[input.dataset.field] = input.value;
-      });
-
-      state.cartItems.push({
-        gameName: gameInfo.name,
-        packName: packInfo.name,
-        price: packInfo.price,
-        ...fieldValues
-      });
-
-      updateCartBadge();
-      hapticNotify('success');
-      showToast('✓ Добавлено в корзину');
     });
 
-    document.getElementById('btnBuyNow').addEventListener('click', () => {
-      haptic('light');
-      if (!state.selectedPack) {
-        showToast('⚠️ Выберите пакет');
-        return;
-      }
-
-      const gameInfo = gamesData[state.currentGame];
-      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
-
-      const fieldValues = {};
-      document.querySelectorAll('.field-input').forEach(input => {
-        fieldValues[input.dataset.field] = input.value;
-      });
-
-      const item = {
-        gameName: gameInfo.name,
-        packName: packInfo.name,
-        price: packInfo.price,
-        ...fieldValues
-      };
-
-      if (state.userBalance >= item.price) {
-        processCheckout([item], item.price);
-      } else {
-        showToast('❌ Недостаточно средств');
-      }
-    });
-
-    // Balance buttons
-    document.querySelectorAll('.btn-amount').forEach(btn => {
-      btn.addEventListener('click', () => {
-        haptic('light');
-        const amount = parseInt(btn.dataset.amount);
-        state.userBalance += amount;
-        updateBalance();
-        hapticNotify('success');
-        showToast(`✓ Баланс пополнен на ${amount} ₽`);
-      });
-    });
-
-    // Premium buttons
-    document.getElementById('btnPremiumHeader').addEventListener('click', () => {
-      haptic('light');
-      showModal('Premium подписка', 'Выберите тариф:\n\n⭐ Premium — 99 ₽/месяц\n👑 Premium+ — 199 ₽/месяц', () => {
-        state.userPremium = 'premium';
-        updateBalance();
-        showToast('⭐ Premium активирован!');
-      });
-    });
-
-    document.getElementById('btnUpgradePremium').addEventListener('click', () => {
-      haptic('light');
-      document.getElementById('btnPremiumHeader').click();
-    });
-
-    // Promo code
-    document.getElementById('btnActivatePromo').addEventListener('click', () => {
-      haptic('light');
-      const code = document.getElementById('promoCodeInput').value.trim();
-      if (!code) {
-        showToast('⚠️ Введите промокод');
-        return;
-      }
-      state.userBalance += 50;
-      updateBalance();
-      hapticNotify('success');
-      showToast('✓ Промокод активирован! +50 ₽');
-      document.getElementById('promoCodeInput').value = '';
-    });
-
-    // Admin panel
-    document.getElementById('btnGeneratePromo').addEventListener('click', () => {
-      haptic('light');
-      generatePromoCode();
-    });
-
-    // Profile menu
-    document.getElementById('btnSettingsMenu').addEventListener('click', () => {
-      haptic('light');
-      showToast('⚙️ Настройки профиля');
-    });
-
-    document.getElementById('btnSupportMenu').addEventListener('click', () => {
-      haptic('light');
-      if (tg.openTelegramLink) {
-        tg.openTelegramLink('https://t.me/GhostMarket_support');
-      } else {
-        showToast('💬 Контакт поддержки');
-      }
-    });
-
-    document.getElementById('btnLogoutMenu').addEventListener('click', () => {
-      haptic('light');
-      showToast('🚪 Выход...');
-    });
-
-    // Tab bar
-    tabItems.forEach(item => {
-      item.addEventListener('click', () => {
-        haptic('light');
-        switchPage(item.dataset.page);
-      });
-    });
-
-    // Header buttons
     document.getElementById('btnCartHeader').addEventListener('click', () => {
       haptic('light');
       switchPage('cart');
     });
 
-    document.getElementById('btnNotifications').addEventListener('click', () => {
+    document.getElementById('btnBackFromCart').addEventListener('click', () => {
       haptic('light');
-      showToast('🔔 Нет новых уведомлений');
+      switchPage('home');
     });
 
-    document.getElementById('btnConstructorScroll').addEventListener('click', () => {
-      haptic('light');
-      const constructorElement = document.querySelector('.constructor-section');
-      if (constructorElement) {
-        constructorElement.scrollIntoView({ behavior: 'smooth' });
-      }
+    tabItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const page = item.dataset.page;
+        if (page === 'home' || page === 'cart') {
+          switchPage(page);
+        } else if (page === 'profile') {
+          showToast('👤 Профиль', 'info');
+        } else if (page === 'settings') {
+          showToast('⚙️ Настройки', 'info');
+        }
+      });
     });
 
-    // Modal
     btnModalCancel.addEventListener('click', closeModal);
     modalBackdrop.addEventListener('click', (e) => {
       if (e.target === modalBackdrop) closeModal();
     });
 
-    // Balance add button
-    document.getElementById('btnBalanceAdd').addEventListener('click', () => {
+    document.getElementById('btnNotifications').addEventListener('click', () => {
       haptic('light');
-      showToast('💳 Выберите сумму пополнения');
+      showToast('🔔 Нет новых уведомлений', 'info');
+    });
+
+    document.getElementById('btnPremiumHeader').addEventListener('click', () => {
+      haptic('light');
+      showToast('⭐ Скоро!', 'info');
+    });
+
+    document.getElementById('btnConstructorScroll').addEventListener('click', () => {
+      haptic('light');
+      switchPage('home');
     });
 
     document.getElementById('btnTopup').addEventListener('click', () => {
       haptic('light');
-      showToast('💳 Переход к пополнению...');
+      showToast('💳 Пополнение в разработке', 'info');
     });
 
     // Initialize
     renderGameSelector();
     renderFields();
     renderPacks();
-    updateBalance();
-    renderProfilePage();
   </script>
 </body>
 </html>
