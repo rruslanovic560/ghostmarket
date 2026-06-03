@@ -1,766 +1,582 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>GhostMarket | Premium WebApp</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>GhostMarket — WebApp</title>
 
-  <script>
-    tailwind = window.tailwind || {};
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'gm-bg': '#0b0d16',
-            'gm-card': '#131724',
-            'gm-border': 'rgba(148,163,184,0.14)',
-            'gm-glow': 'rgba(59,130,246,0.24)',
-            'gm-accent-blue': '#3b82f6',
-            'gm-accent-violet': '#8b5cf6',
-            'gm-price': '#10b981',
-            'gm-text': '#eef2ff',
-            'gm-muted': '#a1a9c0'
-          },
-          boxShadow: {
-            'gm-soft': '0 24px 80px rgba(3,7,18,0.35)',
-            'gm-neon': '0 18px 70px rgba(59,130,246,0.18)',
-            'gm-card': '0 18px 50px rgba(0,0,0,0.22)'
-          },
-          borderRadius: {
-            'card': '24px'
-          }
-        }
-      }
-    }
-  </script>
+  <script>tailwind = window.tailwind || {};</script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
-    html { scroll-behavior: smooth; }
-    body {
-      min-height: 100vh;
-      margin: 0;
-      background: radial-gradient(circle at top, rgba(59,130,246,0.12), transparent 28%), linear-gradient(180deg, #0b0d16 0%, #070810 100%);
-      color: #eef2ff;
-      font-family: 'Inter', system-ui, sans-serif;
+    :root{
+      --bg-dark:#0b0d16;
+      --card-dark:#131724;
+      --text-dark:#eef2ff;
+      --muted:#9aa7bf;
+      --accent-blue:#3b82f6;
+      --accent-violet:#8b5cf6;
+      --price:#10b981;
+      --gap:16px;
     }
-    .app-shell { min-height: 100vh; padding-bottom: 140px; }
-    .glass-card { background: rgba(19,23,36,0.92); border: 1px solid rgba(148,163,184,0.12); box-shadow: 0 24px 80px rgba(3,7,18,0.28); backdrop-filter: blur(18px); }
-    .gm-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); }
-    .section-card { transition: opacity .32s ease, transform .32s ease; will-change: opacity, transform; }
-    .section-hidden { opacity: 0; transform: translateY(18px); pointer-events: none; height: 0; overflow: hidden; }
-    .game-tile { transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease; }
-    .game-tile:hover { transform: translateY(-4px); }
-    .game-tile.active { border-color: rgba(139,92,246,0.34); box-shadow: 0 20px 70px rgba(139,92,246,0.12); }
-    .input-glow { transition: box-shadow .25s ease, border-color .25s ease; }
-    .input-valid { border-color: #10b981; box-shadow: 0 0 24px rgba(16,185,129,0.16); }
-    .input-invalid { border-color: #f87171; box-shadow: 0 0 24px rgba(248,113,113,0.18); }
-    .cart-bubble { width: 26px; height: 26px; border-radius: 999px; display:grid; place-items:center; font-size:12px; font-weight:700; background: linear-gradient(135deg,#3b82f6,#8b5cf6); color:#fff; box-shadow:0 12px 28px rgba(59,130,246,0.32); }
-    .bottom-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; transform: translateY(108%); transition: transform .35s cubic-bezier(0.2,0.8,0.2,1); backdrop-filter: blur(18px); background: rgba(11,14,26,0.92); border-top-left-radius: 28px; border-top-right-radius: 28px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 -18px 60px rgba(0,0,0,0.25); max-height: 92vh; overflow: hidden; }
-    .bottom-sheet.visible { transform: translateY(0); }
-    .sheet-backdrop { position: fixed; inset: 0; background: rgba(3,7,18,0.68); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: opacity .28s ease; z-index: 55; }
-    .sheet-backdrop.visible { opacity: 1; pointer-events: auto; }
-    .modal-confirm { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; background: rgba(3,7,18,0.88); opacity: 0; pointer-events: none; transition: opacity .28s ease; }
-    .modal-confirm.visible { opacity: 1; pointer-events: auto; }
-    .modal-panel { width: min(460px,100%); background: rgba(19,23,36,0.98); border:1px solid rgba(255,255,255,0.08); border-radius: 28px; padding: 26px; box-shadow: 0 35px 110px rgba(0,0,0,0.35); }
-    .theme-light body { background: #f4f6fa; color: #111827; }
-    .theme-light .glass-card { background: rgba(255,255,255,0.88); color: #111827; border-color: rgba(15,23,42,0.08); box-shadow: 0 20px 50px rgba(15,23,42,0.08); }
-    .theme-light .gm-pill { background: rgba(255,255,255,0.7); border-color: rgba(15,23,42,0.08); }
-    .theme-light .game-tile { background: #ffffff; color: #111827; border-color: rgba(15,23,42,0.08); box-shadow: 0 18px 60px rgba(15,23,42,0.08); }
-    .theme-light .bottom-sheet,
-    .theme-light .modal-panel { background: #ffffff; color: #111827; }
-    .theme-light .section-hidden { opacity: 0; transform: translateY(18px); }
-    .theme-light .input-glow { background: #f8fafc; color: #111827; }
-    .theme-light .input-valid { border-color: #10b981; box-shadow: 0 0 20px rgba(16,185,129,0.16); }
-    .theme-light .input-invalid { border-color: #ef4444; box-shadow: 0 0 20px rgba(239,68,68,0.16); }
-    .theme-light .gm-tab-button { color: #475569; }
-    .theme-light .gm-tab-button.active { color: #3b82f6; }
-    .theme-light .tabbar { background: rgba(255,255,255,0.92); border-color: rgba(15,23,42,0.08); }
-    .animate-fade { animation: fadeIn .45s ease forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+    /* Light theme variables */
+    .light {
+      --bg-dark:#f4f6fa;
+      --card-dark:#ffffff;
+      --text-dark:#0f1724;
+      --muted:#475569;
+      --accent-blue:#0b67ff;
+      --accent-violet:#7c3aed;
+      --price:#0f766e;
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--text-dark);background:var(--bg-dark);-webkit-font-smoothing:antialiased}
+    .app {max-width:980px;margin:0 auto;padding:16px;padding-bottom:140px;box-sizing:border-box}
+    .glass {background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);backdrop-filter: blur(8px);border-radius:14px}
+    .card {border-radius:18px}
+    .big {padding:14px}
+    .title {font-weight:800;font-size:1.125rem} /* text-lg */
+    .subtitle {color:var(--muted);font-size:0.9rem}
+    .large-btn {display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 16px;border-radius:14px;font-weight:700;font-size:16px}
+    input[type="text"]{font-size:16px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;outline:none;width:100%}
+    .no-scrollbar::-webkit-scrollbar{display:none} .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+    .game-line{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;padding-top:6px;white-space:nowrap;-webkit-overflow-scrolling:touch}
+    .game-tile{min-width:170px;flex:0 0 auto;border-radius:14px;border:1px solid rgba(255,255,255,0.04);overflow:hidden;background:var(--card-dark)}
+    .game-tile img{width:100%;height:108px;object-fit:cover}
+    .game-tile .info{padding:10px}
+    .game-tile.active{box-shadow:0 20px 60px rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.22)}
+    /* cart button */
+    #cartBtn{position:fixed;right:16px;bottom:92px;width:72px;height:72px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent-violet),var(--accent-blue));z-index:60;box-shadow:0 22px 60px rgba(59,130,246,0.14);transform:translateY(120px);opacity:0;transition:all .35s}
+    #cartBtn.visible{transform:translateY(0);opacity:1}
+    #cartBadge{position:absolute;top:-8px;right:-8px;background:linear-gradient(90deg,#ff3b7a,#ffb86b);color:white;width:28px;height:28px;border-radius:999px;display:grid;place-items:center;font-weight:800}
+    /* sheet */
+    .backdrop{position:fixed;inset:0;background:rgba(3,7,18,0.6);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+    .backdrop.visible{opacity:1;pointer-events:auto}
+    .sheet{position:fixed;left:0;right:0;bottom:0;transform:translateY(110%);transition:transform .33s;z-index:60;background:var(--card-dark);border-top-left-radius:18px;border-top-right-radius:18px;padding:16px;max-height:86vh;overflow:auto;border:1px solid rgba(255,255,255,0.04)}
+    .sheet.visible{transform:translateY(0)}
+    /* confirmation modal */
+    .modal-backdrop{position:fixed;inset:0;display:grid;place-items:center;background:rgba(3,7,18,0.6);z-index:80;opacity:0;pointer-events:none;transition:opacity .18s}
+    .modal-backdrop.visible{opacity:1;pointer-events:auto}
+    .modal{background:var(--card-dark);padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.06);width:88%;max-width:420px}
+    /* validation */
+    .valid{box-shadow:0 0 20px rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.22)}
+    .invalid{box-shadow:0 0 20px rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.22)}
+    /* toasts */
+    .toast{position:fixed;left:50%;transform:translateX(-50%);top:14%;z-index:120;background:rgba(10,14,22,0.9);color:white;padding:10px 14px;border-radius:12px}
+    /* ensure big tappable */
+    .tappable{min-height:52px;display:flex;align-items:center;justify-content:center}
+    /* small screens */
+    @media (max-width:420px){ .app{padding:12px} .game-tile{min-width:150px} .large-btn{padding:10px 12px;font-size:15px} input[type="text"]{font-size:15px;padding:10px} .title{font-size:1rem} }
   </style>
 </head>
-<body class="app-shell">
-  <div class="max-w-6xl mx-auto px-4 pt-5">
-    <header class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-      <div class="flex items-center gap-4">
-        <div class="relative w-16 h-16 rounded-[24px] bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] shadow-gm-neon">
-          <div class="absolute inset-0 rounded-[24px] ring-1 ring-white/10"></div>
-          <span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl font-black text-white">G</span>
-        </div>
+<body>
+  <div class="app">
+    <!-- HEADER -->
+    <header class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-3">
+        <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent-violet),var(--accent-blue));display:grid;place-items:center;color:white;font-weight:800;font-size:20px">G</div>
         <div>
-          <div class="text-2xl font-bold tracking-tight text-gm-text">GhostMarket</div>
-          <div class="mt-1 flex flex-wrap items-center gap-2 text-sm text-gm-muted">
-            <span class="gm-pill">★ 5.0</span>
-            <span class="gm-pill">42k отзывов</span>
-          </div>
+          <div class="title">GhostMarket</div>
+          <div class="subtitle">Премиум игровой маркетплейс</div>
         </div>
       </div>
-      <div class="flex flex-col gap-3 sm:items-end">
-        <div class="glass-card px-4 py-3 flex items-center gap-4">
-          <div class="rounded-2xl bg-slate-900/90 px-3 py-2 text-gm-text shadow-gm-soft">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 7H6a2 2 0 0 0-2 2v8h16V9a2 2 0 0 0-2-2Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 12h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-          <div>
-            <div class="text-sm text-gm-muted">Баланс</div>
-            <div id="balanceDisplay" class="text-xl font-semibold text-gm-price">0 ₽</div>
-          </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <div class="subtitle">Баланс</div>
+          <div id="balance" style="font-weight:800;color:var(--price)">0 ₽</div>
         </div>
-        <button id="themeSwitcher" class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm font-semibold text-white shadow-gm-neon transition-all duration-300 hover:-translate-y-0.5">
-          <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 18a6 6 0 0 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="1.8"/></svg>
-          <span id="themeLabel">Light mode</span>
+        <button id="themeBtn" class="large-btn border border-white/10 bg-transparent" aria-label="Toggle theme">
+          <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3a1 1 0 0 1 0 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span id="themeText" style="font-weight:800">Light</span>
         </button>
       </div>
     </header>
 
-    <div class="mt-8 grid gap-4">
-      <div class="glass-card p-4 flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#131724]/80 border border-white/10">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M11 5l7 7-7 7M4 12h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div>
-            <div class="text-sm uppercase tracking-[0.24em] text-gm-muted">Главные разделы</div>
-            <div class="text-lg font-semibold text-gm-text">Управляй маркетплейсом в один клик</div>
-          </div>
-        </div>
-        <div class="flex flex-wrap gap-3">
-          <button class="gm-pill gm-tab-button active" data-section="home">🧭 Главная</button>
-          <button class="gm-pill gm-tab-button" data-section="donat">💎 Донат</button>
-          <button class="gm-pill gm-tab-button" data-section="subs">📝 Подписки</button>
-          <button class="gm-pill gm-tab-button" data-section="accounts">👤 Аккаунты</button>
-        </div>
-      </div>
-    </div>
+    <!-- SECTIONS -->
+    <nav class="glass big flex gap-3 card mb-4" style="padding:12px">
+      <button class="section-btn large-btn tappable active px-4" data-section="home">🧭 Главная</button>
+      <button class="section-btn large-btn tappable px-4" data-section="donat">💎 Донат</button>
+      <button class="section-btn large-btn tappable px-4" data-section="subs">📝 Подписки</button>
+      <button class="section-btn large-btn tappable px-4" data-section="accounts">👤 Аккаунты</button>
+    </nav>
 
-    <main class="mt-6 space-y-6">
-      <section id="home" class="section-card">
-        <div class="glass-card overflow-hidden rounded-[28px] p-5">
-          <div class="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-            <div class="max-w-xl">
-              <div class="text-sm uppercase tracking-[0.28em] text-gm-accent-blue/80">Добро пожаловать в GhostMarket</div>
-              <h1 class="mt-3 text-3xl font-bold text-gm-text">Премиальный маркетплейс игровых товаров внутри Telegram</h1>
-              <p class="mt-4 text-base leading-7 text-gm-muted">Дорогие интерфейсы, быстрый заказ, индивидуальные предложения и экосистема для игроков с VIP-ощущением.</p>
-            </div>
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div class="rounded-3xl border border-white/10 bg-[#14192b]/80 p-4 text-center">
-                <div class="text-3xl font-bold text-gm-price">+500</div>
-                <div class="mt-2 text-xs uppercase tracking-[0.22em] text-gm-muted">Кристаллов</div>
-              </div>
-              <div class="rounded-3xl border border-white/10 bg-[#14192b]/80 p-4 text-center">
-                <div class="text-3xl font-bold text-[#8b5cf6]">5%</div>
-                <div class="mt-2 text-xs uppercase tracking-[0.22em] text-gm-muted">Кэшбэк</div>
-              </div>
-              <div class="rounded-3xl border border-white/10 bg-[#14192b]/80 p-4 text-center">
-                <div class="text-3xl font-bold text-[#38bdf8]">24/7</div>
-                <div class="mt-2 text-xs uppercase tracking-[0.22em] text-gm-muted">Поддержка</div>
-              </div>
-              <div class="rounded-3xl border border-white/10 bg-[#14192b]/80 p-4 text-center">
-                <div class="text-3xl font-bold text-[#10b981]">VIP</div>
-                <div class="mt-2 text-xs uppercase tracking-[0.22em] text-gm-muted">Уровень</div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- MAIN CONTENT -->
+    <main>
+      <section id="home" class="card glass big mb-4">
+        <div class="title">Добро пожаловать</div>
+        <div class="subtitle mt-2">Выберите игру и пакет — быстрый заказ прямо в Telegram.</div>
       </section>
 
-      <section id="donat" class="section-card section-hidden">
-        <div class="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
-          <div class="glass-card p-5">
-            <div class="flex items-center justify-between gap-4">
-              <div>
-                <div class="text-sm uppercase tracking-[0.24em] text-gm-muted">Выбери игру</div>
-                <div class="text-2xl font-semibold text-gm-text">Лучшие предложения доната</div>
-              </div>
-              <div class="gm-pill">
-                <span class="w-2 h-2 rounded-full bg-gm-accent-blue"></span>
-                Live selection
-              </div>
-            </div>
-
-            <div class="mt-5 overflow-x-auto pb-3">
-              <div class="flex gap-4">
-                <button class="game-tile flex min-w-[220px] flex-col gap-4 rounded-[24px] border border-slate-800/60 bg-[#131724] p-4 text-left active" data-game="genshin">
-                  <img class="h-24 w-full rounded-3xl object-cover" src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80" alt="Genshin" />
-                  <div class="text-lg font-semibold text-gm-text">Genshin Impact</div>
-                  <div class="text-sm text-gm-muted">Primogems & Bundles</div>
-                </button>
-                <button class="game-tile flex min-w-[220px] flex-col gap-4 rounded-[24px] border border-slate-800/60 bg-[#131724] p-4 text-left" data-game="brawl">
-                  <img class="h-24 w-full rounded-3xl object-cover" src="https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=400&q=80" alt="Brawl Stars" />
-                  <div class="text-lg font-semibold text-gm-text">Brawl Stars</div>
-                  <div class="text-sm text-gm-muted">Gems & Pass</div>
-                </button>
-                <button class="game-tile flex min-w-[220px] flex-col gap-4 rounded-[24px] border border-slate-800/60 bg-[#131724] p-4 text-left" data-game="pubg">
-                  <img class="h-24 w-full rounded-3xl object-cover" src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=400&q=80" alt="PUBG Mobile" />
-                  <div class="text-lg font-semibold text-gm-text">PUBG Mobile</div>
-                  <div class="text-sm text-gm-muted">UC & Elite Pass</div>
-                </button>
-                <button class="game-tile flex min-w-[220px] flex-col gap-4 rounded-[24px] border border-slate-800/60 bg-[#131724] p-4 text-left" data-game="ml">
-                  <img class="h-24 w-full rounded-3xl object-cover" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80" alt="Mobile Legends" />
-                  <div class="text-lg font-semibold text-gm-text">Mobile Legends</div>
-                  <div class="text-sm text-gm-muted">Diamonds & Skins</div>
-                </button>
-                <button class="game-tile flex min-w-[220px] flex-col gap-4 rounded-[24px] border border-slate-800/60 bg-[#131724] p-4 text-left" data-game="ff">
-                  <img class="h-24 w-full rounded-3xl object-cover" src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=400&q=80" alt="Free Fire" />
-                  <div class="text-lg font-semibold text-gm-text">Free Fire</div>
-                  <div class="text-sm text-gm-muted">Diamonds & Packs</div>
-                </button>
-              </div>
-            </div>
-
-            <div class="mt-6 rounded-[24px] border border-slate-800/60 bg-[#101826]/80 p-5">
-              <div class="flex flex-col gap-1">
-                <div class="text-sm uppercase tracking-[0.22em] text-gm-muted">Премиум-конструктор</div>
-                <h2 id="selectedGameTitle" class="text-2xl font-semibold text-gm-text">Genshin Impact</h2>
-              </div>
-
-              <div class="mt-5 grid gap-4">
-                <label class="block">
-                  <div class="flex items-center justify-between text-sm text-gm-muted">
-                    <span>User ID</span>
-                    <span id="uidHint" class="text-xs text-gm-accent-blue">9 цифр</span>
-                  </div>
-                  <div id="uidField" class="mt-2 rounded-2xl border border-slate-800/60 bg-[#111726] p-4 input-glow flex items-center gap-3">
-                    <input id="uidInput" type="text" autocomplete="off" placeholder="100000000" class="w-full bg-transparent text-base text-gm-text outline-none" />
-                    <svg id="uidSuccess" width="20" height="20" viewBox="0 0 24 24" fill="none" class="opacity-0 transition-all duration-200"><path d="M20 6L9 17l-5-5" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </div>
-                </label>
-
-                <label class="block">
-                  <div class="flex items-center justify-between text-sm text-gm-muted">
-                    <span>Zone ID</span>
-                    <span id="zoneHint" class="text-xs text-gm-accent-blue">опционально</span>
-                  </div>
-                  <div id="zoneField" class="mt-2 rounded-2xl border border-slate-800/60 bg-[#111726] p-4 input-glow flex items-center gap-3">
-                    <input id="zoneInput" type="text" autocomplete="off" placeholder="Zone ID" class="w-full bg-transparent text-base text-gm-text outline-none" />
-                    <svg id="zoneSuccess" width="20" height="20" viewBox="0 0 24 24" fill="none" class="opacity-0 transition-all duration-200"><path d="M20 6L9 17l-5-5" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </div>
-                </label>
-
-                <div class="grid gap-3">
-                  <div class="flex items-center justify-between text-sm text-gm-muted">
-                    <span>Селектор паков</span>
-                    <span id="packSelectedLabel" class="text-xs text-gm-price">Лучший выбор</span>
-                  </div>
-                  <div id="packOptions" class="grid gap-3 sm:grid-cols-3">
-                    <!-- Pack buttons injected -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="glass-card p-5">
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <div class="text-sm uppercase tracking-[0.24em] text-gm-muted">Итог заказа</div>
-                <div class="mt-3 text-4xl font-bold text-gm-text" id="totalPrice">229 ₽</div>
-              </div>
-              <div class="rounded-3xl bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] px-4 py-3 text-white shadow-gm-neon">
-                <div class="text-xs uppercase opacity-90">Пакет</div>
-                <div id="totalItems" class="mt-1 text-xl font-semibold">1</div>
-              </div>
-            </div>
-            <div class="mt-6 space-y-4">
-              <button id="addCartButton" class="w-full rounded-3xl bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] px-5 py-4 text-base font-semibold text-white shadow-gm-neon transition-all duration-300 hover:-translate-y-0.5">Добавить в корзину</button>
-              <button id="buyNowButton" class="w-full rounded-3xl border border-slate-800/60 bg-[#111726] px-5 py-4 text-base font-semibold text-gm-text transition-all duration-300 hover:bg-slate-900">Купить сейчас</button>
-            </div>
-
-            <div class="mt-8 rounded-[24px] border border-slate-800/60 bg-[#0d1321]/80 p-4">
-              <div class="text-sm uppercase tracking-[0.22em] text-gm-muted">Что внутри</div>
-              <div class="mt-3 grid gap-3">
-                <div class="rounded-3xl border border-white/5 bg-[#111726]/90 p-4">
-                  <div class="flex items-center gap-3">
-                    <div class="h-12 w-12 rounded-3xl bg-[#15213a] grid place-items-center text-xl text-gm-accent-blue">★</div>
-                    <div>
-                      <div class="font-semibold text-gm-text">Гарантия зачисления</div>
-                      <div class="text-sm text-gm-muted">Автоматический контроль заказа</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="rounded-3xl border border-white/5 bg-[#15213a]/90 p-4">
-                  <div class="flex items-center gap-3">
-                    <div class="h-12 w-12 rounded-3xl bg-[#15213a] grid place-items-center text-xl text-[#10b981]">⚡</div>
-                    <div>
-                      <div class="font-semibold text-gm-text">Мгновенная обработка</div>
-                      <div class="text-sm text-gm-muted">Заказы идут в бота сразу</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="subs" class="section-card section-hidden">
-        <div class="grid gap-4 xl:grid-cols-2">
-          <div class="glass-card p-5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-sm uppercase tracking-[0.24em] text-gm-muted">Подписки</div>
-                <div class="text-2xl font-semibold text-gm-text">Режим абонемента</div>
-              </div>
-              <div class="gm-pill">Live</div>
-            </div>
-            <div class="mt-6 space-y-4">
-              <div class="rounded-[24px] border border-slate-800/60 bg-[#101826]/90 p-5 shadow-gm-card">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <div class="text-lg font-semibold text-gm-text">VIP +30</div>
-                    <div class="text-sm text-gm-muted">Еженедельная рассылка и скидки</div>
-                  </div>
-                  <div class="text-xl font-bold text-gm-price">249 ₽</div>
-                </div>
-              </div>
-              <div class="rounded-[24px] border border-slate-800/60 bg-[#101826]/90 p-5 shadow-gm-card">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <div class="text-lg font-semibold text-gm-text">Premium Клуб</div>
-                    <div class="text-sm text-gm-muted">Персональная поддержка 24/7</div>
-                  </div>
-                  <div class="text-xl font-bold text-[#8b5cf6]">499 ₽</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="glass-card p-5">
-            <div class="text-sm uppercase tracking-[0.24em] text-gm-muted">Бонусы</div>
-            <div class="mt-5 grid gap-4">
-              <div class="rounded-[24px] border border-slate-800/60 bg-[#101826]/90 p-5">
-                <div class="font-semibold text-gm-text">+20% на первый донат</div>
-                <p class="mt-2 text-sm text-gm-muted">При активации подписки бонус начисляется моментально.</p>
-              </div>
-              <div class="rounded-[24px] border border-slate-800/60 bg-[#101826]/90 p-5">
-                <div class="font-semibold text-gm-text">Скидки на рубли</div>
-                <p class="mt-2 text-sm text-gm-muted">Специальные условия для частых покупателей.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="accounts" class="section-card section-hidden">
-        <div class="glass-card p-5">
+      <!-- DONATE -->
+      <section id="donat" class="hidden">
+        <div class="card glass big mb-4">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-sm uppercase tracking-[0.24em] text-gm-muted">Аккаунты</div>
-              <div class="text-2xl font-semibold text-gm-text">Проверенные предложения</div>
+              <div class="title">Выберите игру</div>
+              <div class="subtitle mt-1">Свайпните плитки вправо, чтобы увидеть все игры</div>
             </div>
-            <div class="gm-pill">Secure</div>
+            <div class="subtitle">Live</div>
           </div>
-          <div class="mt-6 grid gap-4">
-            <div class="rounded-[24px] border border-slate-800/60 bg-[#101826]/90 p-5">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="text-lg font-semibold text-gm-text">Genshin Premium</div>
-                  <div class="text-sm text-gm-muted">С фулл прокачкой и скинами</div>
-                </div>
-                <div class="text-xl font-bold text-gm-price">1 199 ₽</div>
+
+          <!-- HORIZONTAL SCROLLER -->
+          <div class="game-line no-scrollbar mt-4" id="gamesRow" role="list">
+            <div class="game-tile active" data-game="genshin" role="listitem" tabindex="0">
+              <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop" alt="Genshin" />
+              <div class="info">
+                <div style="font-weight:800">Genshin Impact</div>
+                <div class="subtitle" style="margin-top:6px">Primogems & Bundles</div>
               </div>
             </div>
-            <div class="rounded-[24px] border border-slate-800/60 bg-[#101826]/90 p-5">
-              <div class="flex items-center justify-between">
+
+            <div class="game-tile" data-game="brawl">
+              <img src="https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=800&auto=format&fit=crop" alt="Brawl Stars" />
+              <div class="info">
+                <div style="font-weight:800">Brawl Stars</div>
+                <div class="subtitle" style="margin-top:6px">Gems & Pass</div>
+              </div>
+            </div>
+
+            <div class="game-tile" data-game="pubg">
+              <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=800&auto=format&fit=crop" alt="PUBG" />
+              <div class="info">
+                <div style="font-weight:800">PUBG Mobile</div>
+                <div class="subtitle" style="margin-top:6px">UC & Elite Pass</div>
+              </div>
+            </div>
+
+            <div class="game-tile" data-game="ml">
+              <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop" alt="Mobile Legends" />
+              <div class="info">
+                <div style="font-weight:800">Mobile Legends</div>
+                <div class="subtitle" style="margin-top:6px">Diamonds & Skins</div>
+              </div>
+            </div>
+
+            <div class="game-tile" data-game="ff">
+              <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=800&auto=format&fit=crop" alt="Free Fire" />
+              <div class="info">
+                <div style="font-weight:800">Free Fire</div>
+                <div class="subtitle" style="margin-top:6px">Diamonds & Packs</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONSTRUCTOR -->
+          <div class="mt-6 grid gap-4 grid-cols-1 md:grid-cols-3">
+            <div class="md:col-span-2">
+              <div class="title" id="selectedGame">Genshin Impact</div>
+              <div class="subtitle mt-1">Введите данные для зачисления — все поля крупные и удобные для пальца</div>
+
+              <div class="mt-4 grid gap-3">
+                <label>
+                  <div class="flex justify-between items-center mb-1">
+                    <div style="font-weight:700">User ID</div>
+                    <div class="subtitle" id="uidHint">9 цифр</div>
+                  </div>
+                  <div id="uidWrap" class="glass p-2">
+                    <input id="uid" type="text" inputmode="numeric" placeholder="100000000" aria-label="User ID" />
+                  </div>
+                </label>
+
+                <label>
+                  <div class="flex justify-between items-center mb-1">
+                    <div style="font-weight:700">Zone ID</div>
+                    <div class="subtitle">опционально</div>
+                  </div>
+                  <div id="zoneWrap" class="glass p-2">
+                    <input id="zone" type="text" placeholder="Zone ID" aria-label="Zone ID" />
+                  </div>
+                </label>
+
                 <div>
-                  <div class="text-lg font-semibold text-gm-text">Free Fire Elite</div>
-                  <div class="text-sm text-gm-muted">Пак аккаунтов с BP</div>
+                  <div style="font-weight:700">Пакеты</div>
+                  <div class="flex gap-3 mt-3 flex-wrap">
+                    <button class="pack-btn glass large-btn" data-pack="p1"><img src="https://picsum.photos/seed/p1/48/48" alt="" style="width:44px;height:44px;border-radius:8px;margin-right:8px">60 Кристаллов — <span class="font-bold">229 ₽</span></button>
+                    <button class="pack-btn glass large-btn" data-pack="p2"><img src="https://picsum.photos/seed/p2/48/48" alt="" style="width:44px;height:44px;border-radius:8px;margin-right:8px">300 Кристаллов — <span class="font-bold">569 ₽</span></button>
+                    <button class="pack-btn glass large-btn" data-pack="p3"><img src="https://picsum.photos/seed/p3/48/48" alt="" style="width:44px;height:44px;border-radius:8px;margin-right:8px">Легенда — <span class="font-bold">1249 ₽</span></button>
+                  </div>
                 </div>
-                <div class="text-xl font-bold text-[#8b5cf6]">899 ₽</div>
+              </div>
+            </div>
+
+            <div class="glass card big">
+              <div class="flex justify-between items-center">
+                <div>
+                  <div class="subtitle">Итог</div>
+                  <div id="price" style="font-weight:800;font-size:1.125rem;color:var(--price)">229 ₽</div>
+                </div>
+                <div>
+                  <div class="subtitle">Кол-во</div>
+                  <div id="count" style="font-weight:800">1</div>
+                </div>
+              </div>
+
+              <div class="mt-4 grid gap-3">
+                <button id="toCart" class="large-btn border border-white/10 bg-transparent">В корзину</button>
+                <button id="buyNow" class="large-btn" style="background:linear-gradient(90deg,var(--accent-blue),var(--accent-violet));color:white">Купить в 1 клик</button>
               </div>
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- SUBS -->
+      <section id="subs" class="hidden card glass big mb-4">
+        <div class="title">Подписки</div>
+        <div class="subtitle mt-2">Премиальные планы и бонусы</div>
+      </section>
+
+      <!-- ACCOUNTS -->
+      <section id="accounts" class="hidden card glass big mb-4">
+        <div class="title">Аккаунты</div>
+        <div class="subtitle mt-2">Проверенные предложения</div>
       </section>
     </main>
   </div>
 
-  <button id="cartButton" class="fixed right-5 bottom-28 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] shadow-gm-neon transition-transform duration-500 translate-y-20 opacity-0">
-    <div class="relative">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 6h15l-1.5 9h-12L6 6Z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 20a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" fill="white"/></svg>
-      <span id="cartCount" class="cart-bubble absolute -right-2 -top-2">0</span>
-    </div>
-  </button>
+  <!-- CART FLOAT BUTTON -->
+  <div id="cartBtn" aria-label="Корзина">
+    <div id="cartBadge">0</div>
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M6 6h15l-1.5 9h-12L6 6Z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
 
-  <div id="sheetBackdrop" class="sheet-backdrop"></div>
-  <div id="cartSheet" class="bottom-sheet">
-    <div class="p-5">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="text-sm uppercase tracking-[0.22em] text-gm-muted">Корзина</div>
-          <div class="text-2xl font-semibold text-gm-text">Ваш заказ</div>
-        </div>
-        <button id="closeSheet" class="rounded-2xl border border-white/10 bg-[#111726] px-4 py-3 text-sm text-gm-text transition hover:bg-slate-900">Закрыть</button>
+  <!-- SHEET & MODAL -->
+  <div id="sheetBackdrop" class="backdrop"></div>
+  <div id="cartSheet" class="sheet">
+    <div class="flex justify-between items-center">
+      <div>
+        <div class="title">Корзина</div>
+        <div class="subtitle">Соберите несколько пакетов и оплатите одним платежом</div>
       </div>
-      <div id="cartItems" class="mt-5 space-y-3 min-h-[140px]"></div>
-      <div class="mt-5 rounded-[24px] border border-slate-800/60 bg-[#111726]/90 p-5 flex items-center justify-between">
-        <div>
-          <div class="text-sm text-gm-muted">Итого</div>
-          <div id="cartTotal" class="text-3xl font-bold text-gm-price">0 ₽</div>
-        </div>
-        <div class="space-y-3 text-right">
-          <button id="clearCart" class="w-full rounded-2xl border border-white/10 bg-[#111726] px-4 py-3 text-sm text-gm-text transition hover:bg-slate-900">Очистить</button>
-          <button id="checkoutButton" class="w-full rounded-2xl bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] px-4 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5">Оплатить</button>
-        </div>
+      <div class="flex gap-2">
+        <button id="clear" class="large-btn border border-white/10 bg-transparent">Очистить</button>
+        <button id="closeSheetBtn" class="large-btn" style="background:linear-gradient(90deg,var(--accent-blue),var(--accent-violet));color:white">Готово</button>
+      </div>
+    </div>
+    <div id="cartList" class="mt-4 space-y-3"></div>
+    <div class="mt-4 flex justify-between items-center">
+      <div class="subtitle">Итого</div>
+      <div id="sheetSum" style="font-weight:800;color:var(--price)">0 ₽</div>
+    </div>
+    <div class="mt-3">
+      <button id="checkout" class="large-btn" style="width:100%;background:linear-gradient(90deg,var(--accent-violet),var(--accent-blue));color:white">Оплатить</button>
+    </div>
+  </div>
+
+  <div id="confirmBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div style="font-weight:800;font-size:1rem" id="modalTitle">Подтвердите оплату</div>
+      <div class="subtitle mt-2" id="modalBody">Вы собираетесь оплатить пакет</div>
+      <div class="mt-4 flex gap-3 justify-end">
+        <button id="modalCancel" class="large-btn border bg-transparent">Отменить</button>
+        <button id="modalConfirm" class="large-btn" style="background:linear-gradient(90deg,var(--accent-blue),var(--accent-violet));color:white">Оплатить</button>
       </div>
     </div>
   </div>
 
-  <div id="confirmModal" class="modal-confirm">
-    <div class="modal-panel text-center">
-      <div class="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#3b82f6]/20 to-[#8b5cf6]/20">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#10b981" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="text-lg font-semibold text-gm-text">Платёж принят</div>
-      <p class="mt-3 text-sm leading-6 text-gm-muted">Данные отправлены в бот. Скоро заказ будет обработан администратором.</p>
-      <button id="confirmClose" class="mt-6 rounded-2xl bg-[#111726] px-6 py-3 text-sm font-semibold text-gm-text transition hover:bg-slate-900">Понятно</button>
-    </div>
-  </div>
-
-  <nav class="tabbar fixed inset-x-4 bottom-4 z-40 rounded-[28px] border border-white/10 bg-[#0b0f1a]/95 px-5 py-3 shadow-gm-soft backdrop-blur-xl">
-    <div class="flex items-center justify-between">
-      <button class="gm-tab-button flex flex-col items-center gap-2 text-sm text-gm-muted active" data-section="home">
-        <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#141b2f]">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11.5 12 4l9 7.5v8.5H3v-8.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-        </span>
-        Дом
-      </button>
-      <button class="gm-tab-button flex flex-col items-center gap-2 text-sm text-gm-muted" data-section="donat">
-        <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#141b2f]">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21c-4.97 0-9-4.02-9-9 0-4.75 3.65-8.63 8.3-8.99A7.5 7.5 0 1 1 12 21Z" stroke="currentColor" stroke-width="1.6"/></svg>
-        </span>
-        Донат
-      </button>
-      <button class="gm-tab-button flex flex-col items-center gap-2 text-sm text-gm-muted" data-section="subs">
-        <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#141b2f]">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 4h12v16H6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </span>
-        Подписки
-      </button>
-      <button class="gm-tab-button flex flex-col items-center gap-2 text-sm text-gm-muted" data-section="accounts">
-        <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#141b2f]">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.6"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" stroke-width="1.6"/></svg>
-        </span>
-        Аккаунты
-      </button>
-    </div>
-  </nav>
+  <div id="toastRoot" aria-hidden="true"></div>
 
   <script>
+    // Telegram WebApp handle
     const tg = window.Telegram?.WebApp || window.TelegramWebApp || null;
-    if (tg?.ready) tg.ready();
-    const haptic = (type = 'medium') => { try { tg?.HapticFeedback?.impactOccurred?.(type); } catch (e) {} };
+    try { tg?.ready?.(); } catch (e) {}
+    const haptic = (type='medium') => { try { tg?.HapticFeedback?.impactOccurred?.(type); } catch(e) {} };
+    const hapticNotify = (type='success') => { try { tg?.HapticFeedback?.notificationOccurred?.(type); } catch(e) {} };
 
+    // UID patterns
     const GAMES = {
-      genshin: { title: 'Genshin Impact', uidExample: '100000000', uidPattern: /^\d{9}$/ },
-      brawl: { title: 'Brawl Stars', uidExample: '#ABC123', uidPattern: /^#?[A-Z0-9\-]{4,12}$/i },
-      pubg: { title: 'PUBG Mobile', uidExample: '123456789', uidPattern: /^\d{8,12}$/ },
-      ml: { title: 'Mobile Legends', uidExample: 'UID1234', uidPattern: /^\w{4,16}$/ },
-      ff: { title: 'Free Fire', uidExample: '12345678', uidPattern: /^\d{6,12}$/ }
+      genshin: { title:'Genshin Impact', uidRe:/^\d{9}$/, hint:'9 цифр' },
+      brawl:  { title:'Brawl Stars', uidRe:/^#?[A-Z0-9\-]{4,12}$/i, hint:'#TAG или 4-12 симв.' },
+      pubg:   { title:'PUBG Mobile', uidRe:/^\d{8,12}$/, hint:'8-12 цифр' },
+      ml:     { title:'Mobile Legends', uidRe:/^\w{4,16}$/, hint:'4-16 симв.' },
+      ff:     { title:'Free Fire', uidRe:/^\d{6,12}$/, hint:'6-12 цифр' }
     };
 
     const PACKS = [
-      { id: 'pack1', title: '60 Кристаллов', price: 229, note: 'Популярный' },
-      { id: 'pack2', title: '300 Кристаллов', price: 569, note: 'Лучшее соотношение' },
-      { id: 'pack3', title: 'Луна — Легенда', price: 1249, note: 'Топ пакет' }
+      { id:'p1', title:'60 Кристаллов', price:229 },
+      { id:'p2', title:'300 Кристаллов', price:569 },
+      { id:'p3', title:'Легенда — Луна', price:1249 }
     ];
 
-    const state = {
-      section: 'home',
-      theme: 'dark',
+    // state
+    let state = {
+      theme: localStorage.getItem('gm_theme') || 'dark',
+      section: 'donat',
       activeGame: 'genshin',
-      selectedPack: 'pack1',
-      cart: JSON.parse(localStorage.getItem('ghostmarket_cart') || '[]'),
-      balance: Number(localStorage.getItem('ghostmarket_balance') || 0)
+      selectedPack: 'p1',
+      cart: JSON.parse(localStorage.getItem('gm_cart')||'[]'),
+      balance: Number(localStorage.getItem('gm_balance')||0)
     };
 
-    const sectionButtons = document.querySelectorAll('[data-section]');
-    const sections = {
-      home: document.getElementById('home'),
-      donat: document.getElementById('donat'),
-      subs: document.getElementById('subs'),
-      accounts: document.getElementById('accounts')
-    };
-    const gameTiles = document.querySelectorAll('[data-game]');
-    const packOptions = document.getElementById('packOptions');
-    const selectedGameTitle = document.getElementById('selectedGameTitle');
-    const totalPrice = document.getElementById('totalPrice');
-    const totalItems = document.getElementById('totalItems');
-    const uidInput = document.getElementById('uidInput');
-    const zoneInput = document.getElementById('zoneInput');
-    const uidField = document.getElementById('uidField');
-    const zoneField = document.getElementById('zoneField');
-    const uidSuccess = document.getElementById('uidSuccess');
-    const zoneSuccess = document.getElementById('zoneSuccess');
+    // elements
+    const sections = { home: document.getElementById('home'), donat: document.getElementById('donat'), subs: document.getElementById('subs'), accounts: document.getElementById('accounts') };
+    const sectionBtns = document.querySelectorAll('.section-btn');
+    const gamesRow = document.getElementById('gamesRow');
+    const gameTiles = document.querySelectorAll('.game-tile');
+    const selectedGameLabel = document.getElementById('selectedGame');
+    const uidInput = document.getElementById('uid');
+    const uidWrap = document.getElementById('uidWrap');
+    const zoneInput = document.getElementById('zone');
+    const zoneWrap = document.getElementById('zoneWrap');
     const uidHint = document.getElementById('uidHint');
-    const packSelectedLabel = document.getElementById('packSelectedLabel');
-    const addCartButton = document.getElementById('addCartButton');
-    const buyNowButton = document.getElementById('buyNowButton');
-    const cartButton = document.getElementById('cartButton');
-    const cartCount = document.getElementById('cartCount');
+    const packsBtns = document.querySelectorAll('.pack-btn');
+    const priceEl = document.getElementById('price');
+    const countEl = document.getElementById('count');
+    const toCartBtn = document.getElementById('toCart');
+    const buyNowBtn = document.getElementById('buyNow');
+    const cartBtn = document.getElementById('cartBtn');
+    const cartBadge = document.getElementById('cartBadge');
     const cartSheet = document.getElementById('cartSheet');
     const sheetBackdrop = document.getElementById('sheetBackdrop');
-    const closeSheet = document.getElementById('closeSheet');
-    const clearCart = document.getElementById('clearCart');
-    const checkoutButton = document.getElementById('checkoutButton');
-    const cartItems = document.getElementById('cartItems');
-    const cartTotal = document.getElementById('cartTotal');
-    const confirmModal = document.getElementById('confirmModal');
-    const confirmClose = document.getElementById('confirmClose');
-    const themeSwitcher = document.getElementById('themeSwitcher');
-    const themeLabel = document.getElementById('themeLabel');
-    const themeIcon = document.getElementById('themeIcon');
-    const balanceDisplay = document.getElementById('balanceDisplay');
-    const tabButtons = document.querySelectorAll('.tabbar .gm-tab-button');
+    const cartList = document.getElementById('cartList');
+    const sheetSum = document.getElementById('sheetSum');
+    const clearBtn = document.getElementById('clear');
+    const closeSheetBtn = document.getElementById('closeSheetBtn');
+    const checkoutBtn = document.getElementById('checkout');
+    const confirmBackdrop = document.getElementById('confirmBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalConfirm = document.getElementById('modalConfirm');
+    const themeBtn = document.getElementById('themeBtn');
+    const themeText = document.getElementById('themeText');
+    const balanceEl = document.getElementById('balance');
+    const toastRoot = document.getElementById('toastRoot');
 
-    function saveState() {
-      localStorage.setItem('ghostmarket_cart', JSON.stringify(state.cart));
-      localStorage.setItem('ghostmarket_balance', String(state.balance));
+    // helpers
+    function save() {
+      localStorage.setItem('gm_cart', JSON.stringify(state.cart));
+      localStorage.setItem('gm_theme', state.theme);
+      localStorage.setItem('gm_balance', String(state.balance));
     }
 
-    function setSection(section) {
-      state.section = section;
-      Object.entries(sections).forEach(([key, el]) => {
-        if (key === section) {
-          el.classList.remove('section-hidden');
-          el.classList.add('animate-fade');
-        } else {
-          el.classList.add('section-hidden');
-          el.classList.remove('animate-fade');
-        }
-      });
-      sectionButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.section === section));
-      tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.section === section));
+    function showToast(text, ms=1600) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = text;
+      toastRoot.appendChild(t);
+      setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),220); }, ms);
+    }
+
+    function applyTheme() {
+      if (state.theme === 'light') document.documentElement.classList.add('light');
+      else document.documentElement.classList.remove('light');
+      themeText.textContent = state.theme === 'light' ? 'Dark' : 'Light';
+      save();
+    }
+
+    function setSection(name) {
+      state.section = name;
+      Object.keys(sections).forEach(k => sections[k].classList.toggle('hidden', k !== name));
+      sectionBtns.forEach(b => b.classList.toggle('active', b.dataset.section === name));
+      haptic('light');
+    }
+
+    function setGame(key, el=null) {
+      state.activeGame = key;
+      gameTiles.forEach(t => t.classList.toggle('active', t.dataset.game === key));
+      selectedGameLabel.textContent = GAMES[key].title;
+      uidInput.value = '';
+      zoneInput.value = '';
+      uidHint.textContent = GAMES[key].hint;
+      // remove validation styles
+      uidWrap.classList.remove('valid','invalid');
+      zoneWrap.classList.remove('valid','invalid');
+      if(el) el.scrollIntoView({behavior:'smooth',inline:'center'});
       haptic('medium');
+      updateVisuals();
     }
 
-    function setTheme(theme) {
-      state.theme = theme;
-      if (theme === 'light') {
-        document.documentElement.classList.add('theme-light');
-        themeLabel.textContent = 'Dark mode';
-        themeIcon.innerHTML = '<path d="M12 5.75a6.25 6.25 0 0 0 0 12.5 6.25 6.25 0 0 0 0-12.5Z" stroke="currentColor" stroke-width="1.8"/>';
-      } else {
-        document.documentElement.classList.remove('theme-light');
-        themeLabel.textContent = 'Light mode';
-        themeIcon.innerHTML = '<path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12Z" stroke="currentColor" stroke-width="1.8"/>';
-      }
-      haptic('medium');
-    }
-
-    function setGame(gameKey) {
-      state.activeGame = gameKey;
-      gameTiles.forEach(tile => tile.classList.toggle('active', tile.dataset.game === gameKey));
-      selectedGameTitle.textContent = GAMES[gameKey].title;
-      uidInput.placeholder = GAMES[gameKey].uidExample;
-      uidHint.textContent = GAMES[gameKey].uidPattern.source.replace(/\\|\\^|\\$|\[|\]/g, '');
-      validateUid();
-      haptic('medium');
-    }
-
-    function renderPacks() {
-      packOptions.innerHTML = PACKS.map(pack => `
-        <button type="button" class="pack relative rounded-3xl border border-white/10 bg-[#111726]/90 p-4 text-left transition duration-300 hover:border-gm-accent-blue/70 ${state.selectedPack === pack.id ? 'border-gm-accent-blue/80 shadow-gm-neon translate-y-[-2px]' : ''}" data-pack="${pack.id}">
-          <div class="flex items-center gap-3">
-            <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-900/80">
-              <img src="https://picsum.photos/seed/${pack.id}/48/48" alt="pack" class="h-10 w-10 rounded-xl object-cover" />
-            </div>
-            <div>
-              <div class="font-semibold ${state.selectedPack === pack.id ? 'text-gm-text' : 'text-white'}">${pack.title}</div>
-              <div class="text-xs text-gm-muted">${pack.note}</div>
-            </div>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <div class="text-sm text-gm-muted">Цена</div>
-            <div class="text-lg font-bold text-gm-price">${pack.price} ₽</div>
-          </div>
-        </button>
-      `).join('');
-      document.querySelectorAll('[data-pack]').forEach(button => {
-        button.addEventListener('click', () => {
-          state.selectedPack = button.dataset.pack;
-          renderPacks();
-          updateTotals();
-          haptic('medium');
-        });
-      });
-      packSelectedLabel.textContent = PACKS.find(pack => pack.id === state.selectedPack).note;
-    }
-
-    function updateTotals() {
-      const pack = PACKS.find(item => item.id === state.selectedPack);
-      totalPrice.textContent = `${pack.price} ₽`;
-      totalItems.textContent = state.cart.length ? state.cart.length : 1;
-      cartCount.textContent = state.cart.length;
-      cartTotal.textContent = `${state.cart.reduce((sum, item) => sum + item.price, 0)} ₽`;
-      if (state.cart.length > 0) {
-        cartButton.classList.add('translate-y-0', 'opacity-100');
-      } else {
-        cartButton.classList.remove('translate-y-0', 'opacity-100');
-      }
+    function updateVisuals() {
+      const pack = PACKS.find(p => p.id === state.selectedPack) || PACKS[0];
+      priceEl.textContent = `${pack.price} ₽`;
+      countEl.textContent = state.cart.length ? state.cart.length : 1;
+      cartBadge.textContent = state.cart.length;
+      sheetSum.textContent = `${state.cart.reduce((s,i)=>s+i.price,0)} ₽`;
+      balanceEl.textContent = `${state.balance} ₽`;
+      if (state.cart.length) cartBtn.classList.add('visible'); else cartBtn.classList.remove('visible');
     }
 
     function validateUid() {
-      const value = uidInput.value.trim();
-      const valid = GAMES[state.activeGame].uidPattern.test(value);
-      uidField.classList.toggle('input-valid', valid);
-      uidField.classList.toggle('input-invalid', value.length > 0 && !valid);
-      uidSuccess.style.opacity = valid ? '1' : '0';
-      return valid;
+      const val = uidInput.value.trim();
+      const re = GAMES[state.activeGame].uidRe;
+      const ok = re.test(val);
+      uidWrap.classList.toggle('valid', ok);
+      uidWrap.classList.toggle('invalid', !ok && val.length>0);
+      return ok;
     }
 
     function validateZone() {
-      const value = zoneInput.value.trim();
-      const valid = value.length === 0 || value.length >= 2;
-      zoneField.classList.toggle('input-valid', valid && value.length > 0);
-      zoneField.classList.toggle('input-invalid', value.length > 0 && !valid);
-      zoneSuccess.style.opacity = valid && value.length > 0 ? '1' : '0';
-      return valid;
+      const val = zoneInput.value.trim();
+      const ok = val.length === 0 || val.length >= 2;
+      zoneWrap.classList.toggle('valid', ok && val.length>0);
+      zoneWrap.classList.toggle('invalid', !ok && val.length>0);
+      return ok;
     }
 
-    function renderCartItems() {
-      if (!state.cart.length) {
-        cartItems.innerHTML = '<div class="rounded-[24px] border border-white/10 bg-[#0f1627]/90 p-5 text-center text-gm-muted">Корзина пуста</div>';
-        cartCount.textContent = 0;
-        cartButton.classList.remove('translate-y-0', 'opacity-100');
-        return;
-      }
-      cartItems.innerHTML = state.cart.map((item, index) => `
-        <div class="group flex items-center justify-between gap-4 rounded-[24px] border border-white/10 bg-[#0f1627]/90 p-4 transition-all duration-300 hover:-translate-y-1">
-          <div>
-            <div class="font-semibold text-gm-text">${item.title}</div>
-            <div class="mt-1 text-sm text-gm-muted">${item.game}</div>
-            <div class="mt-2 text-xs text-gm-muted">UID: ${item.uid || 'Не указан'}</div>
-          </div>
-          <div class="text-right">
-            <div class="text-lg font-bold text-gm-price">${item.price} ₽</div>
-            <button class="mt-3 rounded-2xl border border-white/10 bg-[#111726] px-3 py-2 text-xs text-gm-text transition hover:bg-slate-900" data-remove="${index}">Удалить</button>
-          </div>
-        </div>
-      `).join('');
-      cartItems.querySelectorAll('[data-remove]').forEach(button => {
-        button.addEventListener('click', () => {
-          const index = Number(button.dataset.remove);
-          state.cart.splice(index, 1);
-          saveState();
-          renderCartItems();
-          updateTotals();
+    function renderPacksSelection() {
+      packsBtns.forEach(btn => {
+        btn.classList.toggle('border-2', btn.dataset.pack === state.selectedPack);
+        btn.addEventListener('click', ()=> {
+          state.selectedPack = btn.dataset.pack;
+          packsBtns.forEach(b=>b.classList.remove('border-2'));
+          btn.classList.add('border-2');
+          updateVisuals();
           haptic('light');
         });
       });
-      cartCount.textContent = state.cart.length;
-      cartButton.classList.add('translate-y-0', 'opacity-100');
+      // apply initial border
+      const init = Array.from(packsBtns).find(b=>b.dataset.pack===state.selectedPack);
+      if(init) init.classList.add('border-2');
     }
 
-    function openCart() {
-      cartSheet.classList.add('visible');
-      sheetBackdrop.classList.add('visible');
-      haptic('medium');
-    }
-
-    function closeCart() {
-      cartSheet.classList.remove('visible');
-      sheetBackdrop.classList.remove('visible');
-      haptic('light');
-    }
-
-    function showConfirmation() {
-      confirmModal.classList.add('visible');
-      haptic('heavy');
-      setTimeout(() => {
-        confirmModal.classList.remove('visible');
-      }, 2600);
-    }
-
-    function addToCart() {
-      if (!validateUid()) { uidInput.focus(); showToast('Проверьте User ID'); return; }
-      if (!validateZone()) { zoneInput.focus(); showToast('Проверьте Zone ID'); return; }
-      const pack = PACKS.find(item => item.id === state.selectedPack);
-      state.cart.push({
-        game: GAMES[state.activeGame].title,
-        title: pack.title,
-        price: pack.price,
-        uid: uidInput.value.trim(),
-        zone: zoneInput.value.trim()
+    // CART UI
+    function refreshCartUI() {
+      cartList.innerHTML = '';
+      if (!state.cart.length) { cartList.innerHTML = `<div class="subtitle">Корзина пуста</div>`; updateVisuals(); return; }
+      state.cart.forEach((it, idx) => {
+        const node = document.createElement('div');
+        node.className = 'glass p-3 flex justify-between items-center';
+        node.style.borderRadius='12px';
+        node.innerHTML = `
+          <div>
+            <div style="font-weight:800">${it.title}</div>
+            <div class="subtitle">${it.game}</div>
+            <div class="subtitle" style="font-size:12px">UID: ${it.uid || '—'}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:800;color:var(--price)">${it.price} ₽</div>
+            <button data-rem="${idx}" class="large-btn mt-2" style="background:transparent;border:1px solid rgba(0,0,0,0.06)">Удалить</button>
+          </div>
+        `;
+        cartList.appendChild(node);
       });
-      saveState();
-      renderCartItems();
-      updateTotals();
-      showToast('Товар добавлен в корзину');
-      try { tg?.sendData?.(JSON.stringify({ type: 'cart_add', game: state.activeGame, pack: pack.id, price: pack.price, uid: uidInput.value.trim(), zone: zoneInput.value.trim() })); } catch (error) {}
-      haptic('medium');
+      cartList.querySelectorAll('[data-rem]').forEach(btn => btn.addEventListener('click', (e)=> {
+        const idx = Number(e.currentTarget.dataset.rem);
+        state.cart.splice(idx,1);
+        save(); refreshCartUI(); updateVisuals(); haptic('light');
+      }));
+      updateVisuals();
     }
 
-    function checkout() {
-      if (!state.cart.length) { showToast('Корзина пуста'); return; }
-      const total = state.cart.reduce((sum, item) => sum + item.price, 0);
-      const payload = {
-        type: 'checkout',
-        total,
-        items: state.cart.map(item => ({ game: item.game, title: item.title, uid: item.uid, zone: item.zone }))
+    // 1-click buy flow
+    function openConfirmModal(title, body, onConfirm) {
+      modalTitle.textContent = title;
+      modalBody.textContent = body;
+      confirmBackdrop.classList.add('visible');
+      modalConfirm.onclick = async () => {
+        confirmBackdrop.classList.remove('visible');
+        await onConfirm();
       };
-      try { tg?.sendData?.(JSON.stringify(payload)); } catch (error) {}
-      showConfirmation();
-      state.cart = [];
-      saveState();
-      renderCartItems();
-      updateTotals();
-      closeCart();
+      modalCancel.onclick = () => { confirmBackdrop.classList.remove('visible'); };
     }
 
-    function showToast(message) {
-      const toast = document.createElement('div');
-      toast.textContent = message;
-      toast.className = 'fixed left-1/2 top-20 z-50 w-[min(90%,360px)] -translate-x-1/2 rounded-3xl bg-[#141b2f] px-5 py-3 text-center text-sm font-semibold text-white shadow-gm-soft';
-      document.body.appendChild(toast);
-      setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%, -10px)'; }, 1800);
-      setTimeout(() => toast.remove(), 2200);
+    async function sendToBot(payload) {
+      try {
+        tg?.sendData?.(JSON.stringify(payload));
+      } catch (e) {
+        console.error('tg.sendData failed', e);
+      }
     }
 
-    sectionButtons.forEach(button => {
-      button.addEventListener('click', () => setSection(button.dataset.section));
-    });
+    // buy now handler
+    buyNowBtn.addEventListener('click', ()=> {
+      if (!validateUid()) { uidInput.focus(); showToastAndHaptic('Проверьте User ID'); return; }
+      if (!validateZone()) { zoneInput.focus(); showToastAndHaptic('Проверьте Zone ID'); return; }
+      const pack = PACKS.find(p=>p.id===state.selectedPack);
+      const payload = {
+        action:'checkout',
+        items: [{ game: GAMES[state.activeGame].title, title: pack.title, price: pack.price, uid: uidInput.value.trim(), zone: zoneInput.value.trim() }],
+        total: pack.price
+      };
 
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => setSection(button.dataset.section));
-    });
+      // Telegram popup (best-effort) for native feel
+      try {
+        if (tg?.showPopup) {
+          try { tg.showPopup && tg.showPopup({ title: 'Подтвердите оплату', message: `${pack.title} — ${pack.price} ₽` }); } catch(e){}
+        }
+      } catch(e){}
 
-    gameTiles.forEach(tile => {
-      tile.addEventListener('click', () => {
-        setGame(tile.dataset.game);
+      // Open internal confirm modal (we control this)
+      openConfirmModal('Подтвердить оплату', `${pack.title} — ${pack.price} ₽\nUID: ${uidInput.value.trim()}`, async () => {
+        hapticNotify('success');
+        await sendToBot(payload);
+        showToast('Данные отправлены в бот');
+        // clear only the single inputs (do not clear cart)
+        uidInput.value=''; zoneInput.value='';
+        uidWrap.classList.remove('valid'); zoneWrap.classList.remove('valid');
       });
     });
 
+    // add to cart handler
+    toCartBtn.addEventListener('click', ()=> {
+      if (!validateUid()) { uidInput.focus(); showToastAndHaptic('Проверьте User ID'); return; }
+      if (!validateZone()) { zoneInput.focus(); showToastAndHaptic('Проверьте Zone ID'); return; }
+      const pack = PACKS.find(p=>p.id===state.selectedPack);
+      state.cart.push({ game: GAMES[state.activeGame].title, title: pack.title, price: pack.price, uid: uidInput.value.trim(), zone: zoneInput.value.trim() });
+      save(); refreshCartUI(); updateVisuals();
+      try { tg?.sendData?.(JSON.stringify({ type:'cart_add', game: state.activeGame, pack: pack.id, price: pack.price, uid: uidInput.value.trim(), zone: zoneInput.value.trim() })); } catch(e){}
+      showToastAndHaptic('Добавлено в корзину');
+      uidInput.value=''; zoneInput.value=''; uidWrap.classList.remove('valid'); zoneWrap.classList.remove('valid');
+    });
+
+    function showToastAndHaptic(text) { haptic('light'); showToast(text); }
+
+    // cart sheet actions
+    cartBtn.addEventListener('click', ()=> { cartSheet.classList.add('visible'); sheetBackdrop.classList.add('visible'); haptic('light'); });
+    closeSheetBtn.addEventListener('click', ()=> { cartSheet.classList.remove('visible'); sheetBackdrop.classList.remove('visible'); haptic('light'); });
+    sheetBackdrop.addEventListener('click', ()=> { cartSheet.classList.remove('visible'); sheetBackdrop.classList.remove('visible'); });
+    clearBtn.addEventListener('click', ()=> { state.cart=[]; save(); refreshCartUI(); updateVisuals(); haptic('light'); });
+
+    checkoutBtn.addEventListener('click', ()=> {
+      if (!state.cart.length) { showToastAndHaptic('Корзина пуста'); return; }
+      const payload = { action:'checkout', items: state.cart, total: state.cart.reduce((s,i)=>s+i.price,0) };
+      openConfirmModal('Оплатить корзину', `Итог: ${payload.total} ₽\nТоваров: ${payload.items.length}`, async () => {
+        hapticNotify('success');
+        await sendToBot(payload);
+        state.cart = [];
+        save(); refreshCartUI(); updateVisuals();
+        showToast('Заказ отправлен в бот');
+      });
+    });
+
+    // wire games selection
+    gameTiles.forEach(tile => tile.addEventListener('click', ()=> setGame(tile.dataset.game, tile)));
+    sectionBtns.forEach(b => b.addEventListener('click', ()=> setSection(b.dataset.section)));
     uidInput.addEventListener('input', validateUid);
     zoneInput.addEventListener('input', validateZone);
-    addCartButton.addEventListener('click', addToCart);
-    buyNowButton.addEventListener('click', checkout);
-    cartButton.addEventListener('click', openCart);
-    closeSheet.addEventListener('click', closeCart);
-    sheetBackdrop.addEventListener('click', closeCart);
-    clearCart.addEventListener('click', () => {
-      state.cart = [];
-      saveState();
-      renderCartItems();
-      updateTotals();
-      haptic('light');
-    });
-    checkoutButton.addEventListener('click', checkout);
-    confirmClose.addEventListener('click', () => confirmModal.classList.remove('visible'));
-    themeSwitcher.addEventListener('click', () => setTheme(state.theme === 'dark' ? 'light' : 'dark'));
+    themeBtn.addEventListener('click', ()=> { state.theme = state.theme === 'dark' ? 'light' : 'dark'; applyTheme(); haptic('medium'); });
 
-    function init() {
+    // keyboard-friendly horizontal scroll suggestion: add a small gradient on right to hint scroll
+    (function addScrollHint(){
+      const hint = document.createElement('div');
+      hint.style.position='absolute'; hint.style.right='0'; hint.style.top='calc(50% - 48px)'; hint.style.width='36px'; hint.style.height='96px';
+      hint.style.pointerEvents='none'; hint.style.background='linear-gradient(90deg, transparent, rgba(0,0,0,0.12))';
+      hint.style.borderRadius='8px';
+      document.querySelector('.game-line').style.position='relative';
+      document.querySelector('.game-line').appendChild(hint);
+    })();
+
+    // init UI
+    (function init(){
+      applyTheme();
       setSection(state.section);
-      setTheme(state.theme);
       setGame(state.activeGame);
-      renderPacks();
-      renderCartItems();
-      updateTotals();
-      balanceDisplay.textContent = `${state.balance} ₽`;
-      if (state.cart.length) cartButton.classList.add('translate-y-0', 'opacity-100');
-      else cartButton.classList.remove('translate-y-0', 'opacity-100');
-    }
+      renderPacksSelection();
+      refreshCartUI();
+      updateVisuals();
+      // set large tappable defaults visually
+      // ensure no accidental zoom gestures on iOS
+      document.addEventListener('gesturestart', e => e.preventDefault());
+    })();
 
-    init();
+    // expose for debug
+    window._GM = { state, GAMES, PACKS };
+
+    // prevent accidental text selection on long tap
+    document.addEventListener('selectstart', e => { if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') e.preventDefault(); });
   </script>
 </body>
 </html>
