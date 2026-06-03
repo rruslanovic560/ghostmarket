@@ -4,84 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GhostMarket</title>
-    <!-- Подключаем стили Tailwind для красивого дизайна -->
+    <!-- Подключаем стили Tailwind -->
     <script src="https://jsdelivr.net"></script>
-    <!-- Подключаем скрипт Телеграма -->
     <script src="https://telegram.org"></script>
+    <style>
+        /* Скрытие скроллбара для категорий */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-[#131418] text-white font-sans antialiased pb-10">
+<body id="body" class="bg-[#12131a] text-white font-sans antialiased pb-24 transition-colors duration-300">
 
-    <!-- Шапка приложения -->
-    <header class="bg-[#1b1c21] p-4 sticky top-0 z-50 border-b border-gray-800 flex justify-between items-center">
-        <div>
-            <h1 class="text-xl font-black tracking-wide text-yellow-400">GHOST MARKET</h1>
-            <p class="text-xs text-gray-400">Лучшие цены на игры и Stars</p>
+    <!-- ХЕДЕР С ТЕМНОЙ/СВЕТЛОЙ ТЕМОЙ -->
+    <header class="bg-[#181922] p-4 border-b border-gray-800/60 flex justify-between items-center transition-colors duration-300" id="header">
+        <div class="flex items-center gap-2">
+            <div class="bg-blue-600 text-white font-black text-xl px-2.5 py-1 rounded-xl tracking-tighter shadow-md shadow-blue-600/20">G</div>
+            <div>
+                <h1 class="text-base font-bold tracking-tight">Ghostmarket</h1>
+                <div class="text-[10px] text-gray-400 flex items-center gap-1">
+                    <span class="inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> 1 млн+ товаров
+                </div>
+            </div>
         </div>
-        <div class="bg-gray-800 px-3 py-1.5 rounded-xl border border-gray-700 text-sm">
-            💰 <span id="user-balance">0.00</span> ₽
-        </div>
+        
+        <!-- Переключатель темы оформления -->
+        <button onclick="toggleTheme()" class="bg-[#20222e] p-2.5 rounded-xl border border-gray-800/80 cursor-pointer active:scale-95 transition" id="theme-btn">
+            🌙
+        </button>
     </header>
 
-    <!-- Категории товаров -->
-    <div class="p-4 flex gap-2 overflow-x-auto no-scrollbar">
-        <button class="bg-yellow-400 text-black px-4 py-2 rounded-xl text-sm font-bold shadow-md shrink-0">🔥 Все</button>
-        <button class="bg-[#1b1c21] text-gray-300 px-4 py-2 rounded-xl text-sm font-medium border border-gray-800 shrink-0">⭐ Stars</button>
-        <button class="bg-[#1b1c21] text-gray-300 px-4 py-2 rounded-xl text-sm font-medium border border-gray-800 shrink-0">🎮 Донат</button>
-        <button class="bg-[#1b1c21] text-gray-300 px-4 py-2 rounded-xl text-sm font-medium border border-gray-800 shrink-0">🔑 Ключи</button>
+    <!-- ПОИСКОВАЯ СТРОКА (Как на Playerok) -->
+    <div class="p-4">
+        <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 text-sm">🔍</span>
+            <input type="text" placeholder="Поиск игр и приложений" class="w-full bg-[#181922] border border-gray-800 text-sm rounded-xl pl-9 pr-4 py-3 placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all" id="search-bar">
+        </div>
     </div>
 
-    <!-- Витрина товаров (Копия стилистики Playrok) -->
-    <main class="p-4 grid grid-cols-1 gap-4">
-        
-        <!-- Товар 1 -->
-        <div class="bg-[#1b1c21] border border-gray-800 rounded-2xl p-4 flex flex-col justify-between transition active:scale-98">
-            <div>
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-blue-500/10 text-blue-400 text-xs font-bold px-2 py-1 rounded-md">⭐ Telegram Stars</span>
-                    <span class="text-emerald-400 font-black text-lg">150 ₽</span>
-                </div>
-                <h3 class="font-bold text-base text-gray-100">50 Telegram Stars</h3>
-                <p class="text-xs text-gray-400 mt-1">Моментальное автоматическое зачисление по вашему ID</p>
-            </div>
-            <button onclick="buyProduct('50 Stars')" class="w-full bg-yellow-400 text-black font-extrabold text-sm py-2.5 rounded-xl mt-4 cursor-pointer hover:bg-yellow-500 transition">Купить в 1 клик</button>
-        </div>
+    <!-- КАТЕГОРИИ (Донат, Подписки, Аккаунты) -->
+    <div class="px-4 py-1 flex gap-2 overflow-x-auto no-scrollbar">
+        <button class="bg-blue-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shrink-0 flex items-center gap-1.5 shadow-lg shadow-blue-600/10">💎 Донат</button>
+        <button class="bg-[#181922] border border-gray-800 text-gray-300 text-xs font-medium px-4 py-2.5 rounded-xl shrink-0 flex items-center gap-1.5" id="cat-1">📄 Подписки</button>
+        <button class="bg-[#181922] border border-gray-800 text-gray-300 text-xs font-medium px-4 py-2.5 rounded-xl shrink-0 flex items-center gap-1.5" id="cat-2">🎮 Аккаунты</button>
+        <button class="bg-[#181922] border border-gray-800 text-gray-300 text-xs font-medium px-4 py-2.5 rounded-xl shrink-0 flex items-center gap-1.5" id="cat-3">⭐ Stars</button>
+    </div>
 
-        <!-- Товар 2 -->
-        <div class="bg-[#1b1c21] border border-gray-800 rounded-2xl p-4 flex flex-col justify-between transition active:scale-98">
-            <div>
-                <div class="flex justify-between items-start mb-2">
-                    <span class="bg-purple-500/10 text-purple-400 text-xs font-bold px-2 py-1 rounded-md">🎮 Донат в игры</span>
-                    <span class="text-emerald-400 font-black text-lg">450 ₽</span>
-                </div>
-                <h3 class="font-bold text-base text-gray-100">Genshin Impact: Купон Кристаллов</h3>
-                <p class="text-xs text-gray-400 mt-1">Официальное пополнение по UID. Безопасно, без бана.</p>
+    <!-- ГОРИЗОНТАЛЬНЫЙ БАННЕР С КАРУСЕЛЬЮ -->
+    <div class="p-4">
+        <div class="relative w-full h-36 rounded-2xl overflow-hidden bg-gradient-to-r from-purple-900 to-indigo-900 border border-purple-500/20 shadow-xl flex items-center p-5">
+            <div class="z-10 max-w-[65%]">
+                <span class="bg-purple-500 text-[9px] font-black tracking-widest px-2 py-0.5 rounded-md uppercase">Новое</span>
+                <h2 class="text-lg font-black leading-tight mt-1">Алмазы MLBB</h2>
+                <p class="text-[11px] text-purple-200 mt-1">Моментальная автоматическая отправка в игру</p>
             </div>
-            <button onclick="buyProduct('Genshin Купон')" class="w-full bg-yellow-400 text-black font-extrabold text-sm py-2.5 rounded-xl mt-4 cursor-pointer hover:bg-yellow-500 transition">Купить в 1 клик</button>
+            <!-- Декоративный неоновый круг вместо картинки игры -->
+            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-blue-500 rounded-full blur-2xl opacity-40"></div>
+            <div class="absolute right-4 text-5xl opacity-80">💎</div>
         </div>
+    </div>
 
-    </main>
+    <!-- ФОРМА ЗАКАЗА (КОПИЯ ЭКРАНА С ПЛЕЙРОКА) -->
+    <div class="px-4 py-2">
+        <div class="bg-[#181922] border border-gray-800/80 rounded-2xl p-4 transition-colors duration-300" id="form-card">
+            <h3 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-1.5" id="form-title">📋 Данные для получения</h3>
+            
+            <!-- Поля ввода ID -->
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1 font-medium">User ID</label>
+                    <input type="number" placeholder="12345678" class="w-full bg-[#20222e] border border-gray-800 text-sm rounded-xl p-3 focus:outline-none focus:border-blue-500 text-white transition-colors" id="input-uid">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1 font-medium">Zone ID</label>
+                    <input type="number" placeholder="1234" class="w-full bg-[#20222e] border border-gray-800 text-sm rounded-xl p-3 focus:outline-none focus:border-blue-500 text-white transition-colors" id="input-zid">
+                </div>
+            </div>
+
+            <!-- Выбор количества -->
+            <div class="mb-4">
+                <label class="text-[10px] text-gray-500 block mb-1 font-medium">Количество</label>
+                <select class="w-full bg-[#20222e] border border-gray-800 text-sm rounded-xl p-3 focus:outline-none focus:border-blue-500 text-white appearance-none cursor-pointer" id="input-select">
+                    <option value="59">35 алмазов — 59 ₽</option>
+                    <option value="149">88 алмазов — 149 ₽</option>
+                    <option value="399">250 алмазов — 399 ₽</option>
+                </select>
+            </div>
+
+            <!-- Индикатор автовыдачи -->
+            <div class="flex items-center gap-2 text-xs text-purple-400 font-semibold mb-4 bg-purple-500/5 py-2 px-3 rounded-xl border border-purple-500/10 w-fit">
+                ⚡ Автовыдача моментально
+            </div>
+
+            <!-- Главная кнопка оплаты -->
+            <button onclick="processPayment()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm py-3.5 rounded-xl shadow-lg shadow-blue-600/10 cursor-pointer active:scale-[0.99] transition">
+                Оплатить <span id="btn-price">59</span> ₽
+            </button>
+        </div>
+    </div>
+
+    <!-- НИЖНЕЕ МЕНЮ (NAV BAR) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#181922]/95 backdrop-blur-md border-t border-gray-800/80 p-2 flex justify-around items-center z-50 transition-colors duration-300" id="nav-bar">
+        <button class="flex flex-col items-center gap-1 text-blue-500 font-bold text-[10px]">
+            <span class="text-lg">🔍</span>Поиск
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-500 text-[10px]" id="nav-2">
+            <span class="text-lg">➕</span>Продать
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-500 text-[10px]" id="nav-3">
+            <span class="text-lg">💬</span>Чаты
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-500 text-[10px]" id="nav-4">
+            <span class="text-lg">👤</span>Профиль
+        </button>
+    </nav>
 
     <script>
-        // Инициализируем Telegram WebApp
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем приложение на весь экран телефона
+        tg.expand();
 
-        // Логика кнопки "Купить"
-        function buyProduct(productName) {
+        // Смена цены при выборе в выпадающем списке
+        const select = document.getElementById('input-select');
+        const btnPrice = document.getElementById('btn-price');
+        select.addEventListener('change', (e) => {
+            btnPrice.innerText = e.target.value;
+        });
+
+        // Функция оплаты
+        function processPayment() {
+            const uid = document.getElementById('input-uid').value;
+            if(!uid) {
+                tg.showAlert('Пожалуйста, введите ваш User ID!');
+                return;
+            }
             tg.showPopup({
-                title: 'Оформление заказа',
-                message: `Вы хотите купить "${productName}"?`,
-                buttons: [
-                    {id: 'buy', type: 'default', text: 'Оплатить'},
-                    {id: 'cancel', type: 'cancel', text: 'Отмена'}
-                ]
-            }, function(buttonId) {
-                if (buttonId === 'buy') {
-                    tg.showAlert('Спасибо за покупку! Товар скоро будет доставлен.');
-                    // Здесь в будущем будет отправка запроса на бэкенд бота
-                }
+                title: 'Подтверждение',
+                message: `Перейти к оплате заказа на сумму ${select.value} ₽?`,
+                buttons: [{type: 'default', text: 'Да'}, {type: 'cancel', text: 'Отмена'}]
             });
         }
-    </script>
-</body>
-</html>
+
+        // Функция переключения ТЕМНОЙ / СВЕТЛОЙ ТЕМЫ
+        let isDark = true;
+        function toggleTheme() {
+            isDark = !isDark;
+            const body = document.getElementById('body');
+            const header = document.getElementById('header');
+            const formCard = document.getElementById('form-card');
+            const navBar = document.getElementById('nav-bar');
+            const themeBtn = document.getElementById('theme-btn');
+            
+            // Массив элементов для легкого переключения классов
+            const bgInputs = document.querySelectorAll('input, select');
+            const bgCats = [document.getElementById('cat-1'), document.getElementById('cat-2'), document.getElementById('cat-3')];
+            const navItems = [document.getElementById('nav-2'), document.getElementById('nav-3'), document.getElementById('nav-4')];
+
+            if(!isDark) {
+                // Светлая тема
+                body.className = "bg-[#f4f5f9] text-gray-900 font-sans antialiased pb-24 transition-colors duration-300";
+                header.className = "bg-white p-4 border-b border-gray-200 flex justify-between items-center transition-colors duration-300";
+                formCard.className = "bg-white border border-gray-200 rounded-2xl p-4 transition-colors duration-300";
+                navBar.className = "fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 p-2 flex justify-around items-center z-50 transition-colors duration-300";
+                                document.getElementById('search-bar').className = "w-full bg-white border border-gray-200 text-sm rounded-xl pl-9 pr-4 py-3 placeholder-gray-400 focus:outline-none focus:border-blue-500 text-gray-900 transition-all";
+                            } else {
+                                // Темная тема (вернуть оригинальные цвета)
+                                body.className = "bg-[#12131a] text-white font-sans antialiased pb-24 transition-colors duration-300";
+                                header.className = "bg-[#181922] p-4 border-b border-gray-800/60 flex justify-between items-center transition-colors duration-300";
+                                formCard.className = "bg-[#181922] border border-gray-800/80 rounded-2xl p-4 transition-colors duration-300";
+                                navBar.className = "fixed bottom-0 left-0 right-0 bg-[#181922]/95 backdrop-blur-md border-t border-gray-800/80 p-2 flex justify-around items-center z-50 transition-colors duration-300";
+                                document.getElementById('search-bar').className = "w-full bg-[#181922] border border-gray-800 text-sm rounded-xl pl-9 pr-4 py-3 placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all";
+                            }
+                
+                            // Переключение классов для inputs
+                            bgInputs.forEach(input => {
+                                input.className = isDark 
+                                    ? "w-full bg-[#20222e] border border-gray-800 text-sm rounded-xl p-3 focus:outline-none focus:border-blue-500 text-white transition-colors"
+                                    : "w-full bg-gray-100 border border-gray-300 text-sm rounded-xl p-3 focus:outline-none focus:border-blue-500 text-gray-900 transition-colors";
+                            });
+                
+                            // Переключение для категорий
+                            bgCats.forEach(cat => {
+                                cat.className = isDark
+                                    ? "bg-[#181922] border border-gray-800 text-gray-300 text-xs font-medium px-4 py-2.5 rounded-xl shrink-0 flex items-center gap-1.5"
+                                    : "bg-gray-100 border border-gray-300 text-gray-900 text-xs font-medium px-4 py-2.5 rounded-xl shrink-0 flex items-center gap-1.5";
+                            });
+                
+                            // Переключение для nav items
+                            navItems.forEach(item => {
+                                item.className = isDark
+                                    ? "flex flex-col items-center gap-1 text-gray-500 text-[10px]"
+                                    : "flex flex-col items-center gap-1 text-gray-600 text-[10px]";
+                            });
+                
+                            // Переключение кнопки темы
+                            themeBtn.innerText = isDark ? '🌙' : '☀️';
+                        }
+                    </script>
+                </body>
+                </html>
