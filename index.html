@@ -3,260 +3,321 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>GhostMarket - Игровая Валюта</title>
+    <title>GhostMarket</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { font-family: 'Rubik', sans-serif; }
-        body { margin: 0; background: #0a0e23; color: #e2e8f0; overflow-x: hidden; }
-        .header-bg { background: linear-gradient(180deg, #1a2150 0%, #0a0e23 100%); }
-        .card { background: rgba(20, 30, 60, 0.6); border: 1px solid rgba(147, 112, 219, 0.2); border-radius: 20px; }
-        .neon-btn { background: linear-gradient(135deg, #9370db 0%, #6366f1 100%); border: none; border-radius: 16px; color: white; font-weight: 600; transition: all 0.3s; cursor: pointer; }
-        .neon-btn:active { transform: scale(0.98); }
-        .btn-small { background: rgba(147, 112, 219, 0.15); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 14px; color: #e2e8f0; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-        .btn-small:active { transform: scale(0.96); }
-        .badge { background: #ef4444; color: white; border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 700; }
-        .tab-active { background: linear-gradient(135deg, #9370db 0%, #6366f1 100%); }
-        .game-item { background: linear-gradient(135deg, rgba(40, 50, 100, 0.6), rgba(20, 30, 60, 0.8)); border: 1px solid rgba(147, 112, 219, 0.15); border-radius: 18px; overflow: hidden; transition: all 0.3s; position: relative; cursor: pointer; }
-        .game-item:active { transform: scale(0.98); }
-        .game-item.selected { border-color: #9370db; box-shadow: 0 0 20px rgba(147, 112, 219, 0.3); }
-        .game-badge { position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); color: white; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; }
-        .game-image { width: 100%; height: 140px; object-fit: cover; }
-        .carousel { display: flex; gap: 12px; overflow-x: auto; padding: 12px 0; scroll-snap-type: x mandatory; }
-        .carousel::-webkit-scrollbar { height: 4px; }
-        .carousel::-webkit-scrollbar-track { background: transparent; }
-        .carousel::-webkit-scrollbar-thumb { background: rgba(147, 112, 219, 0.3); border-radius: 2px; }
-        .carousel-item { flex-shrink: 0; scroll-snap-align: start; }
-        .game-logo { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: rgba(147, 112, 219, 0.15); border: 1px solid rgba(147, 112, 219, 0.3); }
-        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 50; }
-        .toast-item { background: rgba(20, 30, 60, 0.95); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 16px; padding: 14px 16px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); max-width: 90vw; animation: slideIn 0.3s ease; }
-        .toast-success { border-color: rgba(34, 197, 94, 0.3); }
-        .toast-warning { border-color: rgba(245, 158, 11, 0.3); }
-        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .input-field { background: rgba(147, 112, 219, 0.08); border: 1px solid rgba(147, 112, 219, 0.2); border-radius: 14px; padding: 12px 14px; color: white; outline: none; font-size: 14px; transition: all 0.2s; }
-        .input-field:focus { border-color: rgba(147, 112, 219, 0.5); background: rgba(147, 112, 219, 0.12); }
-        .input-field::placeholder { color: rgba(226, 232, 240, 0.4); }
+        * { font-family: 'Inter', sans-serif; }
+        body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #070a1f 0%, #050710 100%); color: #e2e8f0; }
+        .glass { background: rgba(10, 14, 34, 0.86); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.06); }
+        .soft-card { background: rgba(15, 23, 42, 0.82); border: 1px solid rgba(148,163,184,0.18); }
+        .neon-btn { background: linear-gradient(135deg, #7c3aed, #3b82f6); box-shadow: 0 16px 40px rgba(124, 58, 237, 0.18); }
+        .neon-btn:hover { opacity: 0.95; }
+        .tab-btn { transition: all .25s ease; }
+        .tab-active { background: linear-gradient(135deg, rgba(124, 58, 237, 0.95), rgba(59, 130, 246, 0.95)); color: #fff; box-shadow: 0 18px 40px rgba(124,58,237,0.22); }
+        .badge-new { background: #ef4444; color: white; padding: 4px 10px; border-radius: 999px; font-size: 11px; }
+        .game-card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; border: 1px solid rgba(148,163,184,0.18); }
+        .game-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(124,58,237,0.15); }
+        .game-card.selected { border-color: rgba(124, 58, 237, 0.8); }
+        .discount-pill { position: absolute; top: 14px; right: 14px; background: linear-gradient(135deg,#f97316,#ef4444); color:#fff; font-size:11px; font-weight:700; border-radius:999px; padding:6px 11px; }
+        .bottom-nav { position: fixed; left:0; right:0; bottom:0; z-index: 30; }
+        .bottom-nav button { transition: all .2s ease; }
+        .bottom-nav button.active { color:#fff; }
+        .bottom-nav::before { content:''; position:absolute; left:0; right:0; top:0; height:1px; background: rgba(255,255,255,0.08); }
+        .toast-wrapper { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 50; width: calc(100% - 40px); max-width: 420px; }
+        .toast { background: rgba(15,23,42,0.98); border:1px solid rgba(124,58,237,0.25); border-radius: 18px; padding: 14px 16px; box-shadow: 0 18px 40px rgba(0,0,0,0.35); margin-bottom: 10px; display:flex; align-items:flex-start; gap:12px; }
+        .toast .type { font-size: 12px; color: #a5b4fc; }
+        .carousel { display:flex; gap: 12px; overflow-x:auto; padding-bottom:8px; }
+        .carousel::-webkit-scrollbar { height: 6px; }
+        .carousel::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 999px; }
+        .badge-icon { width: 44px; height: 44px; border-radius: 14px; background: rgba(15,23,42,0.8); display:flex; align-items:center; justify-content:center; }
+        input::placeholder { color: rgba(226,232,240,0.45); }
     </style>
 </head>
 <body>
-
-<div class="header-bg sticky top-0 z-40 px-5 py-4 border-b border-slate-800">
-    <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center text-lg font-black">👻</div>
-            <h1 class="text-xl font-900 text-white">GHOSTMARKET</h1>
+<div class="px-5 pt-6 pb-32">
+    <div class="glass rounded-[32px] p-6 shadow-[0_35px_80px_rgba(0,0,0,0.35)]">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div class="max-w-xl">
+                <p class="text-xs uppercase tracking-[0.35em] text-slate-400">GhostMarket</p>
+                <h1 class="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Твой выгодный мир игровой валюты</h1>
+                <p class="mt-4 text-slate-300 leading-7">Самые низкие цены на игровые товары, проверенные продажи и быстрая доставка. Выбери игру, плати в Telegram и получай моментально.</p>
+            </div>
+            <div class="rounded-[24px] bg-[#111827] px-4 py-3 text-sm text-slate-300">Premium</div>
         </div>
-        <button class="text-slate-400 text-2xl">⋮</button>
-    </div>
-</div>
 
-<div class="px-5 py-6 pb-40">
-    <div class="card p-6 mb-6">
-        <h2 class="text-2xl font-900 text-white italic">Твой Выгодный Мир Игровой Валюты</h2>
-        <p class="text-sm text-slate-300 mt-3 leading-relaxed">Здесь самые низкие цены на игровую валюту, аккаунты и услуги. Моментальная доставка и проверенные продажи.</p>
-        <div class="mt-4 flex justify-end">
-            <span class="btn-small px-3 py-1">Premium</span>
+        <div class="mt-6 grid grid-cols-3 gap-3">
+            <button class="tab-btn tab-active rounded-[24px] py-3 text-sm font-semibold" data-tab="shop">Магазин</button>
+            <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="chat">Чат <span id="chatBadge" class="badge-new ml-2 hidden">1</span></button>
+            <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="notifications">Уведомления</button>
         </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-3 mb-6">
-        <button class="tab-btn tab-active neon-btn py-3 text-sm" data-tab="shop">Магазин</button>
-        <button class="tab-btn btn-small py-3 text-sm flex items-center justify-center gap-2" data-tab="chat">
-            Чат <span id="chatBadge" class="badge hidden">1</span>
-        </button>
-        <button class="tab-btn btn-small py-3 text-sm" data-tab="notifications">Уведомления</button>
-    </div>
-
-    <div id="shopPage">
-        <div class="card p-5 mb-5">
-            <div class="flex items-start justify-between gap-3 mb-4">
+    <div id="shopPage" class="mt-7 space-y-6">
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <p class="text-xs text-slate-400 uppercase">Баланс</p>
-                    <h3 id="balanceValue" class="text-4xl font-900 text-white mt-2">0 ₽</h3>
-                    <p class="text-xs text-slate-400 mt-1">Игровой кошелёк</p>
+                    <p class="text-sm text-slate-400">Баланс</p>
+                    <div class="mt-3 flex items-end gap-3">
+                        <h2 id="balanceValue" class="text-4xl font-bold text-white">0 ₽</h2>
+                        <span class="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">Игровой кошелёк</span>
+                    </div>
                 </div>
-                <div class="text-5xl">💰</div>
+                <div class="rounded-[24px] bg-gradient-to-r from-violet-600 to-blue-500 px-4 py-3 text-white flex items-center gap-3">
+                    <div class="text-2xl">💼</div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-200">Пополнение</p>
+                        <p class="text-sm font-semibold">Быстро и безопасно</p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-3 gap-3">
-                <button class="topup-btn neon-btn py-3 text-sm" data-amount="50">+50 ₽</button>
-                <button class="topup-btn neon-btn py-3 text-sm" data-amount="100">+100 ₽</button>
-                <button class="topup-btn neon-btn py-3 text-sm" data-amount="200">+200 ₽</button>
+
+            <div class="mt-5 grid grid-cols-3 gap-3">
+                <button class="neon-btn rounded-[22px] py-4 text-sm font-semibold" data-amount="50">+50 ₽</button>
+                <button class="neon-btn rounded-[22px] py-4 text-sm font-semibold" data-amount="100">+100 ₽</button>
+                <button class="neon-btn rounded-[22px] py-4 text-sm font-semibold" data-amount="200">+200 ₽</button>
             </div>
         </div>
 
-        <div class="mb-4">
-            <h3 class="text-lg font-700 text-white px-1 mb-3">Выберите товар</h3>
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <!-- Genshin Impact -->
-                <button class="game-item" data-product="Genshin Impact Primogems" data-price="250">
-                    <div class="bg-gradient-to-br from-orange-400 via-orange-500 to-red-600 flex items-center justify-center text-5xl" style="height: 140px;">
-                        ✦
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs text-slate-400">Genshin Impact</p>
-                        <p class="text-sm font-700 text-white mt-1">Primogems x50</p>
-                        <p class="text-lg font-900 text-purple-400 mt-2">250 ₽</p>
-                    </div>
-                    <span class="game-badge">-15%</span>
-                </button>
-
-                <!-- MLBB -->
-                <button class="game-item" data-product="MLBB Diamonds" data-price="119">
-                    <div class="bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center text-5xl" style="height: 140px;">
-                        💎
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs text-slate-400">Mobile Legends</p>
-                        <p class="text-sm font-700 text-white mt-1">35 Diamonds</p>
-                        <p class="text-lg font-900 text-purple-400 mt-2">119 ₽</p>
-                    </div>
-                    <span class="game-badge">-15%</span>
-                </button>
-
-                <!-- Brawl Stars -->
-                <button class="game-item" data-product="Brawl Stars Gems" data-price="99">
-                    <div class="bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 flex items-center justify-center text-5xl" style="height: 140px;">
-                        ⭐
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs text-slate-400">Brawl Stars</p>
-                        <p class="text-sm font-700 text-white mt-1">80 Gems</p>
-                        <p class="text-lg font-900 text-purple-400 mt-2">99 ₽</p>
-                    </div>
-                    <span class="game-badge">-15%</span>
-                </button>
-
-                <!-- PUBG Mobile -->
-                <button class="game-item" data-product="PUBG Mobile UC" data-price="199">
-                    <div class="bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-5xl" style="height: 140px;">
-                        🎯
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs text-slate-400">PUBG Mobile</p>
-                        <p class="text-sm font-700 text-white mt-1">100 UC</p>
-                        <p class="text-lg font-900 text-purple-400 mt-2">199 ₽</p>
-                    </div>
-                    <span class="game-badge">-15%</span>
-                </button>
-
-                <!-- Free Fire -->
-                <button class="game-item" data-product="Free Fire Diamonds" data-price="139">
-                    <div class="bg-gradient-to-br from-red-500 to-pink-700 flex items-center justify-center text-5xl" style="height: 140px;">
-                        🔥
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs text-slate-400">Free Fire</p>
-                        <p class="text-sm font-700 text-white mt-1">50 Diamonds</p>
-                        <p class="text-lg font-900 text-purple-400 mt-2">139 ₽</p>
-                    </div>
-                    <span class="game-badge">-15%</span>
-                </button>
-
-                <!-- Standoff 2 -->
-                <button class="game-item" data-product="Standoff 2 Coins" data-price="149">
-                    <div class="bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-5xl" style="height: 140px;">
-                        ⚔️
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs text-slate-400">Standoff 2</p>
-                        <p class="text-sm font-700 text-white mt-1">200 Coins</p>
-                        <p class="text-lg font-900 text-purple-400 mt-2">149 ₽</p>
-                    </div>
-                    <span class="game-badge">-15%</span>
-                </button>
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Выбор игры и товара</p>
+                    <h2 class="mt-2 text-2xl font-bold text-white">Купить валюту быстро</h2>
+                </div>
+                <span class="rounded-full bg-[#111827] px-4 py-2 text-sm text-slate-300">Скидка 15%</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <input id="inputUid" type="text" placeholder="User ID" class="input-field"/>
-                <input id="inputZone" type="text" placeholder="Zone ID" class="input-field"/>
+            <div class="mt-5 overflow-x-auto pb-2">
+                <div class="flex gap-3 min-w-[720px]">
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="genshin">
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="Genshin Impact" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <p class="mt-4 text-sm text-slate-300">Genshin Impact</p>
+                        <p class="mt-2 text-lg font-bold text-white">Primogems</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="brawl">
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="Brawl Stars" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <p class="mt-4 text-sm text-slate-300">Brawl Stars</p>
+                        <p class="mt-2 text-lg font-bold text-white">Gems / Pass</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="pubg">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="PUBG Mobile" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <p class="mt-4 text-sm text-slate-300">PUBG Mobile</p>
+                        <p class="mt-2 text-lg font-bold text-white">UC / Pass</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="freefire">
+                        <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="Free Fire" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <p class="mt-4 text-sm text-slate-300">Free Fire</p>
+                        <p class="mt-2 text-lg font-bold text-white">Diamonds</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="standoff">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="Standoff 2" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <p class="mt-4 text-sm text-slate-300">Standoff 2</p>
+                        <p class="mt-2 text-lg font-bold text-white">Coins</p>
+                    </button>
+                    <button class="game-card rounded-[28px] p-4 flex-shrink-0 w-52 text-left" data-game="blackrush">
+                        <img src="https://img.icons8.com/color/512/cyber-security.png" alt="Black Rush" class="h-12 w-12 rounded-2xl object-cover"/>
+                        <p class="mt-4 text-sm text-slate-300">Black Rush</p>
+                        <p class="mt-2 text-lg font-bold text-white">Скины</p>
+                    </button>
+                </div>
             </div>
-            <button id="buyButton" class="neon-btn w-full py-4 text-base font-700 mb-4">Купить</button>
-            <div id="shopHint" class="hidden card p-3 text-sm text-slate-300"></div>
+
+            <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                <input id="inputUid" type="text" placeholder="User ID" class="input-field h-14 rounded-[20px] px-4 w-full"/>
+                <input id="inputZone" type="text" placeholder="Zone ID" class="input-field h-14 rounded-[20px] px-4 w-full"/>
+            </div>
+
+            <div class="mt-5 grid gap-4">
+                <div id="productList" class="grid gap-4 lg:grid-cols-2"></div>
+            </div>
+
+            <button id="buyButton" class="neon-btn w-full rounded-[24px] py-4 text-base font-semibold mt-1">Купить выбранное</button>
         </div>
 
-        <div class="mb-4">
-            <p class="text-sm text-slate-400 px-1 mb-3">Поддерживаемые игры</p>
-            <div class="carousel">
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Поддерживаемые игры</p>
+                    <h3 class="mt-1 text-lg font-semibold text-white">Карусель логотипов</h3>
+                </div>
+                <span class="badge-new">Лучшее</span>
+            </div>
+            <div class="carousel mt-4">
                 <div class="carousel-item">
-                    <div class="game-logo">✦</div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png" alt="Genshin" class="h-8 w-8"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="game-logo">💎</div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png" alt="Brawl" class="h-8 w-8"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="game-logo">⭐</div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png" alt="PUBG" class="h-8 w-8"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="game-logo">🎯</div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png" alt="Free Fire" class="h-8 w-8"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="game-logo">🔥</div>
+                    <div class="badge-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png" alt="Standoff" class="h-8 w-8"/></div>
                 </div>
                 <div class="carousel-item">
-                    <div class="game-logo">⚔️</div>
+                    <div class="badge-icon"><img src="https://img.icons8.com/color/512/cyber-security.png" alt="Black Rush" class="h-8 w-8"/></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="chatPage" class="hidden">
-        <div class="card p-6 mb-4">
-            <h2 class="text-xl font-900 text-white">💬 AI-помощник</h2>
-            <p class="text-sm text-slate-400 mt-2">Здесь ты найдёшь ответы на все вопросы</p>
-        </div>
-        <div class="space-y-3 mb-4">
-            <button class="chat-action card p-4 text-left w-full" data-action="howToTopUp">
-                <p class="font-700 text-white">Как пополнить баланс?</p>
-                <p class="text-xs text-slate-400 mt-1">Пошаговая инструкция</p>
-            </button>
-            <button class="chat-action card p-4 text-left w-full" data-action="needMoreMoney">
-                <p class="font-700 text-white">Недостаточно средств</p>
-                <p class="text-xs text-slate-400 mt-1">Почему не проходит покупка</p>
-            </button>
-            <button class="chat-action card p-4 text-left w-full" data-action="whatIsUid">
-                <p class="font-700 text-white">Что такое User ID?</p>
-                <p class="text-xs text-slate-400 mt-1">Нужные данные для заказа</p>
-            </button>
-        </div>
-        <div class="card p-4">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-sm font-700 text-white">Сообщения</p>
-                <button id="clearChatMessages" class="btn-small px-3 py-1 text-xs">Очистить</button>
+    <div id="chatPage" class="hidden space-y-6">
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Поддержка</p>
+                    <h2 class="text-2xl font-bold text-white">AI-помощник</h2>
+                </div>
+                <span class="rounded-full bg-[#111827] px-4 py-2 text-sm text-slate-300">временно офлайн</span>
             </div>
-            <div id="chatHistory" class="space-y-2 max-h-96 overflow-y-auto">
-                <p class="text-xs text-slate-500">Пока нет сообщений</p>
+            <div class="mt-5 grid gap-3">
+                <button class="card p-4 text-left rounded-[24px] border border-slate-700" data-action="howToTopUp">
+                    <p class="font-semibold text-white">Как пополнить баланс?</p>
+                    <p class="text-sm text-slate-400 mt-1">Пошаговая инструкция</p>
+                </button>
+                <button class="card p-4 text-left rounded-[24px] border border-slate-700" data-action="needMoney">
+                    <p class="font-semibold text-white">Недостаточно средств</p>
+                    <p class="text-sm text-slate-400 mt-1">Почему не проходит покупка</p>
+                </button>
+                <button class="card p-4 text-left rounded-[24px] border border-slate-700" data-action="whatIsUid">
+                    <p class="font-semibold text-white">Что такое User ID?</p>
+                    <p class="text-sm text-slate-400 mt-1">Для чего нужен и где найти</p>
+                </button>
+            </div>
+        </div>
+
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <p class="text-base font-semibold text-white">Сообщения</p>
+                <button id="clearChatMessages" class="btn-small px-4 py-2">Очистить</button>
+            </div>
+            <div id="chatHistory" class="mt-4 space-y-3">
+                <div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Здесь появятся подсказки и ответы AI-помощника.</div>
             </div>
         </div>
     </div>
 
-    <div id="notificationsPage" class="hidden">
-        <div class="card p-6 mb-4">
-            <h2 class="text-xl font-900 text-white">🔔 Уведомления</h2>
-            <div class="flex gap-2 mt-4">
-                <button id="markAllRead" class="btn-small px-4 py-2 text-xs">Прочитал</button>
+    <div id="notificationsPage" class="hidden space-y-6">
+        <div class="soft-card rounded-[32px] p-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-400">Уведомления</p>
+                    <h2 class="text-2xl font-bold text-white">Последние события</h2>
+                </div>
+                <button id="markAllRead" class="btn-small px-4 py-2">Прочитал</button>
             </div>
-        </div>
-        <div id="notificationsList" class="space-y-3">
-            <p class="text-sm text-slate-400">Нет уведомлений</p>
+            <div id="notificationsList" class="mt-5 space-y-3">
+                <div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Нет новых уведомлений</div>
+            </div>
         </div>
     </div>
 </div>
 
-<div id="toastWrapper"></div>
+<div class="bottom-nav glass py-3 px-5">
+    <div class="grid grid-cols-3 gap-3">
+        <button class="tab-btn active rounded-[24px] py-3 text-sm font-semibold" data-tab="shop">Магазин</button>
+        <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="chat">Чат</button>
+        <button class="tab-btn rounded-[24px] py-3 text-sm font-semibold" data-tab="notifications">Уведомления</button>
+    </div>
+</div>
+
+<div class="toast-wrapper" id="toastWrapper"></div>
 
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+    const tg = window.Telegram?.WebApp;
+    if (tg?.ready) tg.ready();
+
+    const games = {
+        genshin: {
+            id: 'genshin',
+            name: 'Genshin Impact',
+            subtitle: 'Primogems',
+            image: 'https://upload.wikimedia.org/wikipedia/ru/thumb/5/5e/Genshin_Impact_logo.svg/512px-Genshin_Impact_logo.svg.png',
+            products: [
+                { title: '50 Primogems', price: 250 },
+                { title: '120 Primogems', price: 499 },
+                { title: '280 Primogems', price: 999 }
+            ]
+        },
+        brawl: {
+            id: 'brawl',
+            name: 'Brawl Stars',
+            subtitle: 'Gems / Pass',
+            image: 'https://upload.wikimedia.org/wikipedia/ru/4/4f/Brawl_Stars.png',
+            products: [
+                { title: '80 Gems', price: 99 },
+                { title: '250 Gems', price: 229 },
+                { title: 'Brawl Pass', price: 189 }
+            ]
+        },
+        pubg: {
+            id: 'pubg',
+            name: 'PUBG Mobile',
+            subtitle: 'UC / Pass',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/PUBG_Mobile_logo.png/512px-PUBG_Mobile_logo.png',
+            products: [
+                { title: '100 UC', price: 199 },
+                { title: '300 UC', price: 499 },
+                { title: 'Elite Pass', price: 169 }
+            ]
+        },
+        freefire: {
+            id: 'freefire',
+            name: 'Free Fire',
+            subtitle: 'Diamonds',
+            image: 'https://upload.wikimedia.org/wikipedia/ru/thumb/0/02/Free_Fire_logo.png/512px-Free_Fire_logo.png',
+            products: [
+                { title: '50 Diamonds', price: 139 },
+                { title: '120 Diamonds', price: 299 },
+                { title: 'Elite Pass', price: 189 }
+            ]
+        },
+        standoff: {
+            id: 'standoff',
+            name: 'Standoff 2',
+            subtitle: 'Coins',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Standoff_2_logo.png/512px-Standoff_2_logo.png',
+            products: [
+                { title: '200 Coins', price: 149 },
+                { title: '500 Coins', price: 329 },
+                { title: 'Diamond Case', price: 179 }
+            ]
+        },
+        blackrush: {
+            id: 'blackrush',
+            name: 'Black Rush',
+            subtitle: 'Скины',
+            image: 'https://img.icons8.com/color/512/cyber-security.png',
+            products: [
+                { title: 'Skin Pack', price: 129 },
+                { title: 'Premium Skin', price: 229 },
+                { title: 'Starter Bundle', price: 179 }
+            ]
+        }
+    };
 
     const state = {
         balance: parseInt(localStorage.getItem('gm_balance') || '0', 10),
+        selectedGame: 'genshin',
         selectedProduct: null,
         selectedPrice: 0,
         chatUnread: parseInt(localStorage.getItem('gm_chat_unread') || '1', 10),
         notifications: JSON.parse(localStorage.getItem('gm_notifications') || '[]'),
         messages: JSON.parse(localStorage.getItem('gm_messages') || '[]')
     };
+
+    const balanceEl = document.getElementById('balanceValue');
+    const chatBadge = document.getElementById('chatBadge');
+    const productList = document.getElementById('productList');
+    const notificationsList = document.getElementById('notificationsList');
+    const chatHistory = document.getElementById('chatHistory');
+    const toastWrapper = document.getElementById('toastWrapper');
 
     function saveState() {
         localStorage.setItem('gm_balance', state.balance.toString());
@@ -266,158 +327,181 @@
     }
 
     function renderBalance() {
-        document.getElementById('balanceValue').textContent = `${state.balance} ₽`;
+        balanceEl.textContent = `${state.balance} ₽`;
+    }
+
+    function renderGameSelection() {
+        document.querySelectorAll('[data-game]').forEach(card => {
+            card.classList.toggle('selected', card.dataset.game === state.selectedGame);
+        });
+    }
+
+    function renderProducts() {
+        const game = games[state.selectedGame];
+        productList.innerHTML = game.products.map((item, index) => `
+            <button class="game-card relative rounded-[28px] p-4 text-left bg-[#101828] hover:bg-[#111b33]" data-index="${index}">
+                <div class="absolute left-4 top-4 rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">Скидка 15%</div>
+                <div class="flex items-center gap-4">
+                    <div class="badge-icon">
+                        <img src="${game.image}" alt="${game.name}" class="h-9 w-9 object-contain"/>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-400">${game.name}</p>
+                        <p class="mt-1 text-lg font-semibold text-white">${item.title}</p>
+                    </div>
+                </div>
+                <div class="mt-5 flex items-center justify-between">
+                    <span class="text-sm text-slate-400">Цена</span>
+                    <span class="text-xl font-bold text-white">${item.price} ₽</span>
+                </div>
+            </button>
+        `).join('');
+
+        productList.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.game-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                const product = games[state.selectedGame].products[Number(card.dataset.index)];
+                state.selectedProduct = product.title;
+                state.selectedPrice = product.price;
+            });
+        });
     }
 
     function renderChatBadge() {
-        const badge = document.getElementById('chatBadge');
         if (state.chatUnread > 0) {
-            badge.classList.remove('hidden');
-            badge.textContent = state.chatUnread;
+            chatBadge.classList.remove('hidden');
+            chatBadge.textContent = state.chatUnread;
         } else {
-            badge.classList.add('hidden');
+            chatBadge.classList.add('hidden');
         }
     }
 
     function renderNotifications() {
-        const list = document.getElementById('notificationsList');
         if (!state.notifications.length) {
-            list.innerHTML = '<p class="text-sm text-slate-400">Нет уведомлений</p>';
+            notificationsList.innerHTML = '<div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Нет новых уведомлений</div>';
             return;
         }
-        list.innerHTML = state.notifications.map(note => `
-            <div class="card p-4">
-                <div class="flex justify-between items-start gap-2">
+        notificationsList.innerHTML = state.notifications.map(note => `
+            <div class="rounded-[24px] bg-[#0f172a] p-4">
+                <div class="flex items-center justify-between gap-3">
                     <div>
-                        <p class="text-sm font-600 ${note.type === 'warning' ? 'text-orange-300' : 'text-slate-300'}">${note.title}</p>
-                        <p class="text-xs text-slate-400 mt-1">${note.text}</p>
+                        <p class="text-sm font-semibold ${note.type === 'warning' ? 'text-orange-300' : 'text-slate-200'}">${note.title}</p>
+                        <p class="text-sm text-slate-400 mt-1">${note.text}</p>
                     </div>
-                    <span class="text-xs ${note.read ? 'text-slate-600' : 'text-purple-400'}">${note.read ? '✓' : '●'}</span>
+                    <span class="text-xs ${note.read ? 'text-slate-500' : 'text-violet-300'}">${note.read ? 'Прочитано' : 'Новое'}</span>
                 </div>
             </div>
         `).join('');
     }
 
     function renderChat() {
-        const hist = document.getElementById('chatHistory');
         if (!state.messages.length) {
-            hist.innerHTML = '<p class="text-xs text-slate-500">Пока нет сообщений</p>';
+            chatHistory.innerHTML = '<div class="rounded-[24px] bg-[#0f172a] p-4 text-slate-400">Здесь появятся подсказки и ответы помощника.</div>';
             return;
         }
-        hist.innerHTML = state.messages.map(msg => `
-            <div class="bg-slate-800/30 p-3 rounded-xl">
-                <p class="text-xs font-600 text-slate-300">${msg.title}</p>
-                <p class="text-xs text-slate-400 mt-1">${msg.text}</p>
+        chatHistory.innerHTML = state.messages.map(item => `
+            <div class="rounded-[24px] bg-[#0f172a] p-4">
+                <p class="text-sm font-semibold text-slate-200">${item.title}</p>
+                <p class="text-sm text-slate-400 mt-1">${item.text}</p>
             </div>
         `).join('');
     }
 
-    function addNotification(title, text, type = 'info') {
-        state.notifications.unshift({ title, text, type, read: false });
-        renderNotifications();
-        saveState();
-    }
-
-    function addMessage(title, text) {
-        state.messages.push({ title, text });
-        renderChat();
-        saveState();
-    }
-
-    function showToast(text, type = 'info') {
-        const wrapper = document.getElementById('toastWrapper');
+    function showToast(message, type = 'info') {
         const toast = document.createElement('div');
-        toast.className = `toast-item toast-${type}`;
-        toast.style.cssText = 'position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 50;';
-        toast.textContent = text;
-        wrapper.appendChild(toast);
-
+        toast.className = 'toast';
+        toast.innerHTML = `
+            <div>
+                <p class="type">${type === 'success' ? 'Готово' : type === 'warning' ? 'Внимание' : 'Инфо'}</p>
+                <p class="text-white font-medium">${message}</p>
+            </div>`;
+        toastWrapper.appendChild(toast);
         setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transition = 'opacity 0.3s';
-            setTimeout(() => toast.remove(), 300);
-        }, 3500);
+            toast.remove();
+        }, 3000);
     }
 
     function selectTab(name) {
         document.querySelectorAll('.tab-btn').forEach(btn => {
-            if (btn.dataset.tab === name) {
-                btn.classList.add('tab-active');
-                btn.classList.remove('btn-small');
-            } else {
-                btn.classList.remove('tab-active');
-                btn.classList.add('btn-small');
-            }
+            btn.classList.toggle('tab-active', btn.dataset.tab === name);
+            btn.classList.toggle('bg-transparent', btn.dataset.tab !== name);
         });
         document.getElementById('shopPage').classList.toggle('hidden', name !== 'shop');
         document.getElementById('chatPage').classList.toggle('hidden', name !== 'chat');
         document.getElementById('notificationsPage').classList.toggle('hidden', name !== 'notifications');
+
         if (name === 'chat') {
             state.chatUnread = 0;
             renderChatBadge();
             saveState();
         }
         if (name === 'notifications') {
-            state.notifications = state.notifications.map(n => ({ ...n, read: true }));
+            state.notifications = state.notifications.map(note => ({ ...note, read: true }));
             renderNotifications();
             saveState();
         }
     }
 
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.tab)));
+    document.querySelectorAll('[data-tab]').forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.tab)));
 
-    document.querySelectorAll('.topup-btn').forEach(btn => {
+    document.querySelectorAll('[data-amount]').forEach(btn => {
         btn.addEventListener('click', () => {
             const amount = Number(btn.dataset.amount);
             state.balance += amount;
             renderBalance();
-            addNotification('Баланс пополнен', `+${amount} ₽`);
-            addMessage('Пополнение', `Баланс пополнен на ${amount} ₽`);
-            showToast(`+${amount} ₽`, 'success');
+            addNotification('Баланс пополнен', `На счёт пришло ${amount} ₽`, 'success');
+            addMessage('Баланс', `Вы пополнили +${amount} ₽, теперь можно купить товар.`);
+            showToast(`Баланс +${amount} ₽`, 'success');
             saveState();
         });
     });
 
-    document.querySelectorAll('.game-item').forEach(btn => {
+    document.querySelectorAll('[data-game]').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.game-item').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            state.selectedProduct = btn.dataset.product;
-            state.selectedPrice = Number(btn.dataset.price);
+            state.selectedGame = btn.dataset.game;
+            state.selectedProduct = null;
+            state.selectedPrice = 0;
+            renderGameSelection();
+            renderProducts();
         });
     });
 
     document.getElementById('buyButton').addEventListener('click', () => {
         const uid = document.getElementById('inputUid').value.trim();
         const zone = document.getElementById('inputZone').value.trim();
-
-        if (!uid || !zone || !state.selectedProduct) {
+        if (!uid || !zone) {
             showToast('Заполните User ID и Zone ID', 'warning');
+            return;
+        }
+        if (!state.selectedProduct) {
+            showToast('Выберите товар', 'warning');
             return;
         }
         if (state.balance < state.selectedPrice) {
             state.chatUnread += 1;
             renderChatBadge();
-            addNotification('Недостаточно средств', `Нужно ${state.selectedPrice} ₽`, 'warning');
+            addNotification('Недостаточно средств', `Для ${state.selectedProduct} нужно ${state.selectedPrice} ₽`, 'warning');
+            addMessage('Ошибка', `Не хватает средств для покупки ${state.selectedProduct}. Пополните баланс.`);
             showToast('Недостаточно средств', 'warning');
             saveState();
             return;
         }
         state.balance -= state.selectedPrice;
         renderBalance();
-        addNotification('Покупка оформлена', `${state.selectedProduct} за ${state.selectedPrice} ₽`);
-        addMessage('Заказ', `${state.selectedProduct} куплен`);
-        showToast('Заказ оформлен!', 'success');
+        addNotification('Покупка оформлена', `${state.selectedProduct} куплен за ${state.selectedPrice} ₽`, 'info');
+        addMessage('Покупка', `Заказ ${state.selectedProduct} оформлен успешно.`);
+        showToast('Покупка оформлена', 'success');
         saveState();
     });
 
-    document.querySelectorAll('.chat-action').forEach(btn => {
+    document.querySelectorAll('[data-action]').forEach(btn => {
         btn.addEventListener('click', () => {
             let text = '';
-            if (btn.dataset.action === 'howToTopUp') text = 'Нажми +50, +100 или +200, и деньги добавятся моментально.';
-            if (btn.dataset.action === 'needMoreMoney') text = 'Пополни баланс и повтори покупку.';
-            if (btn.dataset.action === 'whatIsUid') text = 'User ID — номер в игре. Нужен для доставки товара.';
-            addMessage('Помощник', text);
+            if (btn.dataset.action === 'howToTopUp') text = 'Нажмите на одну из кнопок пополнения. Деньги моментально появятся в балансе.';
+            if (btn.dataset.action === 'needMoney') text = 'Если не хватает средств, пополните баланс и повторите покупку.';
+            if (btn.dataset.action === 'whatIsUid') text = 'User ID — это уникальный номер вашего аккаунта в игре. Он нужен для доставки товара.';
+            addMessage('AI-помощник', text);
             state.chatUnread = 0;
             renderChatBadge();
             saveState();
@@ -425,7 +509,7 @@
     });
 
     document.getElementById('markAllRead').addEventListener('click', () => {
-        state.notifications = state.notifications.map(n => ({ ...n, read: true }));
+        state.notifications = state.notifications.map(note => ({ ...note, read: true }));
         renderNotifications();
         saveState();
     });
@@ -436,10 +520,22 @@
         saveState();
     });
 
+    function addNotification(title, text, type = 'info') {
+        state.notifications.unshift({ title, text, type, read: false });
+        renderNotifications();
+    }
+    function addMessage(title, text) {
+        state.messages.push({ title, text });
+        renderChat();
+    }
+
     renderBalance();
+    renderGameSelection();
+    renderProducts();
     renderChatBadge();
     renderNotifications();
     renderChat();
+    selectTab('shop');
 </script>
 </body>
 </html>
