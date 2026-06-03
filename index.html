@@ -37,6 +37,22 @@
     .app { display: flex; flex-direction: column; height: 100vh; }
     .scroll-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
 
+    /* Page Transitions */
+    .page-content {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* Header */
     .header {
       background: var(--card-dark);
@@ -47,6 +63,7 @@
       justify-content: space-between;
       backdrop-filter: blur(16px);
       gap: 12px;
+      z-index: 30;
     }
 
     .logo {
@@ -160,39 +177,6 @@
     }
 
     .btn-banner-secondary:active { background: rgba(124, 58, 237, 0.16); }
-
-    /* Quick Menu */
-    .quick-menu {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .quick-item {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .quick-item:active { transform: scale(0.95); background: rgba(124, 58, 237, 0.12); }
-
-    .quick-icon {
-      font-size: 28px;
-      margin-bottom: 6px;
-    }
-
-    .quick-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
 
     /* Balance Block */
     .balance-block {
@@ -319,6 +303,8 @@
 
     .game-card {
       flex: 0 0 160px;
+      min-width: 160px;
+      max-width: 160px;
       background: var(--card-dark);
       border: 1px solid var(--border-color);
       border-radius: 14px;
@@ -676,6 +662,155 @@
     .step-label { color: var(--text-muted); font-weight: 600; font-size: 10px; }
     .step.active .step-label { color: var(--accent-purple); font-weight: 700; }
 
+    /* Orders Page */
+    .orders-page {
+      display: none;
+    }
+
+    .orders-page.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .order-item {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .order-info {
+      flex: 1;
+    }
+
+    .order-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .order-status {
+      font-size: 12px;
+      color: var(--price-green);
+      font-weight: 600;
+    }
+
+    .order-price {
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--accent-purple);
+    }
+
+    /* Profile Page */
+    .profile-page {
+      display: none;
+    }
+
+    .profile-page.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .profile-header {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(99, 102, 241, 0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 12px;
+    }
+
+    .profile-name {
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .profile-username {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .profile-stats {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .profile-stat {
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      text-align: center;
+      flex: 0 0 auto;
+    }
+
+    .profile-stat-value {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--accent-purple);
+      display: block;
+    }
+
+    .profile-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .profile-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .profile-menu-item {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .profile-menu-item:active {
+      background: rgba(124, 58, 237, 0.08);
+    }
+
+    .profile-menu-label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .profile-menu-icon {
+      font-size: 18px;
+    }
+
     /* Bottom Tab Bar */
     .tab-bar {
       position: fixed;
@@ -844,44 +979,24 @@
     <!-- HEADER -->
     <header class="header">
       <div class="logo">💜 GhostMarket</div>
-      <button class="btn-premium">★ Premium</button>
+      <button class="btn-premium" id="btnPremium">★ Premium</button>
       <div class="header-actions">
-        <button class="btn-icon" aria-label="Notifications">🔔</button>
-        <button class="btn-icon" aria-label="Profile">👤</button>
+        <button class="btn-icon" aria-label="Notifications" id="btnNotifications">🔔</button>
+        <button class="btn-icon" aria-label="Profile" id="btnHeaderProfile">👤</button>
       </div>
     </header>
 
     <!-- SCROLL CONTENT -->
     <div class="scroll-content" id="scrollContent">
       <!-- HOME PAGE -->
-      <div id="homePage">
+      <div id="homePage" class="page-content">
         <!-- Banner -->
         <div class="banner">
           <div class="banner-title">Игровая валюта дешевле официальных цен</div>
           <div class="banner-subtitle">PUBG • Brawl Stars • Mobile Legends • Free Fire</div>
           <div class="banner-buttons">
-            <button class="btn-banner btn-banner-primary">Пополнить</button>
+            <button class="btn-banner btn-banner-primary" id="btnTopup">Пополнить</button>
             <button class="btn-banner btn-banner-secondary" id="btnCatalog">Каталог</button>
-          </div>
-        </div>
-
-        <!-- Quick Menu -->
-        <div class="quick-menu">
-          <div class="quick-item">
-            <div class="quick-icon">🛒</div>
-            <div class="quick-label">Магазин</div>
-          </div>
-          <div class="quick-item">
-            <div class="quick-icon">💬</div>
-            <div class="quick-label">Поддержка</div>
-          </div>
-          <div class="quick-item">
-            <div class="quick-icon">📦</div>
-            <div class="quick-label">Заказы</div>
-          </div>
-          <div class="quick-item">
-            <div class="quick-icon">⚙️</div>
-            <div class="quick-label">Профиль</div>
           </div>
         </div>
 
@@ -889,7 +1004,7 @@
         <div class="balance-block">
           <div class="balance-header">
             <div class="balance-amount" id="balance">150 ₽</div>
-            <button class="balance-btn-add">+</button>
+            <button class="balance-btn-add" id="btnBalanceAdd">+</button>
           </div>
 
           <div class="balance-stats">
@@ -904,10 +1019,10 @@
           </div>
 
           <div class="balance-buttons">
-            <button class="btn-amount">+100 ₽</button>
-            <button class="btn-amount">+500 ₽</button>
-            <button class="btn-amount">+1000 ₽</button>
-            <button class="btn-amount">+5000 ₽</button>
+            <button class="btn-amount" data-amount="100">+100 ₽</button>
+            <button class="btn-amount" data-amount="500">+500 ₽</button>
+            <button class="btn-amount" data-amount="1000">+1000 ₽</button>
+            <button class="btn-amount" data-amount="5000">+5000 ₽</button>
           </div>
         </div>
 
@@ -985,7 +1100,7 @@
       </div>
 
       <!-- CATALOG PAGE -->
-      <div id="catalogPage" class="hidden">
+      <div id="catalogPage" class="page-content hidden">
         <!-- Game Filter -->
         <div class="game-filter">
           <button class="filter-btn active" data-filter="all">Все игры</button>
@@ -1143,6 +1258,91 @@
           </div>
         </div>
       </div>
+
+      <!-- ORDERS PAGE -->
+      <div id="ordersPage" class="orders-page">
+        <div class="page-content">
+          <div class="section-header" style="margin-bottom: 16px;">
+            <div class="section-title">Ваши заказы</div>
+          </div>
+
+          <div class="order-item">
+            <div class="order-info">
+              <div class="order-name">PUBG Mobile UC | 60 UC</div>
+              <div class="order-status">✓ Доставлено</div>
+            </div>
+            <div class="order-price">15 ₽</div>
+          </div>
+
+          <div class="order-item">
+            <div class="order-info">
+              <div class="order-name">Brawl Stars Gems | 80</div>
+              <div class="order-status">✓ Доставлено</div>
+            </div>
+            <div class="order-price">18 ₽</div>
+          </div>
+
+          <div class="order-item">
+            <div class="order-info">
+              <div class="order-name">Mobile Legends Diamonds | 50</div>
+              <div class="order-status">⏳ В обработке</div>
+            </div>
+            <div class="order-price">12 ₽</div>
+          </div>
+
+          <div class="order-item">
+            <div class="order-info">
+              <div class="order-name">Free Fire Diamonds | 100</div>
+              <div class="order-status">✓ Доставлено</div>
+            </div>
+            <div class="order-price">28 ₽</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE PAGE -->
+      <div id="profilePage" class="profile-page">
+        <div class="page-content">
+          <div class="profile-header">
+            <div class="profile-avatar">👤</div>
+            <div class="profile-name">Пользователь</div>
+            <div class="profile-username">@user_ghostmarket</div>
+            <div class="profile-stats">
+              <div class="profile-stat">
+                <span class="profile-stat-value">12</span>
+                <span class="profile-stat-label">Покупок</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat-value">450 ₽</span>
+                <span class="profile-stat-label">Потрачено</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat-value">22 ₽</span>
+                <span class="profile-stat-label">Кешбэк</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-menu">
+            <div class="profile-menu-item" id="profileSettings">
+              <span class="profile-menu-label">⚙️ Настройки</span>
+              <span class="profile-menu-icon">›</span>
+            </div>
+            <div class="profile-menu-item" id="profileHistory">
+              <span class="profile-menu-label">📜 История операций</span>
+              <span class="profile-menu-icon">›</span>
+            </div>
+            <div class="profile-menu-item" id="profileSupport">
+              <span class="profile-menu-label">💬 Поддержка</span>
+              <span class="profile-menu-icon">›</span>
+            </div>
+            <div class="profile-menu-item" id="profileLogout">
+              <span class="profile-menu-label">🚪 Выход</span>
+              <span class="profile-menu-icon">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- TAB BAR -->
@@ -1182,7 +1382,7 @@
   <div id="toastContainer"></div>
 
   <script>
-    // Telegram WebApp Integration
+    // ==================== TELEGRAM WEBAPP INTEGRATION ====================
     const tg = window.Telegram?.WebApp || window.TelegramWebApp || null;
     
     try { 
@@ -1201,11 +1401,14 @@
       } catch (e) {}
     };
 
-    // DOM Elements
+    // ==================== DOM ELEMENTS ====================
     const homePage = document.getElementById('homePage');
     const catalogPage = document.getElementById('catalogPage');
+    const ordersPage = document.getElementById('ordersPage');
+    const profilePage = document.getElementById('profilePage');
     const scrollContent = document.getElementById('scrollContent');
     const btnCatalog = document.getElementById('btnCatalog');
+    const btnTopup = document.getElementById('btnTopup');
     const tabItems = document.querySelectorAll('.tab-item');
     const buyButtons = document.querySelectorAll('.btn-buy');
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -1216,16 +1419,18 @@
     const btnModalCancel = document.getElementById('btnModalCancel');
     const toastContainer = document.getElementById('toastContainer');
     const balanceAmount = document.getElementById('balance');
-    const premiumBtn = document.querySelector('.btn-premium');
-    const headerNotifBtn = document.querySelector('.btn-icon[aria-label="Notifications"]');
-    const headerProfileBtn = document.querySelector('.btn-icon[aria-label="Profile"]');
+    const balanceButtons = document.querySelectorAll('.btn-amount');
+    const btnBalanceAdd = document.getElementById('btnBalanceAdd');
+    const btnPremium = document.getElementById('btnPremium');
+    const btnNotifications = document.getElementById('btnNotifications');
+    const btnHeaderProfile = document.getElementById('btnHeaderProfile');
 
-    // State
+    // ==================== STATE ====================
     let currentPage = 'home';
     let pendingPurchase = null;
     let currentBalance = 150;
 
-    // Toast Notification
+    // ==================== TOAST NOTIFICATIONS ====================
     function showToast(message) {
       const toast = document.createElement('div');
       toast.className = 'toast';
@@ -1234,7 +1439,7 @@
       setTimeout(() => toast.remove(), 2000);
     }
 
-    // Modal Management
+    // ==================== MODAL MANAGEMENT ====================
     function showModal(title, body, onConfirm) {
       modalTitle.textContent = title;
       modalBody.textContent = body;
@@ -1248,28 +1453,47 @@
       pendingPurchase = null;
     }
 
-    // Page Navigation
+    // ==================== PAGE NAVIGATION ====================
     function switchPage(page) {
       currentPage = page;
+      haptic('light');
 
+      // Hide all pages
+      homePage.classList.add('hidden');
+      catalogPage.classList.add('hidden');
+      ordersPage.classList.remove('active');
+      profilePage.classList.remove('active');
+
+      // Show selected page
       if (page === 'home') {
         homePage.classList.remove('hidden');
-        catalogPage.classList.add('hidden');
       } else if (page === 'catalog') {
-        homePage.classList.add('hidden');
         catalogPage.classList.remove('hidden');
+      } else if (page === 'orders') {
+        ordersPage.classList.add('active');
+      } else if (page === 'profile') {
+        profilePage.classList.add('active');
+      } else if (page === 'support') {
+        // Try to open Telegram support link
+        try {
+          tg?.openTelegramLink?.('https://t.me/GhostMarket_support');
+        } catch (e) {
+          showToast('💬 Контакт поддержки');
+        }
+        // Stay on current page
+        return;
       }
 
+      // Update tab items
       tabItems.forEach((item) => {
-        const isActive = item.dataset.page === page || (page === 'catalog' && item.dataset.page === 'home');
+        const isActive = item.dataset.page === page;
         item.classList.toggle('active', isActive);
       });
 
       scrollContent.scrollTop = 0;
-      haptic('light');
     }
 
-    // Purchase Handler
+    // ==================== PURCHASE HANDLER ====================
     function sendPurchaseData(productName, price) {
       const payload = {
         action: 'checkout',
@@ -1293,44 +1517,57 @@
       closeModal();
     }
 
-    // Event Listeners - Navigation
+    // ==================== TOP-UP HANDLER ====================
+    function showTopupModal(amount) {
+      showModal(
+        'Пополнить баланс',
+        `Пополнить баланс аккаунта на ${amount} ₽ через DonationAlerts?`,
+        () => {
+          hapticNotify('success');
+          currentBalance += amount;
+          balanceAmount.textContent = currentBalance + ' ₽';
+          showToast(`✓ Баланс пополнен на ${amount} ₽`);
+        }
+      );
+    }
+
+    // ==================== EVENT LISTENERS - MAIN NAVIGATION ====================
     btnCatalog.addEventListener('click', () => {
       switchPage('catalog');
     });
 
+    btnTopup.addEventListener('click', () => {
+      haptic('light');
+      switchPage('home');
+    });
+
     tabItems.forEach((item) => {
       item.addEventListener('click', () => {
-        const page = item.dataset.page;
-        if (page === 'home') switchPage('home');
-        else if (page === 'support') { 
-          haptic('light'); 
-          showToast('💬 Раздел Поддержка'); 
-        }
-        else if (page === 'orders') { 
-          haptic('light'); 
-          showToast('📦 Ваши заказы'); 
-        }
-        else if (page === 'profile') { 
-          haptic('light'); 
-          showToast('👤 Профиль пользователя'); 
-        }
-      });
-    });
-
-    // Filter Buttons
-    filterButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
         haptic('light');
-        showToast('Фильтр применен');
+        const page = item.dataset.page;
+        switchPage(page);
       });
     });
 
-    // Purchase Buttons
+    // ==================== EVENT LISTENERS - BALANCE MANAGEMENT ====================
+    btnBalanceAdd.addEventListener('click', () => {
+      haptic('light');
+      showToast('💳 Выберите сумму пополнения');
+    });
+
+    balanceButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        haptic('light');
+        const amount = parseInt(btn.dataset.amount);
+        showTopupModal(amount);
+      });
+    });
+
+    // ==================== EVENT LISTENERS - PURCHASE ====================
     buyButtons.forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        haptic('light');
         const productName = btn.dataset.name;
         const price = btn.dataset.price;
 
@@ -1346,7 +1583,17 @@
       });
     });
 
-    // Modal Actions
+    // ==================== EVENT LISTENERS - FILTER ====================
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        haptic('light');
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showToast('✓ Фильтр применен');
+      });
+    });
+
+    // ==================== EVENT LISTENERS - MODAL ====================
     btnModalConfirm.addEventListener('click', () => {
       if (pendingPurchase) {
         pendingPurchase();
@@ -1365,49 +1612,23 @@
       }
     });
 
-    // Balance Management
-    document.querySelector('.balance-btn-add').addEventListener('click', () => {
-      haptic('light');
-      showToast('💳 Переход к пополнению...');
-    });
-
-    document.querySelectorAll('.btn-amount').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const amount = btn.textContent.match(/\d+/)[0];
-        currentBalance += parseInt(amount);
-        balanceAmount.textContent = currentBalance + ' ₽';
-        hapticNotify('success');
-        showToast(`✓ Баланс пополнен на ${amount} ₽`);
-      });
-    });
-
-    // Header Actions
-    premiumBtn.addEventListener('click', () => {
+    // ==================== EVENT LISTENERS - HEADER ====================
+    btnPremium.addEventListener('click', () => {
       haptic('light');
       showToast('⭐ Premium функции');
     });
 
-    headerNotifBtn.addEventListener('click', () => {
+    btnNotifications.addEventListener('click', () => {
       haptic('light');
       showToast('🔔 Нет новых уведомлений');
     });
 
-    headerProfileBtn.addEventListener('click', () => {
+    btnHeaderProfile.addEventListener('click', () => {
       haptic('light');
-      showToast('👤 Профиль');
+      switchPage('profile');
     });
 
-    // Quick Menu Items
-    document.querySelectorAll('.quick-item').forEach((item, index) => {
-      item.addEventListener('click', () => {
-        haptic('light');
-        const labels = ['Магазин', 'Поддержка', 'Заказы', 'Профиль'];
-        showToast(labels[index]);
-        if (index === 0) switchPage('catalog');
-      });
-    });
-
-    // Category Cards
+    // ==================== EVENT LISTENERS - CATEGORY CARDS ====================
     document.querySelectorAll('.category-card').forEach(card => {
       card.addEventListener('click', () => {
         haptic('light');
@@ -1416,13 +1637,7 @@
       });
     });
 
-    // AI Banner
-    document.querySelector('.ai-banner').addEventListener('click', () => {
-      haptic('light');
-      showToast('🤖 Ghost AI консультант');
-    });
-
-    // Game Cards in Carousel
+    // ==================== EVENT LISTENERS - GAME CARDS ====================
     document.querySelectorAll('.game-card').forEach(card => {
       card.addEventListener('click', () => {
         haptic('light');
@@ -1431,15 +1646,41 @@
       });
     });
 
-    // Prevent zoom on iOS
+    // ==================== EVENT LISTENERS - AI BANNER ====================
+    document.querySelector('.ai-banner').addEventListener('click', () => {
+      haptic('light');
+      showToast('🤖 Ghost AI консультант');
+    });
+
+    // ==================== EVENT LISTENERS - PROFILE MENU ====================
+    document.getElementById('profileSettings').addEventListener('click', () => {
+      haptic('light');
+      showToast('⚙️ Настройки профиля');
+    });
+
+    document.getElementById('profileHistory').addEventListener('click', () => {
+      haptic('light');
+      showToast('📜 История операций');
+    });
+
+    document.getElementById('profileSupport').addEventListener('click', () => {
+      haptic('light');
+      try {
+        tg?.openTelegramLink?.('https://t.me/GhostMarket_support');
+      } catch (e) {
+        showToast('💬 Контакт поддержки');
+      }
+    });
+
+    document.getElementById('profileLogout').addEventListener('click', () => {
+      haptic('light');
+      showToast('🚪 Выход из аккаунта');
+    });
+
+    // ==================== PREVENT IOS ZOOM ====================
     document.addEventListener('gesturestart', (e) => e.preventDefault());
 
-    // Prevent default scroll bounce on iOS
-    document.addEventListener('touchmove', function(e) {
-      if (e.target.closest('.games-carousel')) return;
-    }, { passive: true });
-
-    // Global debug object
+    // ==================== GLOBAL DEBUG ====================
     window._GM = { 
       currentPage: () => currentPage, 
       switchPage,
@@ -1449,13 +1690,6 @@
         balanceAmount.textContent = currentBalance + ' ₽';
       }
     };
-
-    // Auto-hide URL bar on mobile
-    if (tg?.isVerticalSwipeSuppressed) {
-      setTimeout(() => {
-        window.scrollTo(0, 1);
-      }, 100);
-    }
   </script>
 </body>
 </html>
