@@ -12,23 +12,31 @@
         body { margin: 0; background: #0a0e23; color: #e2e8f0; overflow-x: hidden; }
         .header-bg { background: linear-gradient(180deg, #1a2150 0%, #0a0e23 100%); }
         .card { background: rgba(20, 30, 60, 0.6); border: 1px solid rgba(147, 112, 219, 0.2); border-radius: 20px; }
-        .neon-btn { background: linear-gradient(135deg, #9370db 0%, #6366f1 100%); border: none; border-radius: 16px; color: white; font-weight: 600; transition: all 0.3s; }
+        .neon-btn { background: linear-gradient(135deg, #9370db 0%, #6366f1 100%); border: none; border-radius: 16px; color: white; font-weight: 600; transition: all 0.3s; cursor: pointer; }
         .neon-btn:active { transform: scale(0.98); }
-        .btn-small { background: rgba(147, 112, 219, 0.15); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 14px; color: #e2e8f0; font-size: 13px; }
+        .btn-small { background: rgba(147, 112, 219, 0.15); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 14px; color: #e2e8f0; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .btn-small:active { transform: scale(0.96); }
         .badge { background: #ef4444; color: white; border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 700; }
         .tab-active { background: linear-gradient(135deg, #9370db 0%, #6366f1 100%); }
         .game-item { background: linear-gradient(135deg, rgba(40, 50, 100, 0.6), rgba(20, 30, 60, 0.8)); border: 1px solid rgba(147, 112, 219, 0.15); border-radius: 18px; overflow: hidden; transition: all 0.3s; position: relative; cursor: pointer; }
         .game-item:active { transform: scale(0.98); }
         .game-item.selected { border-color: #9370db; box-shadow: 0 0 20px rgba(147, 112, 219, 0.3); }
         .game-badge { position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); color: white; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+        .game-image { width: 100%; height: 140px; object-fit: cover; }
         .carousel { display: flex; gap: 12px; overflow-x: auto; padding: 12px 0; scroll-snap-type: x mandatory; }
         .carousel::-webkit-scrollbar { height: 4px; }
         .carousel::-webkit-scrollbar-track { background: transparent; }
         .carousel::-webkit-scrollbar-thumb { background: rgba(147, 112, 219, 0.3); border-radius: 2px; }
-        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 50; max-width: 90%; }
-        .toast-item { background: rgba(20, 30, 60, 0.95); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 16px; padding: 14px 16px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
+        .carousel-item { flex-shrink: 0; scroll-snap-align: start; }
+        .game-logo { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: rgba(147, 112, 219, 0.15); border: 1px solid rgba(147, 112, 219, 0.3); }
+        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 50; }
+        .toast-item { background: rgba(20, 30, 60, 0.95); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 16px; padding: 14px 16px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); max-width: 90vw; animation: slideIn 0.3s ease; }
         .toast-success { border-color: rgba(34, 197, 94, 0.3); }
         .toast-warning { border-color: rgba(245, 158, 11, 0.3); }
+        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .input-field { background: rgba(147, 112, 219, 0.08); border: 1px solid rgba(147, 112, 219, 0.2); border-radius: 14px; padding: 12px 14px; color: white; outline: none; font-size: 14px; transition: all 0.2s; }
+        .input-field:focus { border-color: rgba(147, 112, 219, 0.5); background: rgba(147, 112, 219, 0.12); }
+        .input-field::placeholder { color: rgba(226, 232, 240, 0.4); }
     </style>
 </head>
 <body>
@@ -36,10 +44,8 @@
 <div class="header-bg sticky top-0 z-40 px-5 py-4 border-b border-slate-800">
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center text-lg">🎮</div>
-            <div>
-                <h1 class="text-xl font-900 text-white">GAMECOIN HUB</h1>
-            </div>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center text-lg font-black">👻</div>
+            <h1 class="text-xl font-900 text-white">GHOSTMARKET</h1>
         </div>
         <button class="text-slate-400 text-2xl">⋮</button>
     </div>
@@ -48,19 +54,18 @@
 <div class="px-5 py-6 pb-40">
     <div class="card p-6 mb-6">
         <h2 class="text-2xl font-900 text-white italic">Твой Выгодный Мир Игровой Валюты</h2>
-        <p class="text-sm text-slate-300 mt-3 leading-relaxed">Здесь самые низкие цены на игровую валюту, аккаунты и услуги. Моментальная доставка и проверенные продажи. AI‑помощник помогут найти лучшее предложение.</p>
-        <div class="mt-4 flex items-center justify-between">
-            <div></div>
+        <p class="text-sm text-slate-300 mt-3 leading-relaxed">Здесь самые низкие цены на игровую валюту, аккаунты и услуги. Моментальная доставка и проверенные продажи.</p>
+        <div class="mt-4 flex justify-end">
             <span class="btn-small px-3 py-1">Premium</span>
         </div>
     </div>
 
     <div class="grid grid-cols-3 gap-3 mb-6">
-        <button class="tab-active neon-btn py-3 text-sm" data-tab="shop">Магазин</button>
-        <button class="btn-small py-3 text-sm flex items-center justify-center gap-2" data-tab="chat">
+        <button class="tab-btn tab-active neon-btn py-3 text-sm" data-tab="shop">Магазин</button>
+        <button class="tab-btn btn-small py-3 text-sm flex items-center justify-center gap-2" data-tab="chat">
             Чат <span id="chatBadge" class="badge hidden">1</span>
         </button>
-        <button class="btn-small py-3 text-sm" data-tab="notifications">Уведомления</button>
+        <button class="tab-btn btn-small py-3 text-sm" data-tab="notifications">Уведомления</button>
     </div>
 
     <div id="shopPage">
@@ -71,7 +76,7 @@
                     <h3 id="balanceValue" class="text-4xl font-900 text-white mt-2">0 ₽</h3>
                     <p class="text-xs text-slate-400 mt-1">Игровой кошелёк</p>
                 </div>
-                <div class="text-4xl">💰</div>
+                <div class="text-5xl">💰</div>
             </div>
             <div class="grid grid-cols-3 gap-3">
                 <button class="topup-btn neon-btn py-3 text-sm" data-amount="50">+50 ₽</button>
@@ -83,70 +88,114 @@
         <div class="mb-4">
             <h3 class="text-lg font-700 text-white px-1 mb-3">Выберите товар</h3>
             <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Genshin Impact -->
                 <button class="game-item" data-product="Genshin Impact Primogems" data-price="250">
-                    <div class="aspect-video bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-4xl relative">
-                        🎨
-                        <span class="game-badge">-15%</span>
+                    <div class="bg-gradient-to-br from-orange-400 via-orange-500 to-red-600 flex items-center justify-center text-5xl" style="height: 140px;">
+                        ✦
                     </div>
                     <div class="p-3">
                         <p class="text-xs text-slate-400">Genshin Impact</p>
-                        <p class="text-sm font-700 text-white mt-1">Primogems</p>
+                        <p class="text-sm font-700 text-white mt-1">Primogems x50</p>
                         <p class="text-lg font-900 text-purple-400 mt-2">250 ₽</p>
                     </div>
+                    <span class="game-badge">-15%</span>
                 </button>
 
+                <!-- MLBB -->
                 <button class="game-item" data-product="MLBB Diamonds" data-price="119">
-                    <div class="aspect-video bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center text-4xl relative">
+                    <div class="bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center text-5xl" style="height: 140px;">
                         💎
-                        <span class="game-badge">-15%</span>
                     </div>
                     <div class="p-3">
                         <p class="text-xs text-slate-400">Mobile Legends</p>
                         <p class="text-sm font-700 text-white mt-1">35 Diamonds</p>
                         <p class="text-lg font-900 text-purple-400 mt-2">119 ₽</p>
                     </div>
+                    <span class="game-badge">-15%</span>
                 </button>
 
+                <!-- Brawl Stars -->
                 <button class="game-item" data-product="Brawl Stars Gems" data-price="99">
-                    <div class="aspect-video bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl relative">
+                    <div class="bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 flex items-center justify-center text-5xl" style="height: 140px;">
                         ⭐
-                        <span class="game-badge">-15%</span>
                     </div>
                     <div class="p-3">
                         <p class="text-xs text-slate-400">Brawl Stars</p>
                         <p class="text-sm font-700 text-white mt-1">80 Gems</p>
                         <p class="text-lg font-900 text-purple-400 mt-2">99 ₽</p>
                     </div>
+                    <span class="game-badge">-15%</span>
                 </button>
 
+                <!-- PUBG Mobile -->
+                <button class="game-item" data-product="PUBG Mobile UC" data-price="199">
+                    <div class="bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-5xl" style="height: 140px;">
+                        🎯
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs text-slate-400">PUBG Mobile</p>
+                        <p class="text-sm font-700 text-white mt-1">100 UC</p>
+                        <p class="text-lg font-900 text-purple-400 mt-2">199 ₽</p>
+                    </div>
+                    <span class="game-badge">-15%</span>
+                </button>
+
+                <!-- Free Fire -->
                 <button class="game-item" data-product="Free Fire Diamonds" data-price="139">
-                    <div class="aspect-video bg-gradient-to-br from-red-600 to-pink-700 flex items-center justify-center text-4xl relative">
+                    <div class="bg-gradient-to-br from-red-500 to-pink-700 flex items-center justify-center text-5xl" style="height: 140px;">
                         🔥
-                        <span class="game-badge">-15%</span>
                     </div>
                     <div class="p-3">
                         <p class="text-xs text-slate-400">Free Fire</p>
                         <p class="text-sm font-700 text-white mt-1">50 Diamonds</p>
                         <p class="text-lg font-900 text-purple-400 mt-2">139 ₽</p>
                     </div>
+                    <span class="game-badge">-15%</span>
+                </button>
+
+                <!-- Standoff 2 -->
+                <button class="game-item" data-product="Standoff 2 Coins" data-price="149">
+                    <div class="bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-5xl" style="height: 140px;">
+                        ⚔️
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs text-slate-400">Standoff 2</p>
+                        <p class="text-sm font-700 text-white mt-1">200 Coins</p>
+                        <p class="text-lg font-900 text-purple-400 mt-2">149 ₽</p>
+                    </div>
+                    <span class="game-badge">-15%</span>
                 </button>
             </div>
 
             <div class="grid grid-cols-2 gap-3 mb-4">
-                <input id="inputUid" type="text" placeholder="User ID" class="card px-4 py-3 text-white outline-none text-sm placeholder-slate-500"/>
-                <input id="inputZone" type="text" placeholder="Zone ID" class="card px-4 py-3 text-white outline-none text-sm placeholder-slate-500"/>
+                <input id="inputUid" type="text" placeholder="User ID" class="input-field"/>
+                <input id="inputZone" type="text" placeholder="Zone ID" class="input-field"/>
             </div>
             <button id="buyButton" class="neon-btn w-full py-4 text-base font-700 mb-4">Купить</button>
+            <div id="shopHint" class="hidden card p-3 text-sm text-slate-300"></div>
         </div>
 
         <div class="mb-4">
             <p class="text-sm text-slate-400 px-1 mb-3">Поддерживаемые игры</p>
             <div class="carousel">
-                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-xl">G</div>
-                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-yellow-600 flex items-center justify-center text-xl">M</div>
-                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-xl">B</div>
-                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xl">F</div>
-                <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-red-600 to-pink-700 flex items-center justify-center text-xl">S</div>
+                <div class="carousel-item">
+                    <div class="game-logo">✦</div>
+                </div>
+                <div class="carousel-item">
+                    <div class="game-logo">💎</div>
+                </div>
+                <div class="carousel-item">
+                    <div class="game-logo">⭐</div>
+                </div>
+                <div class="carousel-item">
+                    <div class="game-logo">🎯</div>
+                </div>
+                <div class="carousel-item">
+                    <div class="game-logo">🔥</div>
+                </div>
+                <div class="carousel-item">
+                    <div class="game-logo">⚔️</div>
+                </div>
             </div>
         </div>
     </div>
@@ -154,18 +203,18 @@
     <div id="chatPage" class="hidden">
         <div class="card p-6 mb-4">
             <h2 class="text-xl font-900 text-white">💬 AI-помощник</h2>
-            <p class="text-sm text-slate-400 mt-2">временно офлайн</p>
+            <p class="text-sm text-slate-400 mt-2">Здесь ты найдёшь ответы на все вопросы</p>
         </div>
         <div class="space-y-3 mb-4">
-            <button class="chat-action card p-4 text-left" data-action="howToTopUp">
+            <button class="chat-action card p-4 text-left w-full" data-action="howToTopUp">
                 <p class="font-700 text-white">Как пополнить баланс?</p>
                 <p class="text-xs text-slate-400 mt-1">Пошаговая инструкция</p>
             </button>
-            <button class="chat-action card p-4 text-left" data-action="needMoreMoney">
+            <button class="chat-action card p-4 text-left w-full" data-action="needMoreMoney">
                 <p class="font-700 text-white">Недостаточно средств</p>
                 <p class="text-xs text-slate-400 mt-1">Почему не проходит покупка</p>
             </button>
-            <button class="chat-action card p-4 text-left" data-action="whatIsUid">
+            <button class="chat-action card p-4 text-left w-full" data-action="whatIsUid">
                 <p class="font-700 text-white">Что такое User ID?</p>
                 <p class="text-xs text-slate-400 mt-1">Нужные данные для заказа</p>
             </button>
@@ -173,7 +222,7 @@
         <div class="card p-4">
             <div class="flex items-center justify-between mb-3">
                 <p class="text-sm font-700 text-white">Сообщения</p>
-                <button id="clearChatMessages" class="btn-small px-3 py-1">Очистить</button>
+                <button id="clearChatMessages" class="btn-small px-3 py-1 text-xs">Очистить</button>
             </div>
             <div id="chatHistory" class="space-y-2 max-h-96 overflow-y-auto">
                 <p class="text-xs text-slate-500">Пока нет сообщений</p>
@@ -194,7 +243,7 @@
     </div>
 </div>
 
-<div id="toastWrapper" class="toast"></div>
+<div id="toastWrapper"></div>
 
 <script>
     const tg = window.Telegram.WebApp;
@@ -256,7 +305,7 @@
             return;
         }
         hist.innerHTML = state.messages.map(msg => `
-            <div class="bg-slate-800/30 p-3 rounded-12">
+            <div class="bg-slate-800/30 p-3 rounded-xl">
                 <p class="text-xs font-600 text-slate-300">${msg.title}</p>
                 <p class="text-xs text-slate-400 mt-1">${msg.text}</p>
             </div>
@@ -279,17 +328,19 @@
         const wrapper = document.getElementById('toastWrapper');
         const toast = document.createElement('div');
         toast.className = `toast-item toast-${type}`;
+        toast.style.cssText = 'position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 50;';
         toast.textContent = text;
         wrapper.appendChild(toast);
 
         setTimeout(() => {
             toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s';
             setTimeout(() => toast.remove(), 300);
         }, 3500);
     }
 
     function selectTab(name) {
-        document.querySelectorAll('[data-tab]').forEach(btn => {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
             if (btn.dataset.tab === name) {
                 btn.classList.add('tab-active');
                 btn.classList.remove('btn-small');
@@ -313,7 +364,7 @@
         }
     }
 
-    document.querySelectorAll('[data-tab]').forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.tab)));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.tab)));
 
     document.querySelectorAll('.topup-btn').forEach(btn => {
         btn.addEventListener('click', () => {
