@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhostMarket</title>
+    <!-- Подключаем стили Tailwind для красивого дизайна -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- Подключаем скрипт Телеграма -->
+    <script src="https://telegram.org"></script>
+</head>
+<body class="bg-[#131418] text-white font-sans antialiased pb-10">
+
+    <!-- Шапка приложения -->
+    <header class="bg-[#1b1c21] p-4 sticky top-0 z-50 border-b border-gray-800 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-black tracking-wide text-yellow-400">GHOST MARKET</h1>
+            <p class="text-xs text-gray-400">Лучшие цены на игры и Stars</p>
+        </div>
+        <div class="bg-gray-800 px-3 py-1.5 rounded-xl border border-gray-700 text-sm">
+            💰 <span id="user-balance">0.00</span> ₽
+        </div>
+    </header>
+
+    <!-- Категории товаров -->
+    <div class="p-4 flex gap-2 overflow-x-auto no-scrollbar">
+        <button class="bg-yellow-400 text-black px-4 py-2 rounded-xl text-sm font-bold shadow-md shrink-0">🔥 Все</button>
+        <button class="bg-[#1b1c21] text-gray-300 px-4 py-2 rounded-xl text-sm font-medium border border-gray-800 shrink-0">⭐ Stars</button>
+        <button class="bg-[#1b1c21] text-gray-300 px-4 py-2 rounded-xl text-sm font-medium border border-gray-800 shrink-0">🎮 Донат</button>
+        <button class="bg-[#1b1c21] text-gray-300 px-4 py-2 rounded-xl text-sm font-medium border border-gray-800 shrink-0">🔑 Ключи</button>
+    </div>
+
+    <!-- Витрина товаров (Копия стилистики Playrok) -->
+    <main class="p-4 grid grid-cols-1 gap-4">
+        
+        <!-- Товар 1 -->
+        <div class="bg-[#1b1c21] border border-gray-800 rounded-2xl p-4 flex flex-col justify-between transition active:scale-98">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-blue-500/10 text-blue-400 text-xs font-bold px-2 py-1 rounded-md">⭐ Telegram Stars</span>
+                    <span class="text-emerald-400 font-black text-lg">150 ₽</span>
+                </div>
+                <h3 class="font-bold text-base text-gray-100">50 Telegram Stars</h3>
+                <p class="text-xs text-gray-400 mt-1">Моментальное автоматическое зачисление по вашему ID</p>
+            </div>
+            <button onclick="buyProduct('50 Stars')" class="w-full bg-yellow-400 text-black font-extrabold text-sm py-2.5 rounded-xl mt-4 cursor-pointer hover:bg-yellow-500 transition">Купить в 1 клик</button>
+        </div>
+
+        <!-- Товар 2 -->
+        <div class="bg-[#1b1c21] border border-gray-800 rounded-2xl p-4 flex flex-col justify-between transition active:scale-98">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-purple-500/10 text-purple-400 text-xs font-bold px-2 py-1 rounded-md">🎮 Донат в игры</span>
+                    <span class="text-emerald-400 font-black text-lg">450 ₽</span>
+                </div>
+                <h3 class="font-bold text-base text-gray-100">Genshin Impact: Купон Кристаллов</h3>
+                <p class="text-xs text-gray-400 mt-1">Официальное пополнение по UID. Безопасно, без бана.</p>
+            </div>
+            <button onclick="buyProduct('Genshin Купон')" class="w-full bg-yellow-400 text-black font-extrabold text-sm py-2.5 rounded-xl mt-4 cursor-pointer hover:bg-yellow-500 transition">Купить в 1 клик</button>
+        </div>
+
+    </main>
+
+    <script>
+        // Инициализируем Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем приложение на весь экран телефона
+
+        // Логика кнопки "Купить"
+        function buyProduct(productName) {
+            tg.showPopup({
+                title: 'Оформление заказа',
+                message: `Вы хотите купить "${productName}"?`,
+                buttons: [
+                    {id: 'buy', type: 'default', text: 'Оплатить'},
+                    {id: 'cancel', type: 'cancel', text: 'Отмена'}
+                ]
+            }, function(buttonId) {
+                if (buttonId === 'buy') {
+                    tg.showAlert('Спасибо за покупку! Товар скоро будет доставлен.');
+                    // Здесь в будущем будет отправка запроса на бэкенд бота
+                }
+            });
+        }
+    </script>
+</body>
+</html>
