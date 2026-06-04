@@ -2,34 +2,25 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>GhostMarket — Premium Game Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       --bg-dark: #070814;
-      --bg-dark-card: #0e1125;
+      --bg-card: #0e1125;
+      --bg-panel: rgba(16, 10, 33, 0.92);
       --accent-purple: #7c3aed;
       --accent-indigo: #6366f1;
+      --accent-gold: #f59e0b;
       --text-light: #e4e4e7;
       --text-muted: #a1a1a6;
-      --price-green: #10b981;
-      --discount-red: #ef4444;
-      --border-color: rgba(124, 58, 237, 0.08);
-      --shadow-neon: 0 0 20px rgba(124, 58, 237, 0.3);
+      --text-contrast: #ffffff;
       --success: #10b981;
-      --warning: #f59e0b;
       --error: #ef4444;
-    }
-
-    [data-theme="light"] {
-      --bg-dark: #f4f6fa;
-      --bg-dark-card: #ffffff;
-      --text-light: #111827;
-      --text-muted: #6b7280;
-      --border-color: rgba(124, 58, 237, 0.08);
-      --shadow-neon: 0 2px 12px rgba(0, 0, 0, 0.08);
+      --border: rgba(124, 58, 237, 0.12);
+      --shadow: 0 20px 80px rgba(0, 0, 0, 0.25);
     }
 
     * {
@@ -39,294 +30,95 @@
     }
 
     html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
+      min-height: 100%;
       font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg-dark);
+      background: radial-gradient(circle at top left, #14172d 0%, #070814 35%, #05060d 100%);
       color: var(--text-light);
       -webkit-font-smoothing: antialiased;
-      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
     }
 
     body {
-      overflow-x: hidden;
+      overflow: hidden;
+    }
+
+    button {
+      font: inherit;
     }
 
     .app {
+      position: fixed;
+      inset: 0;
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      position: fixed;
-      width: 100%;
-      left: 0;
-      top: 0;
+      background: transparent;
     }
 
-    .scroll-content {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 16px;
-      padding-bottom: 100px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* ===== ANIMATIONS ===== */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-        box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
-      }
-      50% {
-        opacity: 0.8;
-        box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
-      }
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(20px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes cardFlip {
-      0% {
-        transform: perspective(1200px) rotateY(0deg) scale(1);
-      }
-      50% {
-        transform: perspective(1200px) rotateY(90deg) scale(1.02);
-      }
-      100% {
-        transform: perspective(1200px) rotateY(0deg) scale(1);
-      }
-    }
-
-    @keyframes balanceShift {
-      0% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      50% {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes sparkFly {
-      0% {
-        opacity: 1;
-        transform: translate(0, 0) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(150px, -150px) scale(0);
-      }
-    }
-
-    @keyframes checkPop {
-      0% {
-        opacity: 0;
-        transform: scale(0.2) rotate(-45deg);
-      }
-      70% {
-        transform: scale(1.15) rotate(10deg);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-      }
-    }
-
-    @keyframes slideRight {
-      from {
-        opacity: 0;
-        transform: translateX(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        max-height: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        max-height: 500px;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideUp_reverse {
-      from {
-        opacity: 1;
-        max-height: 500px;
-        transform: translateY(0);
-      }
-      to {
-        opacity: 0;
-        max-height: 0;
-        transform: translateY(-10px);
-      }
-    }
-
-    @keyframes slideInRight {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOutRight {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-    }
-
-    @keyframes cardPayment {
-      0% {
-        transform: scale(1) rotateZ(0deg);
-        box-shadow: 0 10px 40px rgba(124, 58, 237, 0.4);
-      }
-      50% {
-        transform: scale(1.08) rotateZ(-5deg);
-        box-shadow: 0 15px 60px rgba(124, 58, 237, 0.6);
-      }
-      100% {
-        transform: scale(1) rotateZ(0deg);
-        box-shadow: 0 10px 40px rgba(124, 58, 237, 0.4);
-      }
-    }
-
-    @keyframes moneyFly {
-      0% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-100px) scale(0);
-      }
-    }
-
-    .page-content {
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    /* ===== HEADER ===== */
     .header {
-      background: var(--bg-dark-card);
-      border-bottom: 1px solid var(--border-color);
-      padding: 14px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      backdrop-filter: blur(16px);
-      z-index: 30;
-      position: relative;
+      padding: 14px 16px;
+      background: rgba(14, 17, 37, 0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(18px);
     }
 
     .logo {
-      font-weight: 800;
       font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: transparent;
       background-clip: text;
-      letter-spacing: -0.5px;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .btn-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      color: var(--text-light);
-      font-size: 18px;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-      position: relative;
-    }
-
-    .btn-icon:active {
-      transform: scale(0.92);
-      background: rgba(124, 58, 237, 0.16);
-    }
-
-    .balance-btn-header {
       width: 100%;
-      height: 40px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
-      cursor: pointer;
+      justify-content: flex-end;
+    }
+
+    .balance-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 13px;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(124, 58, 237, 0.16), rgba(99, 102, 241, 0.16));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 12px;
       font-weight: 700;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
+      transition: transform 0.2s ease;
     }
 
-    .balance-btn-header:active {
+    .balance-header:active {
+      transform: scale(0.96);
+    }
+
+    .btn-icon, .btn-theme {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--text-light);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+
+    .btn-icon:active, .btn-theme:active {
       transform: scale(0.92);
     }
 
@@ -336,579 +128,296 @@
       right: -4px;
       width: 18px;
       height: 18px;
-      background: var(--discount-red);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 800;
-      color: white;
-      animation: pulse 2s infinite;
-    }
-
-    .btn-theme {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      cursor: pointer;
+      background: #ef4444;
       display: grid;
       place-items: center;
-      color: var(--text-light);
-      font-size: 18px;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      box-shadow: 0 0 0 4px rgba(7, 8, 20, 0.25);
     }
 
-    .btn-theme:active {
-      transform: scale(0.92);
-    }
-
-    /* ===== BALANCE PANEL ===== */
-    .balance-panel-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(8px);
-      display: none;
-      z-index: 50;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .balance-panel-backdrop.visible {
-      display: block;
-    }
-
-    .balance-panel {
-      position: fixed;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 88%;
-      max-width: 360px;
-      background: var(--bg-dark-card);
-      border-left: 1px solid var(--border-color);
-      z-index: 60;
-      animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      display: flex;
-      flex-direction: column;
+    .scroll-content {
+      flex: 1;
       overflow-y: auto;
+      padding: 16px;
+      padding-bottom: 120px;
       -webkit-overflow-scrolling: touch;
     }
 
-    .balance-panel.hidden {
-      animation: slideOutRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .balance-panel-header {
-      padding: 20px 16px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      background: var(--bg-dark-card);
+    .page-content {
+      animation: fadeIn 0.26s ease-out;
     }
 
-    .balance-panel-title {
-      font-weight: 800;
-      font-size: 16px;
+    .hidden {
+      display: none !important;
     }
 
-    .balance-panel-close {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      transition: all 0.24s;
-    }
-
-    .balance-panel-close:active {
-      transform: scale(0.9);
-    }
-
-    .balance-panel-content {
-      flex: 1;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .balance-info {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      margin-bottom: 8px;
-    }
-
-    .balance-info-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .balance-info-amount {
-      font-weight: 800;
-      font-size: 28px;
-      color: var(--price-green);
-    }
-
-    .balance-package-panel {
-      background: var(--bg-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.24s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .balance-package-panel:active {
-      background: rgba(124, 58, 237, 0.08);
-      transform: translateY(-2px);
-      border-color: var(--accent-purple);
-    }
-
-    .balance-badge-tag {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--discount-red);
-      color: white;
-      font-weight: 800;
-      font-size: 9px;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-
-    .balance-amount-panel {
-      font-weight: 800;
-      font-size: 20px;
-      color: var(--price-green);
-      margin-bottom: 4px;
-    }
-
-    .balance-price-panel {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .balance-btn-panel {
-      width: 100%;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
-      color: white;
-      border-radius: 8px;
-      padding: 10px;
-      font-weight: 700;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .balance-btn-panel:active {
-      transform: scale(0.92);
-    }
-
-    /* ===== BANNER ===== */
     .banner {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(99, 102, 241, 0.1));
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 24px 16px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(99, 102, 241, 0.14));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 18px;
       margin-bottom: 20px;
-      text-align: center;
     }
 
     .banner-title {
-      font-weight: 800;
       font-size: 20px;
-      margin-bottom: 8px;
+      font-weight: 800;
       line-height: 1.3;
+      margin-bottom: 10px;
     }
 
     .banner-subtitle {
       color: var(--text-muted);
       font-size: 12px;
-      margin-bottom: 16px;
+      line-height: 1.5;
     }
 
-    /* ===== PROMO BANNER ===== */
     .promo-banner {
-      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
-      border: 1px solid rgba(255, 193, 7, 0.3);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 16px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
       gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(245, 158, 11, 0.05));
+      margin-bottom: 20px;
     }
 
     .promo-banner-text {
-      flex: 1;
       font-size: 12px;
+      color: #ffe082;
       font-weight: 700;
-      color: #ffc107;
+      flex: 1;
+      line-height: 1.4;
     }
 
     .promo-banner-btn {
-      background: #ffc107;
-      color: #000;
+      background: #f59e0b;
+      color: #070814;
       border: none;
-      border-radius: 8px;
-      padding: 8px 12px;
+      border-radius: 12px;
+      padding: 10px 14px;
       font-weight: 700;
       font-size: 11px;
       cursor: pointer;
-      transition: all 0.24s;
-      white-space: nowrap;
-      flex: 0 0 auto;
     }
 
-    .promo-banner-btn:active {
-      transform: scale(0.92);
-    }
-
-    /* ===== SECTION ===== */
     .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 24px 0 14px 0;
-      gap: 8px;
+      margin: 20px 0 12px;
     }
 
     .section-title {
-      font-weight: 800;
       font-size: 16px;
+      font-weight: 800;
     }
 
-    /* ===== GAMES CAROUSEL ===== */
-    .games-carousel {
+    .games-carousel, .pass-line {
       display: flex;
       gap: 12px;
       overflow-x: auto;
-      overflow-y: hidden;
-      padding: 0 0 12px 0;
       scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
       scrollbar-width: none;
-      margin-bottom: 20px;
     }
 
-    .games-carousel::-webkit-scrollbar {
+    .games-carousel::-webkit-scrollbar,
+    .pass-line::-webkit-scrollbar,
+    .inventory-grid::-webkit-scrollbar,
+    .quests-list::-webkit-scrollbar {
       display: none;
     }
 
-    .game-card {
-      flex: 0 0 140px;
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 12px;
-      text-align: center;
+    .game-card, .pass-card, .inventory-card, .quest-card, .premium-card, .product-card, .settings-card {
+      background: rgba(14, 17, 37, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      min-width: 120px;
+      transition: all 0.22s ease;
       cursor: pointer;
-      transition: all 0.24s;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
-    .game-card:active {
-      transform: scale(0.97);
-      border-color: var(--accent-purple);
+    .game-card:hover, .pass-card:hover, .inventory-card:hover, .premium-card:hover, .product-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(124, 58, 237, 0.4);
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.12);
     }
 
-    .game-icon {
+    .game-icon, .product-icon, .inventory-icon {
       width: 56px;
       height: 56px;
-      border-radius: 12px;
-      margin: 0 auto;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
-
-    .game-name {
-      font-weight: 700;
-      font-size: 11px;
-      line-height: 1.3;
-    }
-
-    .game-price {
-      color: var(--price-green);
-      font-weight: 800;
-      font-size: 12px;
-    }
-
-    .game-discount {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--discount-red);
-      color: white;
-      font-weight: 800;
-      font-size: 10px;
-      padding: 3px 6px;
-      border-radius: 6px;
-    }
-
-    /* ===== CONSTRUCTOR ===== */
-    .constructor {
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 16px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 10px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(99, 102, 241, 0.12));
+      font-size: 26px;
+    }
+
+    .game-name, .product-name, .inventory-name {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.3;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .game-price, .product-price, .inventory-price {
+      color: var(--success);
+      font-weight: 800;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .game-discount, .product-discount {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ef4444;
+      color: white;
+      padding: 3px 7px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .constructor, .catalog, .profile-card, .card-section, .payment-history-section, .settings-section, .premium-section, .inventory-section, .pass-section {
+      background: rgba(14, 17, 37, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
       margin-bottom: 20px;
     }
 
-    .constructor-title {
+    .constructor-title, .card-section-title, .settings-title, .inventory-title, .pass-header-title {
+      font-size: 15px;
       font-weight: 800;
-      font-size: 14px;
       margin-bottom: 14px;
     }
 
-    .game-selector-inline {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      margin-bottom: 14px;
-      padding-bottom: 8px;
-      scrollbar-width: none;
-    }
-
-    .game-selector-inline::-webkit-scrollbar {
-      display: none;
+    .game-select-btn, .product-buy-btn, .balance-btn-panel, .settings-save-btn, .premium-btn, .modal-btn, .quest-action-btn, .admin-btn {
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.22s ease;
     }
 
     .game-select-btn {
-      flex: 0 0 auto;
-      padding: 8px 12px;
-      border-radius: 10px;
+      padding: 10px 14px;
       background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
       color: var(--text-muted);
+      border: 1px solid var(--border);
+      font-size: 12px;
       font-weight: 600;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.24s;
       white-space: nowrap;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .game-select-btn:active {
-      transform: scale(0.95);
+      min-width: 100px;
     }
 
     .game-select-btn.active {
       background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: white;
-      border-color: var(--accent-purple);
+      color: #fff;
+      border-color: rgba(124, 58, 237, 0.35);
+    }
+
+    .game-select-btn:active,
+    .premium-btn:active,
+    .modal-btn:active,
+    .quest-action-btn:active,
+    .admin-btn:active {
+      transform: scale(0.97);
     }
 
     .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .field-label {
-      font-size: 12px;
-      font-weight: 600;
+      display: block;
+      font-size: 11px;
       color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .field-input {
-      background: rgba(124, 58, 237, 0.04);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px;
+    .field-input, .settings-input {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(124, 58, 237, 0.05);
+      padding: 14px;
       color: var(--text-light);
       font-size: 13px;
-      font-family: 'Inter', sans-serif;
       outline: none;
-      transition: all 0.24s;
     }
 
-    .field-input:focus {
+    .field-input:focus, .settings-input:focus {
       border-color: var(--accent-purple);
-      background: rgba(124, 58, 237, 0.08);
-      box-shadow: 0 0 12px rgba(124, 58, 237, 0.15);
-    }
-
-    .field-input::placeholder {
-      color: var(--text-muted);
-      opacity: 0.5;
-    }
-
-    .field-input.error {
-      border-color: var(--error);
-      background: rgba(239, 68, 68, 0.05);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.12);
     }
 
     .field-error {
-      font-size: 10px;
+      margin-top: 6px;
       color: var(--error);
-      margin-top: 2px;
+      font-size: 11px;
+      display: none;
     }
 
-    /* ===== CATALOG ===== */
-    .catalog {
+    .field-input.error + .field-error {
+      display: block;
+    }
+
+    .payment-history-list, .quests-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 20px;
     }
 
-    .product-card {
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
+    .payment-item {
       display: flex;
-      gap: 12px;
+      justify-content: space-between;
       align-items: center;
-      transition: all 0.24s;
-      cursor: pointer;
-    }
-
-    .product-card:active {
+      gap: 10px;
       background: rgba(124, 58, 237, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .product-icon {
-      flex: 0 0 50px;
-      width: 50px;
-      height: 50px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-    }
-
-    .product-info {
-      flex: 1;
-    }
-
-    .product-name {
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .product-details {
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .product-pricing {
-      display: flex;
-      gap: 8px;
-      align-items: baseline;
-    }
-
-    .product-price {
-      font-weight: 800;
-      color: var(--price-green);
-      font-size: 14px;
-    }
-
-    .product-price-old {
-      color: var(--text-muted);
-      text-decoration: line-through;
-      font-size: 11px;
-    }
-
-    .product-discount {
-      background: var(--discount-red);
-      color: white;
-      font-weight: 800;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-
-    .product-btn-group {
-      display: flex;
-      gap: 6px;
-      flex: 0 0 auto;
-    }
-
-    .product-buy-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .product-buy-btn:active {
-      transform: scale(0.88);
-    }
-
-    .product-buy-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .product-buy-btn.quick {
-      width: auto;
-      padding: 8px 12px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    /* ===== PROFILE SECTION ===== */
-    .profile-card {
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 14px;
+    }
+
+    .payment-item-title {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .payment-item-detail {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .payment-item-amount {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--success);
+    }
+
+    .profile-card {
+      overflow: hidden;
     }
 
     .profile-header {
@@ -919,630 +428,615 @@
     }
 
     .profile-avatar {
-      width: 80px;
-      height: 80px;
+      width: 78px;
+      height: 78px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
       font-weight: 800;
-      flex: 0 0 auto;
-      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+      color: #fff;
+      flex-shrink: 0;
     }
 
     .profile-info {
-      text-align: left;
       flex: 1;
     }
 
     .profile-name {
+      font-size: 18px;
       font-weight: 800;
-      font-size: 16px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
 
     .profile-username {
-      color: var(--text-muted);
       font-size: 12px;
-      margin-bottom: 8px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
     }
 
     .profile-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
-      border: 1px solid rgba(255, 193, 7, 0.3);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
       font-weight: 700;
-      color: #ffc107;
+      background: rgba(255, 193, 7, 0.16);
+      border: 1px solid rgba(255, 193, 7, 0.32);
+      color: #ffd966;
+      padding: 6px 10px;
+      border-radius: 14px;
     }
 
     .profile-stats {
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
 
     .profile-stat {
       background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px 12px;
-      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
       text-align: center;
     }
 
-    .stat-value {
-      font-weight: 800;
-      font-size: 14px;
+    .profile-stat strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
       color: var(--accent-purple);
-      display: block;
     }
 
-    .stat-label {
-      font-size: 10px;
+    .profile-stat span {
+      font-size: 11px;
       color: var(--text-muted);
-      display: block;
-      margin-top: 2px;
-    }
-
-    /* ===== CARD SECTION ===== */
-    .card-section {
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
     }
 
     .card-section-title {
-      font-weight: 800;
-      font-size: 14px;
-      margin-bottom: 16px;
-      cursor: pointer;
-      transition: all 0.24s;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .card-section-title:active {
-      transform: scale(0.96);
+      cursor: pointer;
     }
 
     .card-toggle-icon {
-      display: inline-block;
-      transition: transform 0.3s;
+      transition: transform 0.25s ease;
     }
 
     .card-toggle-icon.hidden {
-      transform: rotate(180deg);
+      transform: rotate(-180deg);
     }
 
     .ghost-card {
-      width: 100%;
-      aspect-ratio: 1.6;
-      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
-      border-radius: 20px;
-      padding: 20px;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       position: relative;
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 18px;
+      min-height: 220px;
+      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+      color: #fff;
       overflow: hidden;
-      box-shadow: 0 10px 40px rgba(124, 58, 237, 0.4), inset -2px -2px 5px rgba(0, 0, 0, 0.2), inset 2px 2px 5px rgba(255, 255, 255, 0.1);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      margin-bottom: 16px;
       cursor: pointer;
+      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.35);
+      transition: transform 0.25s ease;
     }
 
     .ghost-card::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
-      pointer-events: none;
-      border-radius: 20px;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 30%);
+      opacity: 0.35;
     }
 
-    .ghost-card.animating {
-      animation: cardPayment 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    .ghost-card:active {
-      transform: scale(0.98) translateY(-2px);
-      box-shadow: 0 15px 50px rgba(124, 58, 237, 0.5), inset -2px -2px 5px rgba(0, 0, 0, 0.3), inset 2px 2px 5px rgba(255, 255, 255, 0.15);
-    }
-
-    .ghost-card.hidden {
-      display: none;
+    .ghost-card:hover {
+      transform: translateY(-2px);
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
     }
 
     .card-logo {
-      font-size: 24px;
-      font-weight: 800;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      font-size: 30px;
     }
 
     .card-chip {
-      width: 45px;
-      height: 36px;
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(255, 193, 7, 0.2));
-      border: 1.5px solid rgba(255, 215, 0, 0.6);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.18);
       font-size: 10px;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.3);
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.92);
     }
 
     .card-number {
       font-family: 'Courier New', monospace;
       font-size: 18px;
-      font-weight: 700;
       letter-spacing: 3px;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      font-weight: 700;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
     }
 
-    .card-balance-display {
+    .card-balance {
       font-size: 14px;
-      opacity: 0.9;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-      margin-top: 8px;
-      animation: balanceShift 0.6s ease-out;
+      opacity: 0.95;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
     }
 
     .card-footer {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      position: relative;
+      z-index: 1;
     }
 
-    .card-holder {
+    .card-holder, .card-valid {
       display: flex;
       flex-direction: column;
-      gap: 3px;
-    }
-
-    .card-holder-label {
-      font-size: 8px;
-      opacity: 0.8;
+      gap: 4px;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.8px;
+      opacity: 0.95;
     }
 
-    .card-holder-name {
+    .card-holder-name, .card-valid-date {
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .card-valid {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .card-valid-label {
-      font-size: 8px;
-      opacity: 0.8;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    .card-valid-date {
-      font-size: 13px;
-      font-weight: 700;
-      font-family: 'Courier New', monospace;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .card-system {
       position: absolute;
       top: 20px;
       right: 20px;
-      font-size: 28px;
+      font-size: 34px;
+      opacity: 0.14;
+      z-index: 1;
     }
 
-    /* ===== CARD STATS ===== */
-    .card-stats {
+    .card-stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 16px;
     }
 
-    .card-stat-item {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px;
+    .card-stat {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
     }
 
-    .card-stat-label {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      font-weight: 600;
+    .card-stat strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #fff;
     }
 
-    .card-stat-value {
-      font-weight: 800;
-      font-size: 16px;
-      color: var(--price-green);
+    .card-stat span {
+      font-size: 11px;
+      color: #d1d5db;
     }
 
-    /* ===== COLOR PICKER ===== */
-    .color-picker-container {
+    .color-picker {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-top: 8px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .color-dot {
-      width: 48px;
-      height: 48px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: all 0.3s;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      position: relative;
-    }
-
-    .color-dot:hover {
-      transform: scale(1.1);
-    }
-
-    .color-dot:active {
-      transform: scale(0.95);
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
     }
 
     .color-dot.active {
-      border-color: white;
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3), 0 4px 12px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255,255,255,0.9);
+      transform: scale(1.05);
     }
 
-    .color-dot.active::after {
-      content: '✓';
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 800;
-      color: white;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
+    .color-dot-0 { background: linear-gradient(135deg, #7c3aed, #6366f1); }
+    .color-dot-1 { background: linear-gradient(135deg, #f97316, #ea580c); }
+    .color-dot-2 { background: linear-gradient(135deg, #10b981, #059669); }
+    .color-dot-3 { background: linear-gradient(135deg, #111827, #1f2937); }
 
-    .color-dot-0 {
-      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
-    }
-
-    .color-dot-1 {
-      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-    }
-
-    .color-dot-2 {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    }
-
-    .color-dot-3 {
-      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    }
-
-    /* ===== PAYMENT HISTORY ===== */
-    .payment-history-section {
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .payment-history-title {
-      font-weight: 800;
-      font-size: 13px;
-      margin-bottom: 12px;
-    }
-
-    .payment-history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .payment-item {
-      background: rgba(124, 58, 237, 0.04);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      animation: slideRight 0.3s ease-out;
-    }
-
-    .payment-item-info {
-      flex: 1;
-    }
-
-    .payment-item-title {
-      font-weight: 700;
-      font-size: 11px;
-      margin-bottom: 2px;
-    }
-
-    .payment-item-detail {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .payment-item-amount {
-      font-weight: 800;
-      font-size: 12px;
-      color: var(--price-green);
-    }
-
-    /* ===== PREMIUM SECTION ===== */
     .premium-section {
-      background: var(--bg-dark-card);
-      border: 2px solid var(--accent-purple);
-      border-radius: 16px;
       padding: 18px;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+      border: 1px solid rgba(255, 193, 7, 0.2);
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.08), rgba(124, 58, 237, 0.04));
     }
 
     .premium-status {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       margin-bottom: 12px;
+      font-weight: 800;
     }
 
-    .premium-status-badge {
-      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
-      border: 1px solid rgba(255, 193, 7, 0.3);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #ffc107;
+    .premium-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      background: rgba(255, 193, 7, 0.14);
+      color: #ffd966;
+      border: 1px solid rgba(255, 193, 7, 0.28);
     }
 
     .premium-info {
-      font-size: 12px;
       color: var(--text-muted);
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    .premium-cashback {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 12px;
-      font-size: 11px;
-      color: var(--price-green);
-      font-weight: 600;
-    }
-
-    .premium-timer {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 12px;
-      font-size: 11px;
-      text-align: center;
-      font-weight: 600;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 14px;
     }
 
     .premium-actions {
       display: flex;
-      gap: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .premium-btn {
       flex: 1;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
-      color: white;
-      border-radius: 10px;
-      padding: 12px;
+      padding: 14px;
+      min-width: 140px;
+      font-size: 13px;
       font-weight: 700;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
     }
 
-    .premium-btn:active {
-      transform: scale(0.96);
+    .premium-btn.cancel {
+      background: rgba(239, 68, 68, 0.14);
+      color: #fb7185;
     }
 
-    .premium-btn-cancel {
-      background: rgba(239, 68, 68, 0.15);
-      color: var(--error);
+    .pass-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
-    /* ===== SETTINGS SECTION ===== */
-    .settings-section {
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .settings-title {
+    .pass-summary strong {
+      font-size: 15px;
       font-weight: 800;
-      font-size: 14px;
-      margin-bottom: 14px;
+      display: block;
     }
 
-    .settings-item {
+    .pass-progress-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .pass-progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #7c3aed, #2563eb);
+      transition: width 0.3s ease;
+    }
+
+    .pass-section {
+      padding-bottom: 8px;
+    }
+
+    .pass-line-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .settings-item:last-child {
-      border-bottom: none;
-    }
-
-    .settings-label {
-      font-weight: 600;
-      font-size: 12px;
-    }
-
-    .toggle-switch {
-      width: 50px;
-      height: 28px;
-      background: rgba(124, 58, 237, 0.2);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      cursor: pointer;
+    .pass-card {
+      min-width: 86px;
+      padding: 12px;
+      border-radius: 18px;
+      text-align: center;
       position: relative;
-      transition: all 0.3s;
-      -webkit-user-select: none;
-      user-select: none;
+      overflow: hidden;
     }
 
-    .toggle-switch.active {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border-color: var(--accent-purple);
+    .pass-card.locked {
+      opacity: 0.35;
+      cursor: default;
     }
 
-    .toggle-switch::after {
-      content: '';
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      background: white;
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      transition: all 0.3s;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    .pass-card .pass-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      margin: 0 auto 10px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      background: rgba(255,255,255,0.08);
     }
 
-    .toggle-switch.active::after {
-      left: calc(100% - 26px);
+    .pass-card strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 4px;
     }
 
-    .settings-inputs {
+    .pass-card small {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .pass-card .locked-label {
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .quests-section {
+      margin-top: 10px;
+    }
+
+    .quest-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .quest-text {
+      flex: 1;
+    }
+
+    .quest-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .quest-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .quest-action-btn {
+      padding: 10px 12px;
+      min-width: 95px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .inventory-section {
+      padding-bottom: 12px;
+    }
+
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .inventory-card {
+      padding: 16px;
+      min-height: 140px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border-color);
+      justify-content: space-between;
     }
 
-    .settings-input {
-      background: rgba(124, 58, 237, 0.04);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px;
-      color: var(--text-light);
+    .inventory-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      font-size: 26px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .inventory-name {
       font-size: 13px;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-      transition: all 0.24s;
+      font-weight: 800;
+      margin-bottom: 6px;
     }
 
-    .settings-input:focus {
-      border-color: var(--accent-purple);
-      background: rgba(124, 58, 237, 0.08);
+    .inventory-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
     }
 
-    .settings-save-btn {
+    .inventory-price {
+      font-size: 14px;
+    }
+
+    .exchange-modal-backdrop, .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .exchange-modal-backdrop.visible, .modal-backdrop.visible {
+      display: flex;
+    }
+
+    .modal-content, .exchange-modal {
       width: 100%;
+      max-width: 420px;
+      border-radius: 22px;
+      padding: 20px;
+      background: rgba(14, 17, 37, 0.98);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .modal-title, .exchange-title {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(124, 58, 237, 0.08);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .modal-body, .exchange-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .exchange-price {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .exchange-trend {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #a5b4fc;
+      margin-bottom: 18px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-btn.cancel {
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--text-light);
+    }
+
+    .modal-btn.confirm {
       background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      border: none;
-      color: white;
-      border-radius: 10px;
-      padding: 12px;
+      color: #fff;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 110px;
+      transform: translateX(-50%);
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: rgba(7, 8, 20, 0.95);
+      color: #fff;
       font-weight: 700;
       font-size: 13px;
-      cursor: pointer;
-      transition: all 0.24s;
-      margin-top: 12px;
-      -webkit-user-select: none;
-      user-select: none;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      z-index: 140;
+      animation: toastIn 0.24s ease forwards, toastOut 0.24s ease forwards 1.8s;
     }
 
-    .settings-save-btn:active {
-      transform: scale(0.96);
+    @keyframes toastIn {
+      from { opacity: 0; transform: translate(-50%, 8px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
-    /* ===== TAB BAR ===== */
+    @keyframes toastOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
     .tab-bar {
       position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--bg-dark-card);
-      border-top: 1px solid var(--border-color);
+      inset: auto 0 0 0;
+      z-index: 40;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      background: rgba(14, 17, 37, 0.96);
+      border-top: 1px solid var(--border);
+      padding: 8px 0 env(safe-area-inset-bottom) 0;
       backdrop-filter: blur(16px);
-      z-index: 40;
     }
 
     .tab-item {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      padding: 8px 0;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
+      gap: 4px;
+      padding: 10px 0 4px;
       cursor: pointer;
-      transition: all 0.24s;
-      font-size: 20px;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-
-    .tab-item:active {
-      transform: scale(0.88);
+      transition: color 0.24s ease;
+      font-size: 18px;
     }
 
     .tab-item.active {
@@ -1550,174 +1044,86 @@
     }
 
     .tab-label {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 700;
-      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    /* ===== MODAL ===== */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
+    .admin-panel {
+      margin-top: 16px;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(245, 158, 11, 0.08);
     }
 
-    .modal-backdrop.visible {
-      display: flex;
-    }
-
-    .modal-content {
-      background: var(--bg-dark-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 20px;
-      width: 88%;
-      max-width: 400px;
-      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .modal-title {
-      font-weight: 800;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    .modal-body {
-      font-size: 13px;
+    .admin-panel p {
+      font-size: 12px;
       color: var(--text-muted);
-      margin-bottom: 16px;
-      line-height: 1.5;
+      margin-bottom: 12px;
     }
 
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .modal-btn {
-      flex: 1;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
+    .admin-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #f59e0b, #d97706);
+      color: #070814;
+      font-weight: 800;
       font-size: 13px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
     }
 
-    .modal-btn-cancel {
-      background: rgba(124, 58, 237, 0.08);
-      color: var(--text-light);
-    }
-
-    .modal-btn-confirm {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: white;
-    }
-
-    .modal-btn:active {
-      transform: scale(0.96);
-    }
-
-    /* ===== TOAST ===== */
-    @keyframes toastIn {
-      from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
-    }
-
-    @keyframes toastOut {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-      }
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(10, 10, 14, 0.95);
-      color: white;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
-      z-index: 120;
-      opacity: 0;
-      animation: toastIn 0.24s forwards, toastOut 0.24s forwards 1.76s;
-      border: 1px solid rgba(124, 58, 237, 0.2);
-    }
-
-    /* ===== UTILITIES ===== */
-    .hidden {
-      display: none !important;
-    }
-
-    .collapsing {
-      animation: slideUp_reverse 0.3s ease-in forwards;
-    }
-
-    .expanding {
-      animation: slideDown 0.3s ease-out forwards;
+    .admin-code {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #fff;
+      word-break: break-all;
+      background: rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 10px 12px;
     }
 
     @media (max-width: 420px) {
-      .logo {
-        font-size: 18px;
+      .profile-stats {
+        grid-template-columns: 1fr;
       }
-      .banner-title {
-        font-size: 18px;
+
+      .card-stats-grid {
+        grid-template-columns: 1fr;
       }
-      .product-btn-group {
-        gap: 4px;
+
+      .inventory-grid {
+        grid-template-columns: 1fr;
       }
-      .product-buy-btn.quick {
-        padding: 6px 10px;
-        font-size: 10px;
+
+      .pass-card {
+        min-width: 95px;
       }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- HEADER -->
     <header class="header">
       <div class="logo">💜 GhostMarket</div>
       <div class="header-actions">
-        <button class="balance-btn-header" id="btnBalance" aria-label="Пополнить баланс">
-          💳 <span id="headerBalance">0 ₽</span>
+        <button class="balance-header" id="btnBalance" aria-label="Пополнить баланс">
+          <span>Баланс: <strong id="headerBalance">0 ₽</strong></span>
         </button>
-        <button class="btn-theme" id="btnTheme" aria-label="Переключить тему">🌙</button>
-        <button class="btn-icon" id="btnNotifications" aria-label="Уведомления">
+        <button class="btn-theme" id="btnTheme" aria-label="Переключить тему">☀️</button>
+        <button class="btn-icon" aria-label="Уведомления">
           🔔
           <span class="notification-badge" id="notificationBadge">3</span>
         </button>
       </div>
     </header>
 
-    <!-- SCROLL CONTENT -->
     <div class="scroll-content" id="scrollContent">
-      <!-- SHOP PAGE -->
       <div id="shopPage" class="page-content">
         <div class="banner">
-          <div class="banner-title">🎮 Игровая валюта дешевле официальных цен</div>
-          <div class="banner-subtitle">Моментальная доставка, безопасно и надежно</div>
+          <div class="banner-title">Игровая валюта дешевле официальных цен</div>
+          <div class="banner-subtitle">Моментальная доставка, безопасно и надежно в Telegram WebApp.</div>
         </div>
 
         <div class="promo-banner">
@@ -1728,1006 +1134,1357 @@
         <div class="section-header">
           <div class="section-title">Популярные игры</div>
         </div>
-
         <div class="games-carousel" id="gamesCarousel"></div>
 
-        <div class="constructor" id="constructor">
+        <div class="constructor">
           <div class="constructor-title">🛍️ Конструктор доната</div>
-          
           <div class="game-selector-inline" id="gameSelectorInline"></div>
-          
           <div id="fieldsContainer"></div>
-          
           <div id="catalogContainer"></div>
         </div>
       </div>
 
-      <!-- SUPPORT PAGE -->
       <div id="supportPage" class="page-content hidden">
         <div class="section-header">
           <div class="section-title">Служба поддержки</div>
         </div>
-        <div style="padding: 40px 16px; text-align: center; color: var(--text-muted);">
-          <div style="font-size: 48px; margin-bottom: 16px;">📞</div>
-          <p>Контакты поддержки:</p>
-          <p style="margin-top: 12px; font-weight: 700;">@GhostMarket_Support</p>
-          <p style="margin-top: 12px; font-size: 12px;">Режим работы: 24/7</p>
+        <div style="background: rgba(14, 17, 37, 0.96); border: 1px solid var(--border); border-radius: 22px; padding: 28px; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 18px;">📞</div>
+          <p style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">@GhostMarket_Support</p>
+          <p style="color: var(--text-muted); font-size: 12px; line-height: 1.6;">
+            Любые вопросы, быстрые решения и помощь 24/7.
+          </p>
         </div>
       </div>
 
-      <!-- ORDERS PAGE -->
       <div id="ordersPage" class="page-content hidden">
         <div class="section-header">
-          <div class="section-title">Мои заказы</div>
+          <div class="section-title">🏆 Ghost Pass</div>
         </div>
-        <div class="payment-history-section">
-          <div class="payment-history-list" id="ordersList">
-            <div style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 12px;">
-              Здесь появятся ваши заказы 📦
+
+        <div class="pass-section">
+          <div class="pass-summary">
+            <div>
+              <strong>Ваш уровень: <span id="passLevel">1</span></strong>
+              <div style="color: var(--text-muted); font-size: 12px; margin-top: 5px;">Опыт: <span id="passXp">0</span> / 100 XP</div>
             </div>
+            <div style="font-size: 12px; color: var(--text-muted); text-align: right; min-width: 100px;" id="passModeLabel">Режим: Free</div>
           </div>
+
+          <div class="pass-progress-bar">
+            <div class="pass-progress-fill" id="passProgressFill"></div>
+          </div>
+
+          <div class="pass-line-section">
+            <div class="pass-line-header">
+              <span>Premium+ Line</span>
+              <span style="font-size: 11px; color: var(--text-muted);">Только для Ghost Premium+</span>
+            </div>
+            <div class="pass-line" id="premiumLine"></div>
+          </div>
+
+          <div class="pass-line-section">
+            <div class="pass-line-header">
+              <span>Free Line</span>
+              <span style="font-size: 11px; color: var(--text-muted);">Доступно всем</span>
+            </div>
+            <div class="pass-line" id="freeLine"></div>
+          </div>
+        </div>
+
+        <div class="pass-section">
+          <div class="pass-header-title">📜 Квесты на опыт</div>
+          <div class="quests-list" id="questsList"></div>
+        </div>
+
+        <div class="inventory-section">
+          <div class="inventory-title">🎒 Рюкзак</div>
+          <div class="inventory-grid" id="inventoryGrid"></div>
         </div>
       </div>
 
-      <!-- PROFILE PAGE -->
       <div id="profilePage" class="page-content hidden">
         <div class="profile-card">
           <div class="profile-header">
             <div class="profile-avatar" id="profileAvatar">👤</div>
             <div class="profile-info">
-              <div class="profile-name" id="profileName">Загрузка...</div>
+              <div class="profile-name" id="profileName">Ghost</div>
               <div class="profile-username" id="profileUsername">@username</div>
-              <div class="profile-badge" id="profileStatus">Обычный игрок</div>
+              <div class="profile-badge" id="profileStatus">🎮 Обычный игрок</div>
             </div>
           </div>
+
           <div class="profile-stats">
             <div class="profile-stat">
-              <span class="stat-value" id="profileOrders">0</span>
-              <span class="stat-label">Заказов</span>
+              <strong id="profileOrders">0</strong>
+              <span>Заказов</span>
             </div>
             <div class="profile-stat">
-              <span class="stat-value" id="profileSpent">0 ₽</span>
-              <span class="stat-label">Потрачено</span>
+              <strong id="profileSpent">0 ₽</strong>
+              <span>Потрачено</span>
             </div>
             <div class="profile-stat">
-              <span class="stat-value" id="profileCashback">0 ₽</span>
-              <span class="stat-label">Кэшбэк</span>
+              <strong id="profileCoin">0 GCOIN</strong>
+              <span>Ghost Coin</span>
+            </div>
+            <div class="profile-stat">
+              <strong id="profileCashback">0 ₽</strong>
+              <span>Кэшбэк</span>
             </div>
           </div>
         </div>
 
-        <!-- PREMIUM SECTION -->
-        <div id="premiumSection"></div>
+        <div class="premium-section" id="premiumSection"></div>
 
-        <!-- CARD SECTION -->
-        <div class="card-section" id="cardSection">
+        <div class="card-section">
           <div class="card-section-title" id="cardSectionTitle">
             <span>💳 Твоя Ghost Card</span>
-            <span class="card-toggle-icon">▼</span>
+            <span class="card-toggle-icon" id="cardToggleIcon">▼</span>
           </div>
 
-          <div class="ghost-card" id="ghostCard">
+          <div class="ghost-card" id="ghostCard" onclick="openBalancePanel()">
             <div class="card-header">
               <div class="card-logo">👻</div>
-              <div class="card-chip">CHIP</div>
+              <div class="card-chip">GHOST</div>
             </div>
             <div class="card-number" id="cardNumber">•••• •••• •••• 1337</div>
-            <div class="card-balance-display" id="cardBalance">Баланс: 0 ₽</div>
+            <div class="card-balance" id="cardBalance">Баланс: 0 ₽</div>
             <div class="card-footer">
               <div class="card-holder">
-                <div class="card-holder-label">CARDHOLDER</div>
-                <div class="card-holder-name" id="cardHolder">GHOST USER</div>
+                <span>CARDHOLDER</span>
+                <span class="card-holder-name" id="cardHolder">GHOST USER</span>
               </div>
               <div class="card-valid">
-                <div class="card-valid-label">VALID THRU</div>
-                <div class="card-valid-date">12/25</div>
+                <span>VALID THRU</span>
+                <span class="card-valid-date">12/25</span>
               </div>
             </div>
             <div class="card-system">💳</div>
           </div>
 
-          <div class="color-picker-container" id="colorPicker"></div>
+          <div class="color-picker" id="colorPicker"></div>
 
-          <div class="card-stats">
-            <div class="card-stat-item">
-              <div class="card-stat-label">Потрачено за все время</div>
-              <div class="card-stat-value" id="totalSpent">0 ₽</div>
+          <div class="card-stats-grid">
+            <div class="card-stat">
+              <strong id="totalSpent">0 ₽</strong>
+              <span>Потрачено за все время</span>
             </div>
-            <div class="card-stat-item">
-              <div class="card-stat-label">Накопительный кэшбэк</div>
-              <div class="card-stat-value" id="accumulatedCashback">0 ₽</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PAYMENT HISTORY -->
-        <div class="payment-history-section">
-          <div class="payment-history-title">📋 История платежей</div>
-          <div class="payment-history-list" id="paymentHistory">
-            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-              Пока нет платежей
+            <div class="card-stat">
+              <strong id="accumulatedCashback">0 ₽</strong>
+              <span>Накопительный кэшбэк</span>
             </div>
           </div>
         </div>
 
-        <!-- SETTINGS -->
+        <div class="inventory-section">
+          <div class="inventory-title">🎒 Рюкзак</div>
+          <div class="inventory-grid" id="inventoryGridProfile"></div>
+        </div>
+
         <div class="settings-section">
           <div class="settings-title">⚙️ Настройки профиля</div>
-          
-          <div class="settings-item">
-            <span class="settings-label">Отключить тяжелые анимации</span>
-            <div class="toggle-switch" id="toggleAnimations"></div>
+          <div class="field-group">
+            <label class="field-label">Отключить тяжелые анимации</label>
+            <button class="game-select-btn" id="toggleAnimations">Вкл/Выкл</button>
           </div>
+          <div class="field-group">
+            <label class="field-label">Игровой UID (сохраняется)</label>
+            <input type="text" class="settings-input" id="settingsUID" placeholder="Введите ваш UID">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Zone ID / Сервер (сохраняется)</label>
+            <input type="text" class="settings-input" id="settingsZoneID" placeholder="Введите Zone ID">
+          </div>
+          <button class="settings-save-btn" id="btnSaveSettings">💾 Сохранить</button>
+        </div>
 
-          <div class="settings-inputs">
-            <div class="field-group">
-              <label class="field-label">Игровой UID (сохраняется)</label>
-              <input type="text" class="settings-input" id="settingsUID" placeholder="Введите ваш UID">
-            </div>
-            <div class="field-group">
-              <label class="field-label">Zone ID / Сервер (сохраняется)</label>
-              <input type="text" class="settings-input" id="settingsZoneID" placeholder="Введите Zone ID">
-            </div>
-            <button class="settings-save-btn" id="btnSaveSettings">💾 Сохранить</button>
-          </div>
+        <div class="admin-panel hidden" id="adminPanel">
+          <p>Админка @henotsosal: создайте ультра-рандомный промокод для GhostMarket.</p>
+          <button class="admin-btn" id="btnGeneratePromo">🎁 Создать ультра-рандомный промокод</button>
+          <div class="admin-code" id="adminPromoCode"></div>
         </div>
       </div>
     </div>
 
-    <!-- BALANCE PANEL -->
-    <div class="balance-panel-backdrop" id="balancePanelBackdrop"></div>
-    <div class="balance-panel hidden" id="balancePanel">
-      <div class="balance-panel-header">
-        <div class="balance-panel-title">💳 Пополнить баланс</div>
-        <button class="balance-panel-close" id="btnCloseBalance">✕</button>
-      </div>
-      <div class="balance-panel-content">
-        <div class="balance-info">
-          <div class="balance-info-label">Текущий баланс</div>
-          <div class="balance-info-amount" id="balancePanelAmount">0 ₽</div>
+    <div class="balance-panel-backdrop hidden" id="balancePanelBackdrop"></div>
+    <div class="balance-panel hidden" id="balancePanel" style="position: fixed; right: 0; top: 0; bottom: 0; width: 84%; max-width: 360px; background: rgba(14,17,37,0.98); border-left: 1px solid var(--border); z-index: 80; box-shadow: -10px 0 40px rgba(0,0,0,0.35); display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 18px; border-bottom: 1px solid var(--border);">
+        <div>
+          <div style="font-weight: 800; font-size: 16px;">💳 Пополнение баланса</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Клик по карте открывает эту панель</div>
         </div>
-
-        <div id="balancePackagesPanel"></div>
+        <button class="btn-icon" id="btnCloseBalance">✕</button>
+      </div>
+      <div style="padding: 18px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="background: rgba(124, 58, 237, 0.1); border: 1px solid var(--border); border-radius: 18px; padding: 18px;">
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">Текущий баланс</div>
+          <div style="font-size: 28px; font-weight: 800;" id="balancePanelAmount">0 ₽</div>
+        </div>
+        <button class="balance-btn-panel" onclick="topUp(100)">+100 ₽</button>
+        <button class="balance-btn-panel" onclick="topUp(500)">+500 ₽</button>
+        <button class="balance-btn-panel" style="background: rgba(124, 58, 237, 0.12); color: var(--text-light);" onclick="closeBalancePanel()">Закрыть</button>
       </div>
     </div>
 
-    <!-- TAB BAR -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title" id="modalTitle">Заголовок</div>
+          <button class="modal-close" id="btnModalCancel">✕</button>
+        </div>
+        <div class="modal-body" id="modalBody">Содержание</div>
+        <div class="modal-actions">
+          <button class="modal-btn cancel" id="btnModalBack">Отмена</button>
+          <button class="modal-btn confirm" id="btnModalConfirm">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange-modal-backdrop" id="exchangeModalBackdrop">
+      <div class="exchange-modal">
+        <div class="modal-header">
+          <div class="exchange-title" id="exchangeTitle">Биржа</div>
+          <button class="modal-close" onclick="closeExchangeModal()">✕</button>
+        </div>
+        <div class="exchange-body">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+            <div style="width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; background: rgba(124, 58, 237, 0.14); font-size: 28px;" id="exchangeIcon">💠</div>
+            <div>
+              <div style="font-size: 16px; font-weight: 800;" id="exchangeName">Предмет</div>
+              <div style="font-size: 11px; color: var(--text-muted);" id="exchangeType">Тип волатильности</div>
+            </div>
+          </div>
+          <div class="exchange-price">
+            <span>Стоимость:</span>
+            <span id="exchangePrice">0 ₽</span>
+          </div>
+          <div class="exchange-trend" id="exchangeTrend">Выросло на +0.0% 📈</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;" id="exchangeDescription">Динамика рынка изменяется при каждом открытии.</div>
+          <button class="modal-btn confirm" onclick="sellExchangeItem()">💸 Продать на бирже</button>
+        </div>
+      </div>
+    </div>
+
     <div class="tab-bar">
-      <button class="tab-item active" data-tab="shop" aria-label="Магазин">
+      <button class="tab-item active" data-tab="shop">
         <span>🛍️</span>
         <span class="tab-label">Магазин</span>
       </button>
-      <button class="tab-item" data-tab="support" aria-label="Поддержка">
+      <button class="tab-item" data-tab="support">
         <span>📞</span>
         <span class="tab-label">Поддержка</span>
       </button>
-      <button class="tab-item" data-tab="orders" aria-label="Заказы">
-        <span>📦</span>
-        <span class="tab-label">Заказы</span>
+      <button class="tab-item" data-tab="orders">
+        <span>🏆</span>
+        <span class="tab-label">Ghost Pass</span>
       </button>
-      <button class="tab-item" data-tab="profile" aria-label="Профиль">
+      <button class="tab-item" data-tab="profile">
         <span>👤</span>
         <span class="tab-label">Профиль</span>
       </button>
     </div>
-
-    <!-- MODALS -->
-    <div class="modal-backdrop" id="modalBackdrop">
-      <div class="modal-content">
-        <div class="modal-title" id="modalTitle">Заголовок</div>
-        <div class="modal-body" id="modalBody">Содержание</div>
-        <div class="modal-actions">
-          <button class="modal-btn modal-btn-cancel" id="btnModalCancel">Отменить</button>
-          <button class="modal-btn modal-btn-confirm" id="btnModalConfirm">Подтвердить</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SUPPORT BUTTON -->
-    <button id="supportBtn" class="support-button">Поддержка</button>
-
-    <script>
-      // BOT username (без @)
-      const BOT_USERNAME = "GhostMarketBuy_Bot";
-
-      const supportBtn = document.getElementById("supportBtn");
-      supportBtn.addEventListener("click", () => {
-        // если открыто внутри Telegram WebApp
-        if (window.Telegram && window.Telegram.WebApp && typeof Telegram.WebApp.sendData === "function") {
-          Telegram.WebApp.sendData(JSON.stringify({ action: "support" }));
-        } else {
-          // открыть чат бота в новом окне (обычный браузер)
-          window.open(`https://t.me/${BOT_USERNAME}`, "_blank");
-        }
-      });
-    </script>
   </div>
 
   <script>
-    // ===== TELEGRAM SDK =====
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+/* Updated application logic: inventory activations, discount handling, and auction bots.
+   Replaces only JS logic; HTML/CSS unchanged.
+*/
 
-    // ===== DONATION ALERTS CONFIG =====
-    const donationAlertsConfig = {
-      username: 'craftrush',
-      currency: 'RUB',
-      apiBaseUrl: 'https://www.donationalerts.com/api/v1'
-    };
+const tg = window.Telegram?.WebApp || null;
+tg?.ready?.();
 
-    // ===== DATA & STATE =====
-    let userState = {
-      username: 'User',
-      firstName: 'Ghost',
-      balance: 0,
-      spent: 0,
-      cashback: 0,
-      orders: [],
-      premiumStatus: 'none',
-      premiumExpires: null,
-      selectedGame: 'pubg',
-      cart: [],
-      payments: [],
-      animationsEnabled: true,
-      savedUID: '',
-      savedZoneID: '',
-      cardColor: 0,
-      cardHidden: false,
-      totalSpent: 0,
-      accumulatedCashback: 0
-    };
+const userState = {
+  firstName: 'Ghost',
+  username: 'username',
+  balance: 0,
+  ghostCoin: 0,
+  spent: 0,
+  cashback: 0,
+  orders: [],
+  payments: [],
+  premiumStatus: 'none',
+  premiumExpires: null,
+  animationsEnabled: true,
+  savedUID: '',
+  savedZoneID: '',
+  cardColor: 0,
+  cardHidden: false,
+  pass: {
+    level: 1,
+    xp: 0,
+    inventory: [],
+    questsCompleted: []
+  },
+  promoCode: '',
+  auctionLots: [] // user auctions
+};
 
-    // ===== GAMES DATA =====
-    const games = [
-      { id: 'pubg', name: 'PUBG', icon: '🎮', fields: ['uid', 'zone'], price: 100 },
-      { id: 'brawl', name: 'Brawl Stars', icon: '⭐', fields: ['uid'], price: 80 },
-      { id: 'mlbb', name: 'MLBB', icon: '🌟', fields: ['uid', 'zone'], price: 90 },
-    ];
+const games = [
+  { id: 'pubg', name: 'PUBG', icon: '🎮', fields: ['uid', 'zone'], price: 100 },
+  { id: 'brawl', name: 'Brawl Stars', icon: '⭐', fields: ['uid'], price: 80 },
+  { id: 'mlbb', name: 'MLBB', icon: '🌟', fields: ['uid', 'zone'], price: 90 }
+];
 
-    const products = [
-      { id: 1, name: 'Стартовый пак', icon: '🎁', price: 100, oldPrice: 120, discount: '-17%' },
-      { id: 2, name: 'Премиум пак', icon: '👑', price: 500, oldPrice: 600, discount: '-17%' },
-      { id: 3, name: 'Легендарный пак', icon: '⚡', price: 1000, oldPrice: 1200, discount: '-17%' },
-    ];
+const products = [
+  { id: 1, name: 'Стартовый пак', icon: '🎁', price: 100, oldPrice: 120, discount: '-17%' },
+  { id: 2, name: 'Премиум пак', icon: '👑', price: 500, oldPrice: 600, discount: '-17%' },
+  { id: 3, name: 'Легендарный пак', icon: '⚡', price: 1000, oldPrice: 1200, discount: '-17%' }
+];
 
-    const balancePackages = [
-      { amount: 101, price: 101, discount: '' },
-      { amount: 500, price: 450, discount: '-10%' },
-      { amount: 1000, price: 850, discount: '-15%' },
-      { amount: 2000, price: 1600, discount: '-20%' },
-      { amount: 5000, price: 3750, discount: '-25%' },
-    ];
+const premiumPlusItems = [
+  { name: 'Void Diamond', icon: '💎' },
+  { name: 'Cyber Ghost Mask', icon: '👺' },
+  { name: 'Wraith Core v2.0', icon: '⚙️' },
+  { name: 'Anomalous Cipher', icon: '🧬' },
+  { name: 'Nebula Cluster', icon: '☄️' },
+  { name: 'Quantum Vault', icon: '🛸' },
+  { name: 'Dark Web Ledger', icon: '📓' },
+  { name: 'Supernova Spark', icon: '✨' }
+];
 
-    // ===== INIT =====
-    function initApp() {
-      loadFromLocalStorage();
-      checkDonationResult();
-      initTelegramUser();
-      setupEventListeners();
-      renderGamesCarousel();
-      renderGameSelector();
-      renderColorPicker();
-      renderBalancePackages();
-      updateProfileUI();
-      updateCardUI();
-      updateFieldsContainer();
-      updateCatalog();
-      updateHeaderBalance();
-    }
+const freePassItems = [
+  { name: 'Ghost Coin', icon: '🪙' },
+  { name: 'Wraith Ethereum', icon: '💠' },
+  { name: 'Ecto-Dollar', icon: '💵' },
+  { name: 'Spectral Asset', icon: '🌌' },
+  { name: 'Ecto-Crate', icon: '📦' },
+  { name: 'Data Disk Spike', icon: '💽' },
+  { name: 'Soul Shard', icon: '🔮' },
+  { name: 'Wraith Ticket', icon: '🎟️' },
+  { name: 'Phantom Key', icon: '🗝️' },
+  { name: 'Quantum Vault', icon: '🛸' } // possibly appears in rewards
+];
 
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem('ghostmarket_state');
-      if (saved) {
-        userState = { ...userState, ...JSON.parse(saved) };
+const quests = [
+  { id: 1, title: 'Пригласить друга по реферальной ссылке', progress: 0, max: 1, xp: 10, premium: false, reward: { name: 'Ecto-Crate', icon: '📦', basePrice: 120 } },
+  { id: 2, title: 'Активировать ультра-код от @henotsosal', progress: 0, max: 1, xp: 20, premium: true, reward: { name: 'Void Diamond', icon: '💎', basePrice: 280 } }
+];
+
+let currentExchange = null;
+
+/* Auction bots configuration */
+const auctionBots = ['player101','shadow_bot','market_ai','ghost_bidder','silent_one'];
+const activeAuctionsTimers = {}; // lotId -> timer reference
+
+function initApp() {
+  loadFromLocalStorage();
+  initTelegramUser();
+  applyTheme();
+  setupEventListeners();
+  renderGamesCarousel();
+  renderGameSelector();
+  updateFieldsContainer();
+  updateCatalog();
+  renderColorPicker();
+  renderPremiumSection();
+  renderPassPage();
+  renderInventoryGrids();
+  updateProfileUI();
+  updateHeaderBalance();
+  updateCardUI();
+  refreshPremiumStatus();
+  renderAdminPanel();
+  switchTab('shop');
+  // resume auctions timers if any persisted
+  resumeAuctionTimers();
+}
+
+function loadFromLocalStorage() {
+  const saved = localStorage.getItem('ghostmarket_state');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      Object.assign(userState, parsed);
+      if (parsed.pass) {
+        userState.pass = { ...userState.pass, ...parsed.pass };
       }
+      if (!userState.auctionLots) userState.auctionLots = [];
+    } catch (e) {
+      console.error('Failed to parse state', e);
     }
+  }
+  // load discount flag if exists
+  const d = localStorage.getItem('active_discount');
+  if (d) userState.active_discount = parseFloat(d);
+}
 
-    function saveToLocalStorage() {
-      localStorage.setItem('ghostmarket_state', JSON.stringify(userState));
+function saveToLocalStorage() {
+  localStorage.setItem('ghostmarket_state', JSON.stringify(userState));
+  if (userState.active_discount) localStorage.setItem('active_discount', String(userState.active_discount));
+  else localStorage.removeItem('active_discount');
+}
+
+/* Telegram / UI helpers */
+function initTelegramUser() {
+  if (tg?.initDataUnsafe?.user) {
+    const user = tg.initDataUnsafe.user;
+    userState.username = user.username || user.first_name || 'username';
+    userState.firstName = user.first_name || 'Ghost';
+  }
+}
+
+function setupEventListeners() {
+  document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+  document.getElementById('btnBalance').addEventListener('click', openBalancePanel);
+  document.getElementById('btnCloseBalance').addEventListener('click', closeBalancePanel);
+  document.getElementById('balancePanelBackdrop').addEventListener('click', closeBalancePanel);
+  document.getElementById('btnCopyPromo').addEventListener('click', () => { copyToClipboard('FIRST15'); showToast('✅ Код скопирован'); });
+
+  document.querySelectorAll('.tab-item').forEach(btn => {
+    btn.addEventListener('click', () => { switchTab(btn.dataset.tab); });
+  });
+
+  document.getElementById('cardSectionTitle').addEventListener('click', toggleCardVisibility);
+  document.getElementById('toggleAnimations').addEventListener('click', () => {
+    userState.animationsEnabled = !userState.animationsEnabled;
+    updateToggleUI();
+    saveToLocalStorage();
+  });
+  document.getElementById('btnSaveSettings').addEventListener('click', () => {
+    userState.savedUID = document.getElementById('settingsUID').value.trim();
+    userState.savedZoneID = document.getElementById('settingsZoneID').value.trim();
+    saveToLocalStorage();
+    showToast('✅ Настройки сохранены');
+  });
+  document.getElementById('btnModalCancel').addEventListener('click', closeModal);
+  document.getElementById('btnModalBack').addEventListener('click', closeModal);
+  document.getElementById('btnModalConfirm').addEventListener('click', () => {
+    if (window.pendingAction) window.pendingAction();
+    closeModal();
+  });
+
+  document.getElementById('btnGeneratePromo')?.addEventListener('click', generatePromoCode);
+}
+
+function applyTheme() {
+  const savedTheme = localStorage.getItem('ghostmarket_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('btnTheme').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('ghostmarket_theme', next);
+  document.getElementById('btnTheme').textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('.page-content').forEach(page => {
+    if (page.id === tabName + 'Page') {
+      page.classList.remove('hidden');
+      page.classList.add('page-content');
+    } else {
+      page.classList.add('hidden');
     }
+  });
+  document.querySelectorAll('.tab-item').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
+  document.getElementById('scrollContent').scrollTop = 0;
+  if (tabName === 'orders') renderPassPage();
+  if (tabName === 'profile') renderInventoryGrids();
+}
 
-    function checkDonationResult() {
-      const params = new URLSearchParams(window.location.search);
-      const amount = parseInt(params.get('donation_success_amount'), 10);
+function updateHeaderBalance() {
+  document.getElementById('headerBalance').textContent = `${userState.balance} ₽`;
+  document.getElementById('balancePanelAmount').textContent = `${userState.balance} ₽`;
+}
 
-      if (params.get('donation_success') === '1' && amount >= 100) {
-        userState.balance += amount;
-        saveToLocalStorage();
-        updateCardUI();
-        updateHeaderBalance();
-        updateCatalog();
-        showToast(`✅ Баланс пополнен на ${amount} ₽`);
+function openBalancePanel() {
+  document.getElementById('balancePanel').classList.remove('hidden');
+  document.getElementById('balancePanelBackdrop').classList.remove('hidden');
+}
 
-        const cleanUrl = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, '', cleanUrl);
-      }
+function closeBalancePanel() {
+  document.getElementById('balancePanel').classList.add('hidden');
+  document.getElementById('balancePanelBackdrop').classList.add('hidden');
+}
+
+function topUp(amount) {
+  userState.balance += amount;
+  saveToLocalStorage();
+  updateHeaderBalance();
+  updateCardUI();
+  showToast(`✅ Баланс пополнен на ${amount} ₽`);
+  closeBalancePanel();
+}
+
+/* Games / Constructor */
+function renderGamesCarousel() {
+  const container = document.getElementById('gamesCarousel');
+  container.innerHTML = games.map(game => `
+    <div class="game-card" onclick="selectGame('${game.id}')">
+      <div class="game-icon">${game.icon}</div>
+      <div class="game-name">${game.name}</div>
+      <div class="game-price">${game.price} ₽</div>
+    </div>
+  `).join('');
+}
+
+function renderGameSelector() {
+  const selector = document.getElementById('gameSelectorInline');
+  selector.innerHTML = games.map(game => `
+    <button class="game-select-btn ${game.id === userState.selectedGame ? 'active' : ''}" onclick="selectGame('${game.id}')">
+      ${game.icon} ${game.name}
+    </button>
+  `).join('');
+}
+
+function selectGame(gameId) {
+  userState.selectedGame = gameId;
+  renderGameSelector();
+  updateFieldsContainer();
+  updateCatalog();
+  saveToLocalStorage();
+}
+
+function updateFieldsContainer() {
+  const container = document.getElementById('fieldsContainer');
+  const game = games.find(g => g.id === userState.selectedGame);
+  if (!game) return;
+  container.innerHTML = game.fields.map(field => {
+    const label = field === 'uid' ? 'Игровой ID (UID)' : 'Zone ID / Сервер';
+    const placeholder = field === 'uid' ? 'Введите UID' : 'Введите Zone ID';
+    const value = field === 'uid' ? userState.savedUID : userState.savedZoneID;
+    return `
+      <div class="field-group">
+        <label class="field-label">${label}</label>
+        <input type="text" class="field-input" id="field_${field}" placeholder="${placeholder}" value="${value}">
+        <div class="field-error" id="error_${field}">Заполните поле</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function validateFields() {
+  const game = games.find(g => g.id === userState.selectedGame);
+  if (!game) return false;
+  let valid = true;
+  game.fields.forEach(field => {
+    const input = document.getElementById(`field_${field}`);
+    const error = document.getElementById(`error_${field}`);
+    if (!input) return;
+    if (!input.value.trim()) {
+      input.classList.add('error');
+      error.style.display = 'block';
+      valid = false;
+    } else {
+      input.classList.remove('error');
+      error.style.display = 'none';
     }
+  });
+  return valid;
+}
 
-    function initTelegramUser() {
-      if (tg.initDataUnsafe?.user) {
-        const user = tg.initDataUnsafe.user;
-        userState.username = user.username || user.first_name || 'User';
-        userState.firstName = user.first_name || 'Ghost';
-      }
-    }
+/* Discount helpers */
+function getActiveDiscount() {
+  // prefer in-memory value
+  if (typeof userState.active_discount === 'number') return userState.active_discount;
+  const raw = localStorage.getItem('active_discount');
+  if (!raw) return 0;
+  const v = parseFloat(raw);
+  if (isNaN(v)) return 0;
+  userState.active_discount = v;
+  return v;
+}
+function consumeActiveDiscount() {
+  delete userState.active_discount;
+  localStorage.removeItem('active_discount');
+  saveToLocalStorage();
+}
 
-    // ===== SETUP EVENTS =====
-    function setupEventListeners() {
-      document.getElementById('btnTheme').addEventListener('click', toggleTheme);
-      document.getElementById('btnBalance').addEventListener('click', openBalancePanel);
-      document.getElementById('btnCloseBalance').addEventListener('click', closeBalancePanel);
-      document.getElementById('balancePanelBackdrop').addEventListener('click', closeBalancePanel);
-
-      document.querySelectorAll('.tab-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const tabName = e.currentTarget.dataset.tab;
-          switchTab(tabName);
-        });
-      });
-
-      document.getElementById('btnCopyPromo').addEventListener('click', () => {
-        copyToClipboard('FIRST15');
-        showToast('✅ Код скопирован!');
-      });
-
-      document.getElementById('cardSectionTitle').addEventListener('click', () => {
-        toggleCardVisibility();
-      });
-
-      document.getElementById('ghostCard').addEventListener('click', () => {
-        switchTab('profile');
-        setTimeout(() => {
-          const profilePage = document.getElementById('profilePage');
-          const cardSection = document.getElementById('cardSection');
-          cardSection.scrollIntoView({ behavior: 'smooth' });
-        }, 200);
-      });
-
-      document.querySelectorAll('.color-dot').forEach((dot, idx) => {
-        dot.addEventListener('click', () => {
-          changeCardColor(idx);
-        });
-      });
-
-      document.getElementById('toggleAnimations').addEventListener('click', () => {
-        userState.animationsEnabled = !userState.animationsEnabled;
-        updateToggleUI();
-        saveToLocalStorage();
-      });
-
-      document.getElementById('btnSaveSettings').addEventListener('click', () => {
-        userState.savedUID = document.getElementById('settingsUID').value;
-        userState.savedZoneID = document.getElementById('settingsZoneID').value;
-        saveToLocalStorage();
-        showToast('✅ Настройки сохранены!');
-      });
-
-      document.getElementById('btnModalCancel').addEventListener('click', closeModal);
-      document.getElementById('btnModalConfirm').addEventListener('click', () => {
-        if (window.pendingAction) {
-          window.pendingAction();
-        }
-        closeModal();
-      });
-    }
-
-    // ===== BALANCE PANEL =====
-    function openBalancePanel() {
-      document.getElementById('balancePanel').classList.remove('hidden');
-      document.getElementById('balancePanelBackdrop').classList.add('visible');
-    }
-
-    function closeBalancePanel() {
-      document.getElementById('balancePanel').classList.add('hidden');
-      document.getElementById('balancePanelBackdrop').classList.remove('visible');
-    }
-
-    function renderBalancePackages() {
-      const container = document.getElementById('balancePackagesPanel');
-      container.innerHTML = balancePackages.map(pkg => `
-        <div class="balance-package-panel">
-          ${pkg.discount ? `<div class="balance-badge-tag">${pkg.discount}</div>` : ''}
-          <div class="balance-amount-panel">+${pkg.amount} ₽</div>
-          <div class="balance-price-panel">${pkg.price} ₽</div>
-          <button class="balance-btn-panel" onclick="openDonationAlerts(${pkg.amount})">💳 DonationAlerts</button>
-        </div>
-      `).join('');
-    }
-
-    function updateHeaderBalance() {
-      document.getElementById('headerBalance').textContent = `${userState.balance} ₽`;
-      document.getElementById('balancePanelAmount').textContent = `${userState.balance} ₽`;
-    }
-
-    // ===== THEME =====
-    function toggleTheme() {
-      const html = document.documentElement;
-      const currentTheme = html.getAttribute('data-theme') || 'dark';
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', newTheme);
-      localStorage.setItem('ghostmarket_theme', newTheme);
-      document.getElementById('btnTheme').textContent = newTheme === 'dark' ? '☀️' : '🌙';
-    }
-
-    const savedTheme = localStorage.getItem('ghostmarket_theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    document.getElementById('btnTheme').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-
-    // ===== TAB NAVIGATION =====
-    function switchTab(tabName) {
-      document.querySelectorAll('.page-content').forEach(page => {
-        page.classList.add('hidden');
-      });
-
-      const pageId = tabName + 'Page';
-      const selectedPage = document.getElementById(pageId);
-      if (selectedPage) {
-        selectedPage.classList.remove('hidden');
-      }
-
-      document.querySelectorAll('.tab-item').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.tab === tabName) {
-          btn.classList.add('active');
-        }
-      });
-
-      document.getElementById('scrollContent').scrollTop = 0;
-    }
-
-    // ===== RENDER GAMES CAROUSEL =====
-    function renderGamesCarousel() {
-      const carousel = document.getElementById('gamesCarousel');
-      carousel.innerHTML = games.map(game => `
-        <div class="game-card" onclick="selectGame('${game.id}')">
-          <div class="game-icon">${game.icon}</div>
-          <div class="game-name">${game.name}</div>
-          <div class="game-price">${game.price} ₽</div>
-          ${game.discount ? `<div class="game-discount">${game.discount}</div>` : ''}
-        </div>
-      `).join('');
-    }
-
-    // ===== RENDER GAME SELECTOR =====
-    function renderGameSelector() {
-      const selector = document.getElementById('gameSelectorInline');
-      selector.innerHTML = games.map(game => `
-        <button class="game-select-btn ${game.id === userState.selectedGame ? 'active' : ''}" 
-                onclick="selectGame('${game.id}')">
-          ${game.icon} ${game.name}
-        </button>
-      `).join('');
-    }
-
-    function selectGame(gameId) {
-      userState.selectedGame = gameId;
-      renderGameSelector();
-      updateFieldsContainer();
-      updateCatalog();
-      autoFillFields();
-      saveToLocalStorage();
-    }
-
-    // ===== RENDER COLOR PICKER =====
-    function renderColorPicker() {
-      const picker = document.getElementById('colorPicker');
-      picker.innerHTML = [0, 1, 2, 3].map(idx => `
-        <div class="color-dot color-dot-${idx} ${idx === userState.cardColor ? 'active' : ''}"
-             onclick="changeCardColor(${idx})"></div>
-      `).join('');
-    }
-
-    function changeCardColor(idx) {
-      userState.cardColor = idx;
-      renderColorPicker();
-      updateCardStyle();
-      saveToLocalStorage();
-      if (userState.animationsEnabled) {
-        document.getElementById('ghostCard').classList.add('animating');
-        setTimeout(() => {
-          document.getElementById('ghostCard').classList.remove('animating');
-        }, 600);
-      }
-    }
-
-    function updateCardStyle() {
-      const card = document.getElementById('ghostCard');
-      const gradients = [
-        'linear-gradient(135deg, #7c3aed 0%, #6366f1 100%)',
-        'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-        'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
-      ];
-      card.style.background = gradients[userState.cardColor];
-    }
-
-    // ===== FIELDS CONTAINER =====
-    function updateFieldsContainer() {
-      const container = document.getElementById('fieldsContainer');
-      const game = games.find(g => g.id === userState.selectedGame);
-      if (!game) return;
-
-      container.innerHTML = game.fields.map(field => {
-        const label = field === 'uid' ? 'Игровой ID (UID)' : 'Zone ID / Сервер';
-        const placeholder = field === 'uid' ? 'Введите ваш UID' : 'Введите Zone ID';
-        const value = field === 'uid' ? userState.savedUID : userState.savedZoneID;
-
+/* Catalog and purchase adjustments: apply discount if active */
+function updateCatalog() {
+  const container = document.getElementById('catalogContainer');
+  const game = games.find(g => g.id === userState.selectedGame);
+  if (!game) {
+    container.innerHTML = '<div class="muted small">Выберите игру</div>';
+    return;
+  }
+  const discount = getActiveDiscount();
+  container.innerHTML = `
+    <div class="catalog">
+      ${products.map(prod => {
+        const base = prod.price;
+        const final = Math.max(1, Math.round(base * (1 - discount)));
+        const canBuy = userState.balance >= final;
         return `
-          <div class="field-group">
-            <label class="field-label">${label}</label>
-            <input type="text" class="field-input" id="field_${field}" 
- 
-                   placeholder="${placeholder}" value="${value}">
-            <div class="field-error hidden" id="error_${field}"></div>
+          <div class="product-card">
+            <div class="product-icon">${prod.icon}</div>
+            <div>
+              <div class="product-name">${prod.name}</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">${game.name}</div>
+              <div class="product-price">${final} ₽${discount?` <small style="opacity:.7">(скидка ${Math.round(discount*100)}%)</small>`:''}</div>
+            </div>
+            <button class="game-select-btn" style="min-width: 86px;" ${canBuy ? '' : 'disabled'} onclick="buyProductQuick(${prod.id})">${canBuy ? '⚡ Купить' : 'Нет'} </button>
           </div>
         `;
-      }).join('');
-    }
+      }).join('')}
+    </div>
+  `;
+}
 
-    function autoFillFields() {
-      const game = games.find(g => g.id === userState.selectedGame);
-      if (!game) return;
+function buyProductQuick(productId) {
+  if (!validateFields()) {
+    showToast('❌ Заполните все поля');
+    triggerHaptic('notificationOccurred', 'error');
+    return;
+  }
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+  const discount = getActiveDiscount();
+  const finalPrice = Math.max(1, Math.round(product.price * (1 - discount)));
+  if (userState.balance < finalPrice) {
+    showModal('Недостаточно средств', `Для покупки нужно ещё ${finalPrice - userState.balance} ₽`, openBalancePanel);
+    return;
+  }
+  // confirm and complete
+  completePurchase(product, finalPrice, discount);
+}
 
-      game.fields.forEach(field => {
-        const input = document.getElementById(`field_${field}`);
-        if (input) {
-          if (field === 'uid') {
-            input.value = userState.savedUID;
-          } else if (field === 'zone') {
-            input.value = userState.savedZoneID;
-          }
-        }
-      });
-    }
+function completePurchase(product, finalPrice, discountApplied = 0) {
+  userState.balance -= finalPrice;
+  userState.spent += finalPrice;
+  // cashback with premium consideration
+  const cashbackPercent = userState.premiumStatus === 'premium_plus' ? 0.15 : (userState.premiumStatus === 'premium' ? 0.05 : 0.02);
+  userState.cashback += Math.floor(finalPrice * cashbackPercent);
+  const order = {
+    id: Date.now(),
+    item: product.name,
+    amount: finalPrice,
+    date: new Date().toLocaleString('ru-RU')
+  };
+  userState.orders.push(order);
+  userState.payments.push(order);
 
-    // ===== CATALOG =====
-    function updateCatalog() {
-      const container = document.getElementById('catalogContainer');
-      const game = games.find(g => g.id === userState.selectedGame);
-      if (!game) return;
+  // consume discount if used
+  if (discountApplied > 0) {
+    consumeActiveDiscount();
+    showToast('✅ Скидка применена и сброшена');
+  }
 
-      container.innerHTML = `
-        <div class="catalog">
-          ${products.map(prod => {
-            const canBuy = userState.balance >= prod.price;
-            return `
-            <div class="product-card">
-              <div class="product-icon">${prod.icon}</div>
-              <div class="product-info">
-                <div class="product-name">${prod.name}</div>
-                <div class="product-details">${game.name}</div>
-                <div class="product-pricing">
-                  <span class="product-price">${prod.price} ₽</span>
-                  ${prod.oldPrice ? `<span class="product-price-old">${prod.oldPrice} ₽</span>` : ''}
-                  ${prod.discount ? `<span class="product-discount">${prod.discount}</span>` : ''}
-                </div>
-              </div>
-              <div class="product-btn-group">
-                <button class="product-buy-btn quick" ${!canBuy ? 'disabled' : ''} onclick="buyProductQuick(${prod.id})" title="Купить в 1 клик">⚡</button>
-                <button class="product-buy-btn" ${!canBuy ? 'disabled' : ''} onclick="addToCart(${prod.id})" title="Добавить в корзину">🛒</button>
-              </div>
-            </div>
-          `}).join('')}
+  saveToLocalStorage();
+  updateHeaderBalance();
+  updateCardUI();
+  updateProfileUI();
+  showToast(`✅ Куплено: ${product.name} за ${finalPrice} ₽`);
+  triggerHaptic('notificationOccurred', 'success');
+  if (tg?.sendData) {
+    tg.sendData(JSON.stringify({ action: 'purchase', item: product.name, amount: finalPrice }));
+  }
+  // re-render catalog so displayed prices update
+  updateCatalog();
+}
+
+/* Inventory / Pass / Quests / Activations */
+
+function renderPassPage() {
+  const pass = userState.pass;
+  document.getElementById('passLevel').textContent = pass.level;
+  document.getElementById('passXp').textContent = pass.xp;
+  document.getElementById('passModeLabel').textContent = userState.premiumStatus === 'premium_plus' ? 'Режим: Premium+' : 'Режим: Free';
+  document.getElementById('passProgressFill').style.width = `${Math.min(100, (pass.xp / 100) * 100)}%`;
+  renderPassLine('premiumLine', premiumPlusItems, true);
+  renderPassLine('freeLine', freePassItems, false);
+  renderQuests();
+  renderInventoryGrids();
+}
+
+function renderPassLine(containerId, items, premiumLine) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  for (let level = 1; level <= 50; level++) {
+    const item = items[(level - 1) % items.length];
+    const card = document.createElement('div');
+    card.className = 'pass-card' + ((premiumLine && userState.premiumStatus !== 'premium_plus') ? ' locked' : '');
+    card.innerHTML = `
+      <div class="pass-icon">${item.icon}</div>
+      <strong>${item.name}</strong>
+      <small>Уровень ${level}</small>
+      ${premiumLine && userState.premiumStatus !== 'premium_plus' ? '<div class="locked-label">Закрыто</div>' : ''}
+    `;
+    container.appendChild(card);
+  }
+}
+
+function renderQuests() {
+  const container = document.getElementById('questsList');
+  container.innerHTML = '';
+  quests.forEach(quest => {
+    if (quest.premium && userState.premiumStatus === 'none') return;
+    const completed = userState.pass.questsCompleted.includes(quest.id);
+    const questCard = document.createElement('div');
+    questCard.className = 'quest-card';
+    questCard.innerHTML = `
+      <div class="quest-text">
+        <div class="quest-title">${quest.title}</div>
+        <div class="quest-meta">
+          <span>${quest.progress} / ${quest.max}</span>
+          <span>+${quest.xp} XP</span>
+          ${quest.premium ? '<span style="color:#fbbf24;">Premium</span>' : ''}
         </div>
-      `;
+      </div>
+      <button class="quest-action-btn" ${completed ? 'disabled' : ''} onclick="claimQuest(${quest.id})">
+        ${completed ? 'Забрано' : 'Забрать'}
+      </button>
+    `;
+    container.appendChild(questCard);
+  });
+}
+
+function claimQuest(questId) {
+  const quest = quests.find(q => q.id === questId);
+  if (!quest) return;
+  if (userState.pass.questsCompleted.includes(questId)) return;
+  if (quest.premium && userState.premiumStatus === 'none') {
+    showToast('🔒 Доступно только для Premium');
+    return;
+  }
+  userState.pass.questsCompleted.push(questId);
+  userState.pass.xp += quest.xp;
+  while (userState.pass.xp >= 100 && userState.pass.level < 50) {
+    userState.pass.xp -= 100;
+    userState.pass.level += 1;
+  }
+  // attach rarity heuristics for some rewards
+  const reward = { ...quest.reward };
+  reward.rarity = inferRarity(reward.name);
+  addInventoryItem(reward);
+  saveToLocalStorage();
+  renderPassPage();
+  showToast('✅ Опыт получен, предмет добавлен в рюкзак');
+  triggerHaptic('impactOccurred', 'medium');
+}
+
+function inferRarity(name) {
+  // simple mapping: valuable keywords -> Legendary/Epic
+  const legendary = ['Void', 'Nebula', 'Quantum', 'Supernova', 'Legend', 'Diamond'];
+  const epic = ['Wraith', 'Cyber', 'Anomalous', 'Mask', 'Core'];
+  if (legendary.some(k => name.includes(k))) return 'Legendary';
+  if (epic.some(k => name.includes(k))) return 'Epic';
+  if (name.includes('Phantom Key')) return 'Rare';
+  if (name.includes('Soul Shard')) return 'Common';
+  return 'Common';
+}
+
+function addInventoryItem(item) {
+  const full = {
+    id: Date.now() + Math.floor(Math.random()*999),
+    name: item.name,
+    icon: item.icon,
+    basePrice: item.basePrice || 100,
+    created: Date.now(),
+    rarity: item.rarity || inferRarity(item.name)
+  };
+  userState.pass.inventory.push(full);
+  saveToLocalStorage();
+}
+
+function renderInventoryGrids() {
+  const list = userState.pass.inventory;
+  const profileGrid = document.getElementById('inventoryGridProfile');
+  const passGrid = document.getElementById('inventoryGrid');
+  [profileGrid, passGrid].forEach(grid => {
+    if (!grid) return;
+    if (list.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 28px 8px;">
+          <div style="font-size: 13px; margin-bottom: 6px;">Рюкзак пуст</div>
+          <div style="font-size: 11px;">Забирай предметы из квестов и продавай на бирже.</div>
+        </div>`;
+      return;
     }
+    grid.innerHTML = list.map((item, index) => `
+      <div class="inventory-card" onclick="openExchangeModal(${index})">
+        <div class="inventory-icon">${item.icon}</div>
+        <div class="inventory-name">${item.name}</div>
+        <div class="inventory-subtitle">≈ ${item.basePrice} ₽ • ${item.rarity}</div>
+        <div class="inventory-price">GCOIN готов</div>
+      </div>
+    `).join('');
+  });
+}
 
-    // ===== VALIDATION =====
-    function validateFields() {
-      const game = games.find(g => g.id === userState.selectedGame);
-      if (!game) return false;
+/* Exchange modal: updated to support activation, direct sell, or listing to auction */
+function openExchangeModal(index) {
+  const item = userState.pass.inventory[index];
+  if (!item) return;
+  currentExchange = { ...item, index };
+  // compute volatility / price estimate
+  const volatility = Math.random() > 0.5 ? 'Высокая' : 'Средняя';
+  const change = (Math.random() * 20 - 10).toFixed(1);
+  const price = item.basePrice + Math.round((Math.random() * 60) - 30);
+  currentExchange.price = Math.max(20, price);
+  currentExchange.change = change;
+  currentExchange.volatility = volatility;
 
-      let valid = true;
-      game.fields.forEach(field => {
-        const input = document.getElementById(`field_${field}`);
-        const errorDiv = document.getElementById(`error_${field}`);
-        const value = input.value.trim();
+  // Build modal content with Activate / Sell / Auction options
+  const isValuable = (item.rarity === 'Epic' || item.rarity === 'Legendary');
+  const modalHtml = `
+    <div style="display:flex;gap:12px;align-items:center">
+      <div style="font-size:36px">${item.icon}</div>
+      <div>
+        <div style="font-weight:800">${item.name}</div>
+        <div class="muted small">≈ ${item.basePrice} ₽ • ${volatility} • ${item.rarity}</div>
+      </div>
+    </div>
+    <div style="margin-top:12px" id="exchangeActions">
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="modal-btn confirm" id="activateBtn">⚡ Активировать/Использовать</button>
+        <button class="modal-btn cancel" id="sellBtn">💸 Продать на бирже</button>
+        ${isValuable ? `<button class="modal-btn confirm" id="listAuctionBtn">🏷️ Выставить на аукцион</button>` : ''}
+      </div>
+    </div>
+  `;
+  document.getElementById('exchangeTitle').textContent = item.name;
+  document.getElementById('exchangeIcon').textContent = item.icon;
+  document.getElementById('exchangeType').textContent = `Волатильность: ${volatility}`;
+  document.getElementById('exchangePrice').textContent = `${currentExchange.price} ₽`;
+  document.getElementById('exchangeTrend').textContent = `${change >= 0 ? '📈 Выросло на ' : '📉 Упало на '}${Math.abs(change)}%`;
+  document.getElementById('exchangeDescription').textContent = 'Продайте предмет и получите Ghost Coin на баланс.';
+  document.getElementById('exchangeModalBackdrop').classList.add('visible');
 
-        if (!value) {
-          input.classList.add('error');
-          errorDiv.textContent = 'Это поле обязательно';
-          errorDiv.classList.remove('hidden');
-          valid = false;
-        } else {
-          input.classList.remove('error');
-          errorDiv.classList.add('hidden');
-        }
-      });
+  // render actions into modal body (we use existing exchange-body area)
+  // find exchange-body and inject action buttons container if exists
+  const exchangeBody = document.querySelector('.exchange-body');
+  if (exchangeBody) {
+    // append the actions and preview content inside the exchange modal body
+    exchangeBody.querySelector('#exchangeName')?.parentElement; // no-op to ensure exist
+  }
 
-      return valid;
+  // add event listeners for new action buttons
+  setTimeout(() => { // slight delay to ensure DOM nodes are present
+    const activateBtn = document.getElementById('activateBtn');
+    const sellBtn = document.getElementById('sellBtn');
+    const listAuctionBtn = document.getElementById('listAuctionBtn');
+
+    activateBtn?.addEventListener('click', () => {
+      handleActivateItem(currentExchange.index);
+    });
+    sellBtn?.addEventListener('click', () => {
+      // direct sell on exchange
+      sellExchangeItem();
+    });
+    listAuctionBtn?.addEventListener('click', () => {
+      // list item for auction (only for Epic/Legendary)
+      listItemToAuction(currentExchange.index);
+    });
+  }, 50);
+}
+
+function closeExchangeModal() {
+  currentExchange = null;
+  document.getElementById('exchangeModalBackdrop').classList.remove('visible');
+}
+
+/* Activation logic per requirements */
+function handleActivateItem(index) {
+  const it = userState.pass.inventory[index];
+  if (!it) {
+    showToast('Предмет не найден');
+    return;
+  }
+  const name = it.name;
+
+  // Soul Shard activation: need 5 -> set discount 10%
+  if (name.includes('Soul Shard')) {
+    const shards = userState.pass.inventory.filter(i => i.name.includes('Soul Shard'));
+    if (shards.length < 5) {
+      showToast('Соберите 5 Soul Shard, чтобы активировать скидку');
+      return;
     }
+    // remove 5 shards
+    let removed = 0;
+    userState.pass.inventory = userState.pass.inventory.filter(i => {
+      if (removed < 5 && i.name.includes('Soul Shard')) { removed++; return false; }
+      return true;
+    });
+    userState.active_discount = 0.10;
+    localStorage.setItem('active_discount', '0.10');
+    saveToLocalStorage();
+    renderInventoryGrids();
+    updateCatalog();
+    showToast('Вы получили скидку 10% на следующую покупку доната!');
+    closeExchangeModal();
+    return;
+  }
 
-    // ===== CART OPERATIONS =====
-    function addToCart(productId) {
-      if (!validateFields()) {
-        showToast('❌ Заполните все поля!');
-        triggerHaptic('notificationOccurred', 'error');
-        return;
-      }
+  // Quantum Vault activation: requires Phantom Key in inventory
+  if (name.includes('Quantum Vault')) {
+    const keyIndex = userState.pass.inventory.findIndex(i => i.name.includes('Phantom Key'));
+    if (keyIndex === -1) {
+      showToast('Для открытия нужен Phantom Key!');
+      return;
+    }
+    // remove the vault and the key
+    // remove vault (current index) and the key (keyIndex)
+    const vaultId = it.id;
+    userState.pass.inventory = userState.pass.inventory.filter(i => i.id !== vaultId);
+    // careful: if keyIndex refers to old array, remove by name search now
+    const keyRemovedIndex = userState.pass.inventory.findIndex(i => i.name.includes('Phantom Key'));
+    if (keyRemovedIndex !== -1) userState.pass.inventory.splice(keyRemovedIndex, 1);
+    // generate promo code result
+    userState.promoCode = 'GHOST-GIFT-777';
+    saveToLocalStorage();
+    renderInventoryGrids();
+    showToast('Ваш промокод на 60 UC / 30 гемов: GHOST-GIFT-777');
+    closeExchangeModal();
+    return;
+  }
 
-      const product = products.find(p => p.id === productId);
-      const game = games.find(g => g.id === userState.selectedGame);
+  // Anomalous Cipher activation: once per week reward
+  if (name.includes('Anomalous Cipher')) {
+    const last = parseInt(localStorage.getItem('anomalous_last') || '0', 10);
+    const weekMs = 7 * 24 * 60 * 60 * 1000;
+    if (Date.now() - last < weekMs) {
+      showToast('Anomalous Cipher можно использовать раз в неделю');
+      return;
+    }
+    localStorage.setItem('anomalous_last', String(Date.now()));
+    // no item removal required by spec — if intended to be consumable, remove it
+    // We'll keep it but can be removed if desired. Here we do not remove.
+    showToast('Начислено 20 Telegram Stars! Передайте ID администратору');
+    closeExchangeModal();
+    return;
+  }
 
-      const cartItem = {
-        id: Date.now(),
-        productId,
-        productName: product.name,
-        gameName: game.name,
-        price: product.price,
-        uid: document.getElementById('field_uid')?.value || '',
-        zone: document.getElementById('field_zone')?.value || ''
-      };
+  // Default: attempt to "use" item: simple message
+  showToast('Этот предмет нельзя активировать прямо сейчас');
+}
 
-      userState.cart.push(cartItem);
+/* Sell directly on exchange */
+function sellExchangeItem() {
+  if (!currentExchange) return;
+  const item = currentExchange;
+  const amount = Math.max(1, Math.round(item.price * 0.12));
+  // remove by index; ensure index still valid
+  if (typeof item.index === 'number' && userState.pass.inventory[item.index] && userState.pass.inventory[item.index].id === item.id) {
+    userState.pass.inventory.splice(item.index, 1);
+  } else {
+    // fallback: remove first match by id
+    const idx = userState.pass.inventory.findIndex(i => i.id === item.id);
+    if (idx !== -1) userState.pass.inventory.splice(idx, 1);
+  }
+  userState.ghostCoin += amount;
+  saveToLocalStorage();
+  renderInventoryGrids();
+  updateProfileUI();
+  closeExchangeModal();
+  showToast(`💸 Предмет продан, получено ${amount} GCOIN`);
+  triggerHaptic('notificationOccurred', 'success');
+}
+
+/* Auction: list item and bots will bid */
+function listItemToAuction(index) {
+  const item = userState.pass.inventory[index];
+  if (!item) return;
+  const rarity = item.rarity || inferRarity(item.name);
+  const isValuable = (rarity === 'Epic' || rarity === 'Legendary');
+  if (!isValuable) {
+    showToast('Этот предмет нельзя выгодно выставить на аукцион');
+    return;
+  }
+
+  // remove from inventory and create auction lot
+  const removed = userState.pass.inventory.splice(index, 1)[0];
+  const lotId = 'lot-' + (Date.now() + Math.floor(Math.random()*999));
+  const startingBid = Math.max(50, Math.round(removed.basePrice * 0.6));
+  const lot = {
+    id: lotId,
+    name: removed.name,
+    icon: removed.icon,
+    owner: userState.username,
+    currentBid: startingBid,
+    highestBidder: userState.username, // user starts as highest bidder
+    createdAt: Date.now(),
+    timeEnd: Date.now() + 60 * 1000, // 60s auction for demo
+    itemData: removed
+  };
+  userState.auctionLots = userState.auctionLots || [];
+  userState.auctionLots.push(lot);
+  saveToLocalStorage();
+  showToast(`Предмет выставлен на аукцион: стартовая ставка ${startingBid} GCOIN`);
+  closeExchangeModal();
+
+  // start bot bidding process for this lot
+  startAuctionBotsForLot(lot.id);
+  renderAuctionList();
+  renderInventoryGrids();
+}
+
+/* Auction UI renderer (placed into orders list area) */
+function renderAuctionList() {
+  const container = document.getElementById('ordersList');
+  if (!userState.auctionLots || userState.auctionLots.length === 0) {
+    container.innerHTML = '<div class="muted small">Аукцион пуст</div>';
+    return;
+  }
+  container.innerHTML = userState.auctionLots.map(l => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);margin-top:8px">
+      <div>
+        <strong>${l.icon} ${l.name}</strong>
+        <div class="muted small">Ставка: ${l.currentBid} GCOIN • Владелец: ${l.owner}</div>
+        <div class="muted small">Окончание: ${Math.max(0, Math.ceil((l.timeEnd - Date.now())/1000))}с</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="modal-btn confirm" onclick="userBid('${l.id}')">🔥 +10</button>
+        <button class="modal-btn cancel" onclick="viewLot('${l.id}')">👁️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* user placing bid on lot (manual) */
+function userBid(lotId) {
+  const lot = (userState.auctionLots || []).find(x => x.id === lotId);
+  if (!lot) return;
+  const inc = 10;
+  if (userState.ghostCoin < inc) { showToast('Недостаточно GCOIN для ставки'); return; }
+  userState.ghostCoin -= inc;
+  lot.currentBid += inc;
+  lot.highestBidder = userState.username;
+  // extend auction slightly
+  lot.timeEnd = Math.max(lot.timeEnd, Date.now() + 30*1000);
+  saveToLocalStorage();
+  renderAuctionList();
+  updateProfileUI();
+  showToast(`Ставка +${inc} GCOIN`);
+}
+
+/* start bots bidding with randomized intervals until auction ends */
+function startAuctionBotsForLot(lotId) {
+  if (!userState.auctionLots) return;
+  const lot = userState.auctionLots.find(l => l.id === lotId);
+  if (!lot) return;
+  // avoid duplicate timers
+  if (activeAuctionsTimers[lotId]) return;
+
+  function botCycle() {
+    const now = Date.now();
+    if (now >= lot.timeEnd) {
+      finalizeAuctionLot(lotId);
+      return;
+    }
+    // pick random bot
+    const bot = auctionBots[Math.floor(Math.random() * auctionBots.length)];
+    // bot decides to outbid with 60% probability
+    if (Math.random() < 0.6) {
+      lot.currentBid += 10;
+      lot.highestBidder = bot;
+      // extend auction a bit to simulate activity
+      lot.timeEnd = Math.max(lot.timeEnd, Date.now() + 30*1000);
       saveToLocalStorage();
-      showToast('✅ Товар добавлен в корзину!');
-      triggerHaptic('notificationOccurred', 'success');
+      renderAuctionList();
     }
+    // schedule next bot action in 10-15s
+    const nextDelay = 10000 + Math.floor(Math.random() * 5000);
+    activeAuctionsTimers[lotId] = setTimeout(botCycle, nextDelay);
+  }
 
-    function buyProductQuick(productId) {
-      if (!validateFields()) {
-        showToast('❌ Заполните все поля!');
-        triggerHaptic('notificationOccurred', 'error');
-        return;
-      }
+  // first call after a random short delay to simulate immediate bids
+  const initialDelay = 3000 + Math.floor(Math.random() * 4000);
+  activeAuctionsTimers[lotId] = setTimeout(botCycle, initialDelay);
+}
 
-      const product = products.find(p => p.id === productId);
+/* finalize auction: winner receives or seller gets coins */
+function finalizeAuctionLot(lotId) {
+  const lots = userState.auctionLots || [];
+  const lotIndex = lots.findIndex(l => l.id === lotId);
+  if (lotIndex === -1) return;
+  const lot = lots[lotIndex];
 
-      if (userState.balance < product.price) {
-        showModal(
-          '❌ Недостаточно средств',
-          `Вам не хватает ${product.price - userState.balance} ₽ для покупки "${product.name}". Пополните баланс?`,
-          () => {
-            openBalancePanel();
-          }
-        );
-        return;
-      }
+  // determine winner
+  const winner = lot.highestBidder;
+  const finalBid = lot.currentBid;
 
-      processPurchase(product.price, product.name);
+  // if winner is the original owner (no bids), then return item to owner
+  if (winner === lot.owner) {
+    // return item to owner's inventory
+    if (lot.itemData) userState.pass.inventory.push(lot.itemData);
+    showToast(`Лот ${lot.name} не продан — возвращён владельцу`);
+  } else if (winner === userState.username) {
+    // user won: add item to inventory
+    if (lot.itemData) userState.pass.inventory.push(lot.itemData);
+    showToast(`Вы выиграли лот: ${lot.name} за ${finalBid} GCOIN`);
+  } else {
+    // some bot won: seller receives GCOIN (simulate)
+    const sellerGain = Math.max(1, Math.round(finalBid * 0.8));
+    if (lot.owner === userState.username) {
+      userState.ghostCoin += sellerGain;
+      showToast(`Ваш лот ${lot.name} продан за ${finalBid} GCOIN (+${sellerGain} GCOIN)`);
+    } else {
+      // other player sold; nothing to do in our simulation
     }
+  }
 
-    // ===== PURCHASE LOGIC =====
-    function processPurchase(amount, itemName) {
-      if (userState.animationsEnabled) {
-        animateCardPayment(amount, itemName);
-      } else {
-        completePayment(amount, itemName);
-      }
+  // clear timers
+  if (activeAuctionsTimers[lotId]) {
+    clearTimeout(activeAuctionsTimers[lotId]);
+    delete activeAuctionsTimers[lotId];
+  }
+
+  // remove lot from list
+  userState.auctionLots = userState.auctionLots.filter(l => l.id !== lotId);
+  saveToLocalStorage();
+  renderAuctionList();
+  renderInventoryGrids();
+  updateProfileUI();
+}
+
+/* resume auction timers after reload */
+function resumeAuctionTimers() {
+  if (!userState.auctionLots || !userState.auctionLots.length) return;
+  userState.auctionLots.forEach(lot => {
+    // if already expired, finalize immediately
+    if (Date.now() >= lot.timeEnd) {
+      finalizeAuctionLot(lot.id);
+    } else {
+      startAuctionBotsForLot(lot.id);
     }
+  });
+}
 
-    function animateCardPayment(amount, itemName) {
-      const card = document.getElementById('ghostCard');
-      card.classList.add('animating');
+/* utility viewLot (inspect) */
+function viewLot(lid) {
+  const lot = (userState.auctionLots || []).find(x => x.id === lid);
+  if (!lot) return;
+  showModal(`${lot.icon} ${lot.name}`, `Ставка: ${lot.currentBid} GCOIN • Заканчивается через ${Math.max(0, Math.ceil((lot.timeEnd - Date.now())/1000))}с`, () => userBid(lid));
+}
 
-      setTimeout(() => {
-        completePayment(amount, itemName);
-        card.classList.remove('animating');
-      }, 600);
-    }
+/* Admin & promo */
+function generatePromoCode() {
+  const suffix = Math.floor(1000 + Math.random() * 9000);
+  userState.promoCode = `GHOST-${suffix}-RAND`;
+  saveToLocalStorage();
+  document.getElementById('adminPromoCode').textContent = userState.promoCode;
+  showToast('🎁 Промокод создан');
+}
 
-    function completePayment(amount, itemName) {
-      userState.balance -= amount;
-      userState.totalSpent += amount;
-      userState.accumulatedCashback += Math.floor(amount * 0.02);
-      userState.spent += amount;
+function renderAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  if (!panel) return;
+  if (userState.username === 'henotsosal') {
+    panel.classList.remove('hidden');
+    document.getElementById('adminPromoCode').textContent = userState.promoCode || 'Ни одного кода ещё нет';
+  } else {
+    panel.classList.add('hidden');
+  }
+}
 
-      const order = {
-        id: userState.orders.length + 1,
-        item: itemName,
-        amount: amount,
-        date: new Date().toLocaleString('ru-RU'),
-        uid: document.getElementById('field_uid')?.value || 'N/A'
-      };
-      userState.orders.push(order);
-      userState.payments.push(order);
+/* Profile / card UI */
+function updateCardUI() {
+  document.getElementById('cardBalance').textContent = `Баланс: ${userState.balance} ₽`;
+  document.getElementById('totalSpent').textContent = `${userState.spent} ₽`;
+  document.getElementById('accumulatedCashback').textContent = `${userState.cashback} ₽`;
+  document.getElementById('profileCoin').textContent = `${userState.ghostCoin} GCOIN`;
+  updateCardStyle();
+  if (userState.cardHidden) {
+    document.getElementById('ghostCard').classList.add('hidden');
+    document.getElementById('cardToggleIcon').classList.add('hidden');
+  } else {
+    document.getElementById('ghostCard').classList.remove('hidden');
+    document.getElementById('cardToggleIcon').classList.remove('hidden');
+  }
+}
 
-      saveToLocalStorage();
-      updateCardUI();
-      updateHeaderBalance();
-      updateProfileUI();
-      updateCatalog();
-      showToast(`✅ Успешно куплено: ${itemName}`);
-      triggerHaptic('notificationOccurred', 'success');
+function changeCardColor(idx) {
+  userState.cardColor = idx;
+  saveToLocalStorage();
+  renderColorPicker();
+  updateCardStyle();
+  if (userState.animationsEnabled) {
+    const card = document.getElementById('ghostCard');
+    card.style.transform = 'scale(1.02)';
+    setTimeout(() => card.style.transform = 'none', 220);
+  }
+}
 
-      if (tg.sendData) {
-        tg.sendData(JSON.stringify({
-          action: 'purchase',
-          item: itemName,
-          amount: amount,
-          timestamp: new Date().toISOString()
-        }));
-      }
-    }
+function updateCardStyle() {
+  const card = document.getElementById('ghostCard');
+  const gradients = [
+    'linear-gradient(135deg, #7c3aed 0%, #6366f1 100%)',
+    'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+    'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    'linear-gradient(135deg, #1f2937 0%, #111827 100%)'
+  ];
+  card.style.background = gradients[userState.cardColor] || gradients[0];
+}
 
-    // ===== DONATION ALERTS INTEGRATION =====
-    function openDonationAlerts(amount) {
-      if (amount < 100) {
-        showToast('Минимальное пополнение — 100 ₽');
-        return;
-      }
+function renderColorPicker() {
+  const picker = document.getElementById('colorPicker');
+  if (!picker) return;
+  picker.innerHTML = [0,1,2,3].map(idx => `
+    <div class="color-dot color-dot-${idx} ${idx === userState.cardColor ? 'active' : ''}" onclick="changeCardColor(${idx})"></div>
+  `).join('');
+}
 
-      const uid = document.getElementById('settingsUID')?.value.trim() || userState.savedUID || 'не указан';
-      const zoneName = document.getElementById('settingsZoneID')?.value.trim() || userState.savedZoneID || '';
+function toggleCardVisibility() {
+  userState.cardHidden = !userState.cardHidden;
+  saveToLocalStorage();
+  updateCardUI();
+}
 
-      let comment = `GhostMarket | UID: ${uid}`;
-      if (zoneName) {
-        comment += ` | Zone: ${zoneName}`;
-      }
-      comment += ` | @${userState.username}`;
+function updateProfileUI() {
+  document.getElementById('profileAvatar').textContent = (userState.firstName || 'G').charAt(0).toUpperCase();
+  document.getElementById('profileName').textContent = userState.firstName || 'Ghost';
+  document.getElementById('profileUsername').textContent = `@${userState.username}`;
+  document.getElementById('profileOrders').textContent = userState.orders.length;
+  document.getElementById('profileSpent').textContent = `${userState.spent} ₽`;
+  document.getElementById('profileCashback').textContent = `${userState.cashback} ₽`;
+  document.getElementById('settingsUID').value = userState.savedUID || '';
+  document.getElementById('settingsZoneID').value = userState.savedZoneID || '';
+  updateToggleUI();
+  updatePremiumSection();
+  renderAdminPanel();
+}
 
-      const encodedComment = encodeURIComponent(comment);
-      const paymentPage = `pay.html?amount=${amount}&comment=${encodedComment}`;
+/* Premium */
+function updateToggleUI() {
+  const button = document.getElementById('toggleAnimations');
+  if (!button) return;
+  button.classList.toggle('active', userState.animationsEnabled);
+  button.textContent = userState.animationsEnabled ? 'Анимации вкл' : 'Анимации выкл';
+}
 
-      closeBalancePanel();
-      showToast('🔄 Открываю страницу оплаты...');
+function refreshPremiumStatus() {
+  if (userState.premiumExpires && Date.now() > userState.premiumExpires) {
+    userState.premiumStatus = 'none';
+    userState.premiumExpires = null;
+    saveToLocalStorage();
+  }
+}
 
-      // Открываем локальную страницу оплаты (pay.html)
-      if (tg.openLink) {
-        tg.openLink(paymentPage);
-      } else {
-        window.location.href = paymentPage;
-      }
-    }
+function formatRemaining(ms) {
+  const hours = Math.floor((ms / 1000 / 60 / 60) % 24);
+  const days = Math.floor(ms / 1000 / 60 / 60 / 24);
+  return `${days} д ${hours} ч`;
+}
 
-    function saveDonationAttempt(amount, uid) {
-      const attempt = {
-        timestamp: new Date().toISOString(),
-        amount: amount,
-        uid: uid,
-        status: 'pending'
-      };
-
-      let attempts = JSON.parse(localStorage.getItem('donation_attempts') || '[]');
-      attempts.push(attempt);
-      localStorage.setItem('donation_attempts', JSON.stringify(attempts.slice(-50)));
-      
-      console.log('💾 Сохранена попытка платежа:', attempt);
-    }
-
-    // ===== CARD UI UPDATE =====
-    function updateCardUI() {
-      document.getElementById('cardBalance').textContent = `Баланс: ${userState.balance} ₽`;
-      document.getElementById('totalSpent').textContent = `${userState.totalSpent} ₽`;
-      document.getElementById('accumulatedCashback').textContent = `${userState.accumulatedCashback} ₽`;
-      updateCardStyle();
-    }
-
-    // ===== CARD VISIBILITY =====
-    function toggleCardVisibility() {
-      const card = document.getElementById('ghostCard');
-      const icon = document.querySelector('.card-toggle-icon');
-
-      userState.cardHidden = !userState.cardHidden;
-      saveToLocalStorage();
-
-      if (userState.cardHidden) {
-        card.classList.add('hidden');
-        icon.classList.add('hidden');
-      } else {
-        card.classList.remove('hidden');
-        icon.classList.remove('hidden');
-      }
-    }
-
-    // ===== PROFILE UI UPDATE =====
-    function updateProfileUI() {
-      const avatar = userState.firstName.charAt(0).toUpperCase();
-      document.getElementById('profileAvatar').textContent = avatar;
-      document.getElementById('profileName').textContent = userState.firstName;
-      document.getElementById('profileUsername').textContent = `@${userState.username}`;
-      document.getElementById('profileOrders').textContent = userState.orders.length;
-      document.getElementById('profileSpent').textContent = `${userState.spent} ₽`;
-      document.getElementById('profileCashback').textContent = `${userState.accumulatedCashback} ₽`;
-
-      const statusBadge = document.getElementById('profileStatus');
-      if (userState.premiumStatus === 'premium_plus') {
-        statusBadge.textContent = '👑 Ghost Premium+';
-      } else if (userState.premiumStatus === 'premium') {
-        statusBadge.textContent = '⭐ Ghost Premium';
-      } else {
-        statusBadge.textContent = '🎮 Обычный игрок';
-      }
-
-      updatePremiumSection();
-      updatePaymentHistory();
-      updateOrdersList();
-
-      document.getElementById('settingsUID').value = userState.savedUID;
-      document.getElementById('settingsZoneID').value = userState.savedZoneID;
-      updateToggleUI();
-    }
-
-    function updateToggleUI() {
-      const toggle = document.getElementById('toggleAnimations');
-      if (userState.animationsEnabled) {
-        toggle.classList.add('active');
-      } else {
-        toggle.classList.remove('active');
-      }
-    }
-
-    function updatePaymentHistory() {
-      const container = document.getElementById('paymentHistory');
-      if (userState.payments.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Пока нет платежей</div>`;
-        return;
-      }
-
-      container.innerHTML = userState.payments.slice().reverse().map(p => `
-        <div class="payment-item">
-          <div class="payment-item-info">
-            <div class="payment-item-title">${p.item}</div>
-            <div class="payment-item-detail">${p.date}</div>
-          </div>
-          <div class="payment-item-amount">-${p.amount} ₽</div>
+function updatePremiumSection() {
+  const container = document.getElementById('premiumSection');
+  refreshPremiumStatus();
+  if (!container) return;
+  if (userState.premiumStatus === 'none') {
+    container.innerHTML = `
+      <div class="premium-card">
+        <div style="font-size: 15px; font-weight: 800; margin-bottom: 10px;">👑 Перейди на Ghost Premium</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+          Выгодный кэшбэк, дополнительные функции и доступ к Ghost Pass.
         </div>
-      `).join('');
-    }
-
-    function updateOrdersList() {
-      const container = document.getElementById('ordersList');
-      if (userState.orders.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 12px;">Здесь появятся ваши заказы 📦</div>`;
-        return;
-      }
-
-      container.innerHTML = userState.orders.slice().reverse().map(o => `
-        <div class="payment-item">
-          <div class="payment-item-info">
-            <div class="payment-item-title">${o.item}</div>
-            <div class="payment-item-detail">UID: ${o.uid} • ${o.date}</div>
-          </div>
-          <div class="payment-item-amount">-${o.amount} ₽</div>
+        <div style="display: grid; gap: 12px;">
+          <button class="premium-btn" onclick="confirmPremium('premium')">Подписка Premium — 100 ₽</button>
+          <button class="premium-btn" onclick="confirmPremium('premium_plus')">Premium+ — 300 ₽</button>
         </div>
-      `).join('');
-    }
+      </div>
+    `;
+  } else {
+    const remaining = userState.premiumExpires ? formatRemaining(userState.premiumExpires - Date.now()) : '—';
+    const label = userState.premiumStatus === 'premium_plus' ? '👑 Ghost Premium+' : '⭐ Ghost Premium';
+    const cashback = userState.premiumStatus === 'premium_plus' ? '15%' : '5%';
+    container.innerHTML = `
+      <div class="premium-card">
+        <div class="premium-status"><span>${label}</span></div>
+        <div class="premium-info">Вы получаете ${cashback} кэшбэка на все покупки и полный доступ к Ghost Pass.</div>
+        <div style="background: rgba(124, 58, 237, 0.08); border: 1px solid var(--border); border-radius: 18px; padding: 14px; margin-bottom: 16px;">
+          <div style="font-size: 13px; font-weight: 700;">Продление через:</div>
+          <div style="font-size: 14px; margin-top: 6px;">${remaining}</div>
+        </div>
+        <div class="premium-actions">
+          <button class="premium-btn" onclick="confirmPremium('${userState.premiumStatus}')">🔄 Продлить</button>
+          <button class="premium-btn cancel" onclick="showCancelPremium()">❌ Отменить</button>
+        </div>
+      </div>
+    `;
+  }
+}
 
-    // ===== PREMIUM SECTION =====
-    function updatePremiumSection() {
-      const container = document.getElementById('premiumSection');
+function confirmPremium(tier) {
+  const price = tier === 'premium_plus' ? 300 : 100;
+  const name = tier === 'premium_plus' ? 'Ghost Premium+' : 'Ghost Premium';
+  if (userState.balance < price) {
+    return showModal('Недостаточно средств', `Для подписки ${name} нужно еще ${price - userState.balance} ₽`, openBalancePanel);
+  }
+  showModal(`Подписка ${name}`, `Списание ${price} ₽. Продолжить?`, () => activatePremium(tier));
+}
 
-      if (userState.premiumStatus === 'none') {
-        container.innerHTML = `
-          <div class="card-section">
-            <div style="margin-bottom: 14px; font-weight: 800; font-size: 14px;">👑 Перейди на Premium</div>
-            
-            <div style="display: flex; flex-direction: column; gap: 14px;">
-              <div style="background: var(--bg-dark-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px;">
-                <div style="font-weight: 800; font-size: 14px; margin-bottom: 8px;">Ghost Premium</div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-                  +5% кэшбэк на все покупки<br>Эксклюзивные скидки<br>Приоритетная поддержка
-                </div>
-                <button class="premium-btn" onclick="buyPremium('premium')">Подписаться - 100 ₽/мес</button>
-              </div>
+function activatePremium(tier) {
+  const price = tier === 'premium_plus' ? 300 : 100;
+  userState.balance -= price;
+  userState.premiumStatus = tier;
+  userState.premiumExpires = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 дней
+  userState.spent += price;
+  saveToLocalStorage();
+  updateHeaderBalance();
+  updateCardUI();
+  updateProfileUI();
+  showToast('✅ Подписка активирована');
+  triggerHaptic('notificationOccurred', 'success');
+}
 
-              <div style="background: var(--bg-dark-card); border: 2px solid var(--accent-purple); border-radius: 14px; padding: 16px; animation: pulse 2s infinite;">
-                <div style="font-weight: 800; font-size: 14px; margin-bottom: 8px;">👑 Ghost Premium+</div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-                  +15% кэшбэк на все покупки<br>Секретные кейсы<br>Еженедельные промокоды<br>VIP поддержка 24/7
-                </div>
-                <button class="premium-btn" onclick="buyPremium('premium_plus')">Подписаться - 300 ₽/мес</button>
-              </div>
-            </div>
-          </div>
-        `;
-      } else {
-        const daysLeft = Math.ceil((userState.premiumExpires - Date.now()) / (1000 * 60 * 60 * 24));
-        const cashbackRate = userState.premiumStatus === 'premium_plus' ? 15 : 5;
+function showCancelPremium() {
+  const message = 'Если отменить подписку, вы потеряете кэшбэк и доступ к Ghost Pass Premium+. Продолжить?';
+  if (tg?.showPopup) {
+    tg.showPopup({
+      title: 'Отмена подписки',
+      message,
+      buttons: [
+        { id: 'cancel', type: 'secondary', text: 'Отмена' },
+        { id: 'confirm', type: 'default', text: 'Удалить' }
+      ]
+    }).then(result => {
+      if (result?.id === 'confirm') doCancelPremium();
+    }).catch(() => {});
+  } else {
+    if (confirm(message)) doCancelPremium();
+  }
+}
 
-        container.innerHTML = `
-          <div class="premium-section">
-            <div class="premium-status">
-              <span style="font-size: 20px;">${userState.premiumStatus === 'premium_plus' ? '👑' : '⭐'}</span>
-              <div class="premium-status-badge">${userState.premiumStatus === 'premium_plus' ? 'Ghost Premium+' : 'Ghost Premium'}</div>
-            </div>
-            <div class="premium-info">
-              🎁 Вы экономите ${cashbackRate}% с каждой покупке благодаря встроенному кэшбэку!
-            </div>
-            <div class="premium-cashback">
-              💰 +${cashbackRate}% кэшбэк на все покупки
-            </div>
-            <div class="premium-timer">
-              ⏰ Продление через: ${daysLeft} дней
-            </div>
-            <div class="premium-actions">
-              <button class="premium-btn" onclick="buyPremium('${userState.premiumStatus}')">🔄 Продлить</button>
-              <button class="premium-btn premium-btn-cancel" onclick="showCancelPremiumModal()">❌ Отменить</button>
-            </div>
-          </div>
-        `;
-      }
-    }
+function doCancelPremium() {
+  userState.premiumStatus = 'none';
+  userState.premiumExpires = null;
+  saveToLocalStorage();
+  updateProfileUI();
+  showToast('✅ Подписка отменена');
+}
 
-    function buyPremium(tier) {
-      const price = tier === 'premium' ? 100 : 300;
-      const tierName = tier === 'premium' ? 'Ghost Premium' : 'Ghost Premium+';
+/* Modal / Toast / Utilities */
+function showModal(title, body, onConfirm) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').textContent = body;
+  window.pendingAction = onConfirm;
+  document.getElementById('modalBackdrop').classList.add('visible');
+  document.getElementById('modalBackdrop').classList.remove('hidden');
+}
 
-      if (userState.balance < price) {
-        showModal(
-          '❌ Недостаточно средств',
-          `Вам не хватает ${price - userState.balance} ₽ для подписки на ${tierName}. Пополните баланс?`,
-          () => {
-            openBalancePanel();
-          }
-        );
-        return;
-      }
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('visible');
+  document.getElementById('modalBackdrop').classList.add('hidden');
+  window.pendingAction = null;
+}
 
-      showModal(
-        `Подписка на ${tierName}`,
-        `Это стоит ${price} ₽ в месяц. Вы получите все привилегии подписки. Продолжить?`,
-        () => {
-          userState.balance -= price;
-          userState.premiumStatus = tier;
-          userState.premiumExpires = Date.now() + (30 * 24 * 60 * 60 * 1000);
-          userState.spent += price;
-          saveToLocalStorage();
-          updateProfileUI();
-          updateCardUI();
-          updateHeaderBalance();
-          updateCatalog();
-          showToast(`✅ Подписка активирована!`);
-          triggerHaptic('notificationOccurred', 'success');
-        }
-      );
-    }
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2200);
+}
 
-    function showCancelPremiumModal() {
-      showModal(
-        'Отменить подписку?',
-        '⚠️ При отмене вы потеряете все привилегии: повышенный кэшбэк, доступ к секретным кейсам и еженедельным промокодам!',
-        () => {
-          userState.premiumStatus = 'none';
-          userState.premiumExpires = null;
-          saveToLocalStorage();
-          updateProfileUI();
-          showToast('✅ Подписка отменена');
-          triggerHaptic('notificationOccurred', 'success');
-        }
-      );
-    }
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).catch(() => alert(text));
+}
 
-    // ===== MODAL =====
-    function showModal(title, body, onConfirm) {
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalBody').textContent = body;
-      window.pendingAction = onConfirm;
-      document.getElementById('modalBackdrop').classList.add('visible');
-    }
+function triggerHaptic(type, style) {
+  const method = type || 'impactOccurred';
+  const value = style || 'light';
+  if (tg?.HapticFeedback?.[method]) {
+    tg.HapticFeedback[method](value);
+  }
+}
 
-    function closeModal() {
-      document.getElementById('modalBackdrop').classList.remove('visible');
-      window.pendingAction = null;
-    }
+/* init */
+initApp();
 
-    // ===== TOAST =====
-    function showToast(message) {
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.textContent = message;
-      document.body.appendChild(toast);
-
-      setTimeout(() => {
-        toast.remove();
-      }, 2000);
-    }
-
-    // ===== UTILS =====
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).catch(() => {
-        alert(text);
-      });
-    }
-
-    function triggerHaptic(method, type) {
-      if (tg.HapticFeedback && tg.HapticFeedback[method]) {
-        tg.HapticFeedback[method](type);
-      }
-    }
-
-    // ===== INIT =====
-    initApp();
   </script>
 </body>
 </html>
