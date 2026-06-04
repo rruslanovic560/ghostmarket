@@ -8,120 +8,33 @@
     :root {
       color-scheme: dark;
       color: #e6e3ff;
-      background: linear-gradient(180deg, #050613 0%, #090b16 45%, #060714 100%);
+      background: radial-gradient(circle at top left, rgba(124, 58, 237, .18), transparent 24%), radial-gradient(circle at bottom right, rgba(59, 130, 246, .14), transparent 22%), #050613;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Inter, system-ui, sans-serif;
-      background-image:
-        radial-gradient(circle at top left, rgba(124, 58, 237, .18), transparent 24%),
-        radial-gradient(circle at bottom right, rgba(59, 130, 246, .14), transparent 22%);
-    }
-    .box {
-      width: min(460px, calc(100% - 32px));
-      padding: 26px;
-      border-radius: 28px;
-      background: rgba(12, 14, 30, 0.96);
-      border: 1px solid rgba(124, 58, 237, 0.24);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.30);
-      backdrop-filter: blur(12px);
-    }
-    h1 {
-      margin: 0 0 12px;
-      font-size: 24px;
-      letter-spacing: .02em;
-      text-transform: uppercase;
-    }
-    .hint {
-      margin: 0 0 22px;
-      color: #9ca3af;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .row {
-      margin-bottom: 18px;
-    }
-    .label {
-      display: block;
-      margin-bottom: 8px;
-      color: #9ca3af;
-      font-size: 12px;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-    .value, .comment, .promo-note, .status {
-      width: 100%;
-      font-size: 18px;
-      line-height: 1.5;
-      color: #f8f8ff;
-      word-break: break-word;
-    }
-    .comment {
-      min-height: 48px;
-    }
-    input {
-      width: 100%;
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 14px;
-      background: rgba(15, 23, 42, 0.92);
-      padding: 14px 16px;
-      color: #eef2ff;
-      font-size: 15px;
-    }
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: Inter, system-ui, sans-serif; }
+    .box { width: min(520px, calc(100% - 32px)); padding: 28px; border-radius: 32px; background: rgba(8, 10, 24, 0.95); border: 1px solid rgba(124, 58, 237, 0.28); box-shadow: 0 40px 90px rgba(0,0,0,.32); backdrop-filter: blur(16px);}
+    h1 { margin: 0 0 10px; font-size: 26px; letter-spacing: .08em; text-transform: uppercase; }
+    .hint { margin: 0 0 22px; color: #9ca3af; font-size: 14px; line-height: 1.7; }
+    .row { margin-bottom: 18px; }
+    .label { display: block; margin-bottom: 8px; color: #9ca3af; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+    .value, .comment, .promo-note, .status { width: 100%; font-size: 18px; line-height: 1.5; color: #eef2ff; word-break: break-word; }
+    .comment { min-height: 48px; }
+    input { width: 100%; border: 1px solid rgba(148,163,184,.18); border-radius: 14px; background: rgba(15,23,42,.92); padding: 14px 16px; color: #eef2ff; font-size: 15px; }
     input::placeholder { color: #64748b; }
-    button {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 16px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #fff;
-      background: linear-gradient(90deg, #7c3aed 0%, #2563eb 100%);
-      transition: transform .18s ease, opacity .18s ease;
-      box-shadow: 0 18px 35px rgba(124, 58, 237, 0.20);
-    }
+    .stripe-element { padding: 14px 16px; border-radius: 14px; background: rgba(15,23,42,.92); border: 1px solid rgba(148,163,184,.18); }
+    button { width: 100%; padding: 15px; border: none; border-radius: 18px; font-size: 15px; font-weight: 700; cursor: pointer; color: #fff; background: linear-gradient(90deg, #7c3aed 0%, #2563eb 100%); transition: transform .18s ease, opacity .18s ease; box-shadow: 0 18px 35px rgba(124,58,237,.22); }
     button:active { transform: scale(.98); }
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-    .secondary {
-      margin-top: 12px;
-      background: rgba(255, 255, 255, 0.06);
-      color: #c7d2fe;
-      border: 1px solid rgba(148, 163, 184, 0.16);
-    }
-    .status {
-      margin-top: 16px;
-      color: #a5b4fc;
-      font-size: 13px;
-      min-height: 22px;
-    }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(99, 102, 241, 0.14);
-      color: #c7d2fe;
-      font-size: 13px;
-      margin-top: 6px;
-    }
+    button:disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
+    .secondary { margin-top: 12px; background: rgba(255,255,255,.06); color: #c7d2fe; border: 1px solid rgba(148,163,184,.16); }
+    .status { margin-top: 18px; color: #a5b4fc; font-size: 13px; min-height: 24px; }
+    .tag { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; background: rgba(99,102,241,.14); color: #c7d2fe; font-size: 13px; margin-top: 6px; }
   </style>
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
   <div class="box">
     <h1>Пополнение GhostMarket</h1>
-    <p class="hint">Оплачивая, ты открываешь портал. После подтверждения данные отправятся в бота, и баланс обновится автоматически.</p>
+    <p class="hint">Оплата проходит внутри WebApp. Карта вводится прямо здесь, а бот автоматически получает подтверждение.</p>
 
     <div class="row">
       <div class="label">Сумма к оплате</div>
@@ -137,7 +50,12 @@
     <div class="row">
       <label class="label" for="promo">Промокод</label>
       <input id="promo" type="text" placeholder="FIRST15" autocomplete="off" />
-      <div class="promo-note" id="promoNote">Введите промокод и нажмите оплатить.</div>
+      <div class="promo-note" id="promoNote">FIRST15 — 15% на первый заказ.</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Данные карты</div>
+      <div id="card-element" class="stripe-element"></div>
     </div>
 
     <button id="btnPay">Оплатить сейчас</button>
@@ -159,6 +77,10 @@
 
     let finalAmount = initialAmount;
     let activePromo = '';
+    const stripe = Stripe('pk_test_ВАШ_PUBLISHABLE_KEY');
+    const elements = stripe.elements();
+    const cardElement = elements.create('card', { style: { base: { color: '#eef2ff', fontSize: '16px', '::placeholder': { color: '#64748b' }, }, invalid: { color: '#ff6b6b' } } });
+    cardElement.mount('#card-element');
 
     function formatMoney(value) {
       return `${value.toLocaleString('ru-RU')} ₽`;
@@ -171,60 +93,87 @@
       const discountAmount = Math.floor(initialAmount * discount);
       finalAmount = initialAmount - discountAmount;
       amountLabel.textContent = formatMoney(finalAmount);
-
       if (!initialAmount) {
         promoNote.textContent = 'Сумма не задана. Вернись в магазин.';
       } else if (discount > 0) {
         promoNote.textContent = `Промокод принят: -${formatMoney(discountAmount)}.`;
       } else if (code.length > 0) {
-        promoNote.textContent = 'Неверный промокод, но можно продолжить оплату.';
+        promoNote.textContent = 'Неверный промокод, но карта всё равно может быть принята.';
       } else {
         promoNote.textContent = 'FIRST15 дает 15% скидку на первый заказ.';
       }
-
       btnPay.disabled = finalAmount < 100;
       if (finalAmount < 100 && initialAmount >= 100) {
-        btnPay.disabled = true;
-        status.textContent = 'После применения промокода сумма должна оставаться ≥ 100 ₽.';
+        status.textContent = 'Минимальная сумма пополнения — 100 ₽.';
       } else {
         status.textContent = '';
       }
     }
 
-    function sendPaymentResult() {
-      const payload = {
-        action: 'payment_success',
-        amount: finalAmount,
-        original_amount: initialAmount,
-        comment,
-        promo: activePromo,
-        timestamp: Date.now()
-      };
+    async function createPaymentIntent() {
+      const response = await fetch('/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: finalAmount })
+      });
+      return response.json();
+    }
 
-      status.textContent = '✨ Секунду... отправляем подтверждение в GhostMarket.';
+    async function sendPaymentResult(payload) {
       if (window.Telegram?.WebApp?.sendData) {
         window.Telegram.WebApp.sendData(JSON.stringify(payload));
         window.Telegram.WebApp.close();
       } else {
-        status.textContent = '⚠️ WebApp не найден. Перенаправляю на магазин.';
-        setTimeout(() => {
-          window.location.href = `index.html?payment_success=1&amount=${finalAmount}`;
-        }, 1200);
+        status.textContent = '⚠️ WebApp не найден. Попробуйте снова из Telegram.';
       }
     }
 
-    commentLabel.textContent = comment || 'Комментарий не задан';
     promoInput.value = params.get('promo') || '';
+    commentLabel.textContent = comment || 'Комментарий не задан';
     updateTotal();
 
     promoInput.addEventListener('input', updateTotal);
-    btnPay.addEventListener('click', () => {
+
+    btnPay.addEventListener('click', async () => {
       if (finalAmount < 100) {
         status.textContent = 'Минимальная сумма пополнения — 100 ₽.';
         return;
       }
       btnPay.disabled = true;
-      sendPaymentResult();
+      status.textContent = '🔮 Создаю платёж...';
+
+      const intentData = await createPaymentIntent();
+      if (intentData.error) {
+        status.textContent = `Ошибка: ${intentData.error}`;
+        btnPay.disabled = false;
+        return;
+      }
+
+      const { clientSecret } = intentData;
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: { card: cardElement }
+      });
+
+      if (error) {
+        status.textContent = `Ошибка оплаты: ${error.message}`;
+        btnPay.disabled = false;
+        return;
+      }
+
+      if (paymentIntent?.status === 'succeeded') {
+        status.textContent = '✨ Оплата подтверждена. Отправляем данные в бот...';
+        await sendPaymentResult({
+          action: 'payment_success',
+          amount: finalAmount,
+          original_amount: initialAmount,
+          comment,
+          promo: activePromo,
+          payment_id: paymentIntent.id
+        });
+      } else {
+        status.textContent = `Статус: ${paymentIntent?.status}`;
+        btnPay.disabled = false;
+      }
     });
 
     btnCancel.addEventListener('click', () => {
