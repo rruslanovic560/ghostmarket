@@ -4,11 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>GhostMarket — Premium Game Store</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       --bg-dark: #070814;
-      --card-dark: #0e1125;
+      --bg-dark-card: #0e1125;
       --accent-purple: #7c3aed;
       --accent-indigo: #6366f1;
       --text-light: #e4e4e7;
@@ -16,48 +17,274 @@
       --price-green: #10b981;
       --discount-red: #ef4444;
       --border-color: rgba(124, 58, 237, 0.08);
+      --shadow-neon: 0 0 20px rgba(124, 58, 237, 0.3);
       --success: #10b981;
       --warning: #f59e0b;
       --error: #ef4444;
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg-dark); color: var(--text-light); -webkit-font-smoothing: antialiased; }
-    body { overflow-x: hidden; }
+    [data-theme="light"] {
+      --bg-dark: #f4f6fa;
+      --bg-dark-card: #ffffff;
+      --text-light: #111827;
+      --text-muted: #6b7280;
+      --border-color: rgba(124, 58, 237, 0.08);
+      --shadow-neon: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
 
-    .app { display: flex; flex-direction: column; height: 100vh; }
-    .scroll-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    .page-content { animation: fadeIn 0.3s ease-in-out; }
+    body {
+      overflow-x: hidden;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: fixed;
+      width: 100%;
+      left: 0;
+      top: 0;
+    }
+
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px;
+      padding-bottom: 100px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+      }
+      50% {
+        opacity: 0.8;
+        box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes cardFlip {
+      0% {
+        transform: perspective(1200px) rotateY(0deg) scale(1);
+      }
+      50% {
+        transform: perspective(1200px) rotateY(90deg) scale(1.02);
+      }
+      100% {
+        transform: perspective(1200px) rotateY(0deg) scale(1);
+      }
+    }
+
+    @keyframes balanceShift {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      50% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes sparkFly {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(150px, -150px) scale(0);
+      }
+    }
+
+    @keyframes checkPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.2) rotate(-45deg);
+      }
+      70% {
+        transform: scale(1.15) rotate(10deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes slideRight {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp_reverse {
+      from {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    @keyframes cardPayment {
+      0% {
+        transform: scale(1) rotateZ(0deg);
+        box-shadow: 0 10px 40px rgba(124, 58, 237, 0.4);
+      }
+      50% {
+        transform: scale(1.08) rotateZ(-5deg);
+        box-shadow: 0 15px 60px rgba(124, 58, 237, 0.6);
+      }
+      100% {
+        transform: scale(1) rotateZ(0deg);
+        box-shadow: 0 10px 40px rgba(124, 58, 237, 0.4);
+      }
+    }
+
+    @keyframes moneyFly {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0);
+      }
+    }
+
+    .page-content {
+      animation: fadeIn 0.4s ease-out;
+    }
 
     /* ===== HEADER ===== */
     .header {
-      background: var(--card-dark);
+      background: var(--bg-dark-card);
       border-bottom: 1px solid var(--border-color);
-      padding: 12px 16px;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       backdrop-filter: blur(16px);
       z-index: 30;
+      position: relative;
     }
 
     .logo {
       font-weight: 800;
-      font-size: 18px;
+      font-size: 20px;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      flex: 1;
+      letter-spacing: -0.5px;
     }
 
-    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
     .btn-icon {
       width: 40px;
@@ -76,87 +303,411 @@
       position: relative;
     }
 
-    .btn-icon:active { transform: scale(0.92); background: rgba(124, 58, 237, 0.16); }
-
-    .btn-premium {
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(99, 102, 241, 0.2));
-      border: 1px solid var(--accent-purple);
-      color: var(--accent-purple);
-      font-weight: 700;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.24s;
-      white-space: nowrap;
-      -webkit-user-select: none;
-      user-select: none;
-      animation: pulse 2s infinite;
+    .btn-icon:active {
+      transform: scale(0.92);
+      background: rgba(124, 58, 237, 0.16);
     }
 
-    .btn-premium:active { transform: scale(0.96); }
-
-    /* ===== BANNER ===== */
-    .banner {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 20px 16px;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .banner-title { font-weight: 800; font-size: 18px; margin-bottom: 8px; line-height: 1.3; }
-    .banner-subtitle { color: var(--text-muted); font-size: 12px; margin-bottom: 14px; }
-
-    .banner-buttons { display: flex; gap: 10px; margin-top: 14px; }
-
-    .btn-banner {
-      flex: 1;
-      padding: 12px 14px;
+    .balance-btn-header {
+      width: 100%;
+      height: 40px;
       border-radius: 10px;
-      font-weight: 700;
-      font-size: 13px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
       border: none;
       cursor: pointer;
-      transition: all 0.24s;
-      min-height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all 0.24s;
       -webkit-user-select: none;
       user-select: none;
     }
 
-    .btn-banner-primary { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; }
-    .btn-banner-primary:active { transform: scale(0.96); opacity: 0.8; }
+    .balance-btn-header:active {
+      transform: scale(0.92);
+    }
 
-    .btn-banner-secondary { background: rgba(124, 58, 237, 0.08); border: 1px solid var(--border-color); color: var(--text-light); }
-    .btn-banner-secondary:active { background: rgba(124, 58, 237, 0.16); }
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 18px;
+      height: 18px;
+      background: var(--discount-red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: white;
+      animation: pulse 2s infinite;
+    }
 
-    /* ===== CONSTRUCTOR SECTION ===== */
-    .constructor-section {
-      background: var(--card-dark);
+    .btn-theme {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(124, 58, 237, 0.08);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      color: var(--text-light);
+      font-size: 18px;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .btn-theme:active {
+      transform: scale(0.92);
+    }
+
+    /* ===== BALANCE PANEL ===== */
+    .balance-panel-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      display: none;
+      z-index: 50;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .balance-panel-backdrop.visible {
+      display: block;
+    }
+
+    .balance-panel {
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 88%;
+      max-width: 360px;
+      background: var(--bg-dark-card);
+      border-left: 1px solid var(--border-color);
+      z-index: 60;
+      animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .balance-panel.hidden {
+      animation: slideOutRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .balance-panel-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg-dark-card);
+    }
+
+    .balance-panel-title {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .balance-panel-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.24s;
+    }
+
+    .balance-panel-close:active {
+      transform: scale(0.9);
+    }
+
+    .balance-panel-content {
+      flex: 1;
       padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .balance-info {
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .balance-info-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .balance-info-amount {
+      font-weight: 800;
+      font-size: 28px;
+      color: var(--price-green);
+    }
+
+    .balance-package-panel {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.24s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-package-panel:active {
+      background: rgba(124, 58, 237, 0.08);
+      transform: translateY(-2px);
+      border-color: var(--accent-purple);
+    }
+
+    .balance-badge-tag {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--discount-red);
+      color: white;
+      font-weight: 800;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .balance-amount-panel {
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--price-green);
+      margin-bottom: 4px;
+    }
+
+    .balance-price-panel {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .balance-btn-panel {
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      border: none;
+      color: white;
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .balance-btn-panel:active {
+      transform: scale(0.92);
+    }
+
+    /* ===== BANNER ===== */
+    .banner {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(99, 102, 241, 0.1));
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .banner-title {
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .banner-subtitle {
+      color: var(--text-muted);
+      font-size: 12px;
       margin-bottom: 16px;
     }
 
-    .constructor-title { font-weight: 800; font-size: 14px; margin-bottom: 12px; }
-
-    .game-selector {
+    /* ===== PROMO BANNER ===== */
+    .promo-banner {
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .promo-banner-text {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffc107;
+    }
+
+    .promo-banner-btn {
+      background: #ffc107;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.24s;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .promo-banner-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* ===== SECTION ===== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 24px 0 14px 0;
       gap: 8px;
+    }
+
+    .section-title {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    /* ===== GAMES CAROUSEL ===== */
+    .games-carousel {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0 0 12px 0;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-bottom: 20px;
+    }
+
+    .games-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .game-card {
+      flex: 0 0 140px;
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.24s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .game-card:active {
+      transform: scale(0.97);
+      border-color: var(--accent-purple);
+    }
+
+    .game-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .game-name {
+      font-weight: 700;
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .game-price {
+      color: var(--price-green);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .game-discount {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--discount-red);
+      color: white;
+      font-weight: 800;
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 6px;
+    }
+
+    /* ===== CONSTRUCTOR ===== */
+    .constructor {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .constructor-title {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .game-selector-inline {
+      display: flex;
+      gap: 6px;
       overflow-x: auto;
       margin-bottom: 14px;
       padding-bottom: 8px;
       scrollbar-width: none;
     }
 
-    .game-selector::-webkit-scrollbar { display: none; }
+    .game-selector-inline::-webkit-scrollbar {
+      display: none;
+    }
 
-    .game-btn {
+    .game-select-btn {
       flex: 0 0 auto;
       padding: 8px 12px;
       border-radius: 10px;
@@ -164,7 +715,7 @@
       border: 1px solid var(--border-color);
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
       transition: all 0.24s;
       white-space: nowrap;
@@ -172,8 +723,15 @@
       user-select: none;
     }
 
-    .game-btn:active { transform: scale(0.95); }
-    .game-btn.active { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; border-color: var(--accent-purple); }
+    .game-select-btn:active {
+      transform: scale(0.95);
+    }
+
+    .game-select-btn.active {
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: white;
+      border-color: var(--accent-purple);
+    }
 
     .field-group {
       display: flex;
@@ -182,98 +740,772 @@
       margin-bottom: 12px;
     }
 
-    .field-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
 
     .field-input {
       background: rgba(124, 58, 237, 0.04);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 10px 12px;
+      padding: 12px;
       color: var(--text-light);
       font-size: 13px;
-      font-family: Inter;
+      font-family: 'Inter', sans-serif;
       outline: none;
       transition: all 0.24s;
     }
 
-    .field-input:focus { border-color: var(--accent-purple); background: rgba(124, 58, 237, 0.08); }
-    .field-input::placeholder { color: var(--text-muted); opacity: 0.5; }
+    .field-input:focus {
+      border-color: var(--accent-purple);
+      background: rgba(124, 58, 237, 0.08);
+      box-shadow: 0 0 12px rgba(124, 58, 237, 0.15);
+    }
 
-    .field-input.error { border-color: var(--error); background: rgba(239, 68, 68, 0.1); }
-    .field-error { font-size: 11px; color: var(--error); margin-top: 2px; display: none; }
-    .field-error.show { display: block; }
+    .field-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
 
-    .pack-selector {
+    .field-input.error {
+      border-color: var(--error);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .field-error {
+      font-size: 10px;
+      color: var(--error);
+      margin-top: 2px;
+    }
+
+    /* ===== CATALOG ===== */
+    .catalog {
       display: flex;
       flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .product-card {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      transition: all 0.24s;
+      cursor: pointer;
+    }
+
+    .product-card:active {
+      background: rgba(124, 58, 237, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .product-icon {
+      flex: 0 0 50px;
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-name {
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .product-details {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .product-pricing {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .product-price {
+      font-weight: 800;
+      color: var(--price-green);
+      font-size: 14px;
+    }
+
+    .product-price-old {
+      color: var(--text-muted);
+      text-decoration: line-through;
+      font-size: 11px;
+    }
+
+    .product-discount {
+      background: var(--discount-red);
+      color: white;
+      font-weight: 800;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .product-btn-group {
+      display: flex;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .product-buy-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .product-buy-btn:active {
+      transform: scale(0.88);
+    }
+
+    .product-buy-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .product-buy-btn.quick {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ===== PROFILE SECTION ===== */
+    .profile-card {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      font-weight: 800;
+      flex: 0 0 auto;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    }
+
+    .profile-info {
+      text-align: left;
+      flex: 1;
+    }
+
+    .profile-name {
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+
+    .profile-username {
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .profile-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #ffc107;
+    }
+
+    .profile-stats {
+      display: flex;
       gap: 10px;
+      justify-content: space-between;
+      margin-top: 16px;
+    }
+
+    .profile-stat {
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--accent-purple);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ===== CARD SECTION ===== */
+    .card-section {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card-section-title {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: all 0.24s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .card-section-title:active {
+      transform: scale(0.96);
+    }
+
+    .card-toggle-icon {
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+
+    .card-toggle-icon.hidden {
+      transform: rotate(180deg);
+    }
+
+    .ghost-card {
+      width: 100%;
+      aspect-ratio: 1.6;
+      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+      border-radius: 20px;
+      padding: 20px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(124, 58, 237, 0.4), inset -2px -2px 5px rgba(0, 0, 0, 0.2), inset 2px 2px 5px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
+    .ghost-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+      pointer-events: none;
+      border-radius: 20px;
+    }
+
+    .ghost-card.animating {
+      animation: cardPayment 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .ghost-card:active {
+      transform: scale(0.98) translateY(-2px);
+      box-shadow: 0 15px 50px rgba(124, 58, 237, 0.5), inset -2px -2px 5px rgba(0, 0, 0, 0.3), inset 2px 2px 5px rgba(255, 255, 255, 0.15);
+    }
+
+    .ghost-card.hidden {
+      display: none;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .card-logo {
+      font-size: 24px;
+      font-weight: 800;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-chip {
+      width: 45px;
+      height: 36px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(255, 193, 7, 0.2));
+      border: 1.5px solid rgba(255, 215, 0, 0.6);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.3);
+    }
+
+    .card-number {
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-balance-display {
+      font-size: 14px;
+      opacity: 0.9;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      margin-top: 8px;
+      animation: balanceShift 0.6s ease-out;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .card-holder {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .card-holder-label {
+      font-size: 8px;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-holder-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-valid {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .card-valid-label {
+      font-size: 8px;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-valid-date {
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-system {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 28px;
+    }
+
+    /* ===== CARD STATS ===== */
+    .card-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-stat-item {
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .card-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .card-stat-value {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--price-green);
+    }
+
+    /* ===== COLOR PICKER ===== */
+    .color-picker-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .color-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .color-dot:hover {
+      transform: scale(1.1);
+    }
+
+    .color-dot:active {
+      transform: scale(0.95);
+    }
+
+    .color-dot.active {
+      border-color: white;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3), 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .color-dot.active::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .color-dot-0 {
+      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+    }
+
+    .color-dot-1 {
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    }
+
+    .color-dot-2 {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .color-dot-3 {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+
+    /* ===== PAYMENT HISTORY ===== */
+    .payment-history-section {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .payment-history-title {
+      font-weight: 800;
+      font-size: 13px;
       margin-bottom: 12px;
     }
 
-    .pack-item {
+    .payment-history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .payment-item {
+      background: rgba(124, 58, 237, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(124, 58, 237, 0.04);
-      border: 2px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px;
-      cursor: pointer;
-      transition: all 0.24s;
-      -webkit-user-select: none;
-      user-select: none;
+      animation: slideRight 0.3s ease-out;
     }
 
-    .pack-item:active { background: rgba(124, 58, 237, 0.12); }
-    .pack-item.selected { background: rgba(124, 58, 237, 0.2); border-color: var(--accent-purple); }
-
-    .pack-info { display: flex; flex-direction: column; gap: 4px; }
-    .pack-name { font-weight: 700; font-size: 13px; }
-    .pack-description { font-size: 11px; color: var(--text-muted); }
-    .pack-price { font-weight: 800; color: var(--price-green); font-size: 14px; }
-
-    .action-buttons { display: flex; gap: 8px; margin-top: 14px; }
-
-    .btn-action {
+    .payment-item-info {
       flex: 1;
-      padding: 12px;
-      border-radius: 10px;
+    }
+
+    .payment-item-title {
       font-weight: 700;
-      font-size: 13px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.24s;
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+
+    .payment-item-detail {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .payment-item-amount {
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--price-green);
+    }
+
+    /* ===== PREMIUM SECTION ===== */
+    .premium-section {
+      background: var(--bg-dark-card);
+      border: 2px solid var(--accent-purple);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .premium-status {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .premium-status-badge {
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffc107;
+    }
+
+    .premium-info {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .premium-cashback {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      color: var(--price-green);
+      font-weight: 600;
+    }
+
+    .premium-timer {
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .premium-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .premium-btn {
+      flex: 1;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      border: none;
+      color: white;
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.24s;
       -webkit-user-select: none;
       user-select: none;
     }
 
-    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+    .premium-btn:active {
+      transform: scale(0.96);
+    }
 
-    .btn-cart { background: rgba(124, 58, 237, 0.12); border: 1px solid var(--border-color); color: var(--text-light); }
-    .btn-cart:active:not(:disabled) { background: rgba(124, 58, 237, 0.2); }
+    .premium-btn-cancel {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--error);
+    }
 
-    .btn-buy-now { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; }
-    .btn-buy-now:active:not(:disabled) { transform: scale(0.96); }
+    /* ===== SETTINGS SECTION ===== */
+    .settings-section {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
 
-    .cart-badge {
+    .settings-title {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+
+    .settings-label {
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .toggle-switch {
+      width: 50px;
+      height: 28px;
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .toggle-switch.active {
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      border-color: var(--accent-purple);
+    }
+
+    .toggle-switch::after {
+      content: '';
       position: absolute;
-      top: -8px;
-      right: -8px;
-      background: var(--discount-red);
-      color: white;
       width: 24px;
       height: 24px;
+      background: white;
       border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch.active::after {
+      left: calc(100% - 26px);
+    }
+
+    .settings-inputs {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 11px;
-      animation: slideDown 0.3s ease;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .settings-input {
+      background: rgba(124, 58, 237, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--text-light);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: all 0.24s;
+    }
+
+    .settings-input:focus {
+      border-color: var(--accent-purple);
+      background: rgba(124, 58, 237, 0.08);
+    }
+
+    .settings-save-btn {
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      border: none;
+      color: white;
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.24s;
+      margin-top: 12px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .settings-save-btn:active {
+      transform: scale(0.96);
     }
 
     /* ===== TAB BAR ===== */
@@ -282,7 +1514,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: var(--card-dark);
+      background: var(--bg-dark-card);
       border-top: 1px solid var(--border-color);
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -309,44 +1541,19 @@
       user-select: none;
     }
 
-    .tab-item:active { transform: scale(0.88); }
-    .tab-item.active { color: var(--accent-purple); }
-    .tab-label { font-size: 9px; font-weight: 700; display: block; }
-
-    /* ===== CART PAGE ===== */
-    .cart-page { display: none; }
-    .cart-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-
-    .cart-item {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .tab-item:active {
+      transform: scale(0.88);
     }
 
-    .cart-item-info { flex: 1; }
-    .cart-item-name { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
-    .cart-item-details { font-size: 11px; color: var(--text-muted); }
-    .cart-item-price { font-weight: 800; font-size: 14px; color: var(--price-green); }
-    .cart-remove { background: var(--error); color: white; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 11px; transition: all 0.24s; }
-    .cart-remove:active { transform: scale(0.9); }
-
-    .cart-total {
-      background: var(--card-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      margin: 16px 0;
+    .tab-item.active {
+      color: var(--accent-purple);
     }
 
-    .cart-total-amount { font-weight: 800; font-size: 24px; color: var(--price-green); margin-bottom: 12px; }
-    .cart-checkout-btn { width: 100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; border: none; border-radius: 10px; padding: 14px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.24s; }
-    .cart-checkout-btn:active { transform: scale(0.96); }
+    .tab-label {
+      font-size: 9px;
+      font-weight: 700;
+      display: block;
+    }
 
     /* ===== MODAL ===== */
     .modal-backdrop {
@@ -360,29 +1567,85 @@
       z-index: 100;
     }
 
-    .modal-backdrop.visible { display: flex; }
+    .modal-backdrop.visible {
+      display: flex;
+    }
 
     .modal-content {
-      background: var(--card-dark);
+      background: var(--bg-dark-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 20px;
       width: 88%;
       max-width: 400px;
-      animation: slideDown 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .modal-title { font-weight: 800; font-size: 16px; margin-bottom: 10px; }
-    .modal-body { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
-    .modal-actions { display: flex; gap: 10px; }
-    .modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; border: none; cursor: pointer; transition: all 0.24s; -webkit-user-select: none; user-select: none; }
-    .modal-btn-cancel { background: rgba(124, 58, 237, 0.08); color: var(--text-light); }
-    .modal-btn-confirm { background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo)); color: white; }
-    .modal-btn:active { transform: scale(0.96); }
+    .modal-title {
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.24s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .modal-btn-cancel {
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--text-light);
+    }
+
+    .modal-btn-confirm {
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: white;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.96);
+    }
 
     /* ===== TOAST ===== */
-    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes toastOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
 
     .toast {
       position: fixed;
@@ -401,15 +1664,33 @@
       border: 1px solid rgba(124, 58, 237, 0.2);
     }
 
-    .toast.success { border-color: var(--success); }
-    .toast.error { border-color: var(--error); }
-    .toast.warning { border-color: var(--warning); }
+    /* ===== UTILITIES ===== */
+    .hidden {
+      display: none !important;
+    }
 
-    .hidden { display: none !important; }
+    .collapsing {
+      animation: slideUp_reverse 0.3s ease-in forwards;
+    }
+
+    .expanding {
+      animation: slideDown 0.3s ease-out forwards;
+    }
 
     @media (max-width: 420px) {
-      .logo { font-size: 15px; }
-      .banner-title { font-size: 16px; }
+      .logo {
+        font-size: 18px;
+      }
+      .banner-title {
+        font-size: 18px;
+      }
+      .product-btn-group {
+        gap: 4px;
+      }
+      .product-buy-btn.quick {
+        padding: 6px 10px;
+        font-size: 10px;
+      }
     }
   </style>
 </head>
@@ -418,594 +1699,1023 @@
     <!-- HEADER -->
     <header class="header">
       <div class="logo">💜 GhostMarket</div>
-      <button class="btn-premium" id="btnPremiumHeader">⭐ Premium</button>
       <div class="header-actions">
-        <button class="btn-icon" id="btnNotifications">🔔</button>
-        <button class="btn-icon" id="btnCartHeader" style="position: relative;">
-          🛒
-          <span class="cart-badge" id="cartBadgeEl" style="display: none;">0</span>
+        <button class="balance-btn-header" id="btnBalance" aria-label="Пополнить баланс">
+          💳 <span id="headerBalance">0 ₽</span>
+        </button>
+        <button class="btn-theme" id="btnTheme" aria-label="Переключить тему">🌙</button>
+        <button class="btn-icon" id="btnNotifications" aria-label="Уведомления">
+          🔔
+          <span class="notification-badge" id="notificationBadge">3</span>
         </button>
       </div>
     </header>
 
     <!-- SCROLL CONTENT -->
     <div class="scroll-content" id="scrollContent">
-      <!-- HOME PAGE -->
-      <div id="homePage" class="page-content">
+      <!-- SHOP PAGE -->
+      <div id="shopPage" class="page-content">
         <div class="banner">
           <div class="banner-title">🎮 Игровая валюта дешевле официальных цен</div>
-          <div class="banner-subtitle">PUBG • Brawl Stars • Mobile Legends • Free Fire</div>
-          <div class="banner-buttons">
-            <button class="btn-banner btn-banner-primary" id="btnTopup">Пополнить баланс</button>
-            <button class="btn-banner btn-banner-secondary" id="btnConstructorScroll">Конструктор</button>
-          </div>
+          <div class="banner-subtitle">Моментальная доставка, безопасно и надежно</div>
         </div>
 
-        <!-- Constructor Section -->
-        <div class="constructor-section">
-          <div class="constructor-title">🎮 Выберите игру</div>
+        <div class="promo-banner">
+          <div class="promo-banner-text">🎁 СКИДКА 15% НА ПЕРВЫЙ ЗАКАЗ! Код: FIRST15</div>
+          <button class="promo-banner-btn" id="btnCopyPromo">Копировать</button>
+        </div>
 
-          <div class="game-selector" id="gameSelector"></div>
+        <div class="section-header">
+          <div class="section-title">Популярные игры</div>
+        </div>
+
+        <div class="games-carousel" id="gamesCarousel"></div>
+
+        <div class="constructor" id="constructor">
+          <div class="constructor-title">🛍️ Конструктор доната</div>
+          
+          <div class="game-selector-inline" id="gameSelectorInline"></div>
+          
           <div id="fieldsContainer"></div>
-          <div class="pack-selector" id="packSelector"></div>
+          
+          <div id="catalogContainer"></div>
+        </div>
+      </div>
 
-          <div class="action-buttons">
-            <button class="btn-action btn-cart" id="btnAddToCart">🛒 В корзину</button>
-            <button class="btn-action btn-buy-now" id="btnBuyNow">⚡ Купить сейчас</button>
+      <!-- SUPPORT PAGE -->
+      <div id="supportPage" class="page-content hidden">
+        <div class="section-header">
+          <div class="section-title">Служба поддержки</div>
+        </div>
+        <div style="padding: 40px 16px; text-align: center; color: var(--text-muted);">
+          <div style="font-size: 48px; margin-bottom: 16px;">📞</div>
+          <p>Контакты поддержки:</p>
+          <p style="margin-top: 12px; font-weight: 700;">@GhostMarket_Support</p>
+          <p style="margin-top: 12px; font-size: 12px;">Режим работы: 24/7</p>
+        </div>
+      </div>
+
+      <!-- ORDERS PAGE -->
+      <div id="ordersPage" class="page-content hidden">
+        <div class="section-header">
+          <div class="section-title">Мои заказы</div>
+        </div>
+        <div class="payment-history-section">
+          <div class="payment-history-list" id="ordersList">
+            <div style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 12px;">
+              Здесь появятся ваши заказы 📦
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- CART PAGE -->
-      <div id="cartPage" class="cart-page">
-        <div class="page-content">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h2 style="margin: 0; font-size: 18px;">🛒 Корзина</h2>
-            <button class="btn-icon" id="btnBackFromCart" style="width: 36px; height: 36px;">←</button>
+      <!-- PROFILE PAGE -->
+      <div id="profilePage" class="page-content hidden">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">👤</div>
+            <div class="profile-info">
+              <div class="profile-name" id="profileName">Загрузка...</div>
+              <div class="profile-username" id="profileUsername">@username</div>
+              <div class="profile-badge" id="profileStatus">Обычный игрок</div>
+            </div>
           </div>
-          <div id="cartList"></div>
-          <div class="cart-total">
-            <div class="cart-total-amount" id="cartTotalAmount">0 ₽</div>
-            <button class="cart-checkout-btn" id="btnCheckout">Оформить заказ</button>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <span class="stat-value" id="profileOrders">0</span>
+              <span class="stat-label">Заказов</span>
+            </div>
+            <div class="profile-stat">
+              <span class="stat-value" id="profileSpent">0 ₽</span>
+              <span class="stat-label">Потрачено</span>
+            </div>
+            <div class="profile-stat">
+              <span class="stat-value" id="profileCashback">0 ₽</span>
+              <span class="stat-label">Кэшбэк</span>
+            </div>
           </div>
         </div>
+
+        <!-- PREMIUM SECTION -->
+        <div id="premiumSection"></div>
+
+        <!-- CARD SECTION -->
+        <div class="card-section" id="cardSection">
+          <div class="card-section-title" id="cardSectionTitle">
+            <span>💳 Твоя Ghost Card</span>
+            <span class="card-toggle-icon">▼</span>
+          </div>
+
+          <div class="ghost-card" id="ghostCard">
+            <div class="card-header">
+              <div class="card-logo">👻</div>
+              <div class="card-chip">CHIP</div>
+            </div>
+            <div class="card-number" id="cardNumber">•••• •••• •••• 1337</div>
+            <div class="card-balance-display" id="cardBalance">Баланс: 0 ₽</div>
+            <div class="card-footer">
+              <div class="card-holder">
+                <div class="card-holder-label">CARDHOLDER</div>
+                <div class="card-holder-name" id="cardHolder">GHOST USER</div>
+              </div>
+              <div class="card-valid">
+                <div class="card-valid-label">VALID THRU</div>
+                <div class="card-valid-date">12/25</div>
+              </div>
+            </div>
+            <div class="card-system">💳</div>
+          </div>
+
+          <div class="color-picker-container" id="colorPicker"></div>
+
+          <div class="card-stats">
+            <div class="card-stat-item">
+              <div class="card-stat-label">Потрачено за все время</div>
+              <div class="card-stat-value" id="totalSpent">0 ₽</div>
+            </div>
+            <div class="card-stat-item">
+              <div class="card-stat-label">Накопительный кэшбэк</div>
+              <div class="card-stat-value" id="accumulatedCashback">0 ₽</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENT HISTORY -->
+        <div class="payment-history-section">
+          <div class="payment-history-title">📋 История платежей</div>
+          <div class="payment-history-list" id="paymentHistory">
+            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+              Пока нет платежей
+            </div>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="settings-section">
+          <div class="settings-title">⚙️ Настройки профиля</div>
+          
+          <div class="settings-item">
+            <span class="settings-label">Отключить тяжелые анимации</span>
+            <div class="toggle-switch" id="toggleAnimations"></div>
+          </div>
+
+          <div class="settings-inputs">
+            <div class="field-group">
+              <label class="field-label">Игровой UID (сохраняется)</label>
+              <input type="text" class="settings-input" id="settingsUID" placeholder="Введите ваш UID">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Zone ID / Сервер (сохраняется)</label>
+              <input type="text" class="settings-input" id="settingsZoneID" placeholder="Введите Zone ID">
+            </div>
+            <button class="settings-save-btn" id="btnSaveSettings">💾 Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BALANCE PANEL -->
+    <div class="balance-panel-backdrop" id="balancePanelBackdrop"></div>
+    <div class="balance-panel hidden" id="balancePanel">
+      <div class="balance-panel-header">
+        <div class="balance-panel-title">💳 Пополнить баланс</div>
+        <button class="balance-panel-close" id="btnCloseBalance">✕</button>
+      </div>
+      <div class="balance-panel-content">
+        <div class="balance-info">
+          <div class="balance-info-label">Текущий баланс</div>
+          <div class="balance-info-amount" id="balancePanelAmount">0 ₽</div>
+        </div>
+
+        <div id="balancePackagesPanel"></div>
       </div>
     </div>
 
     <!-- TAB BAR -->
     <div class="tab-bar">
-      <button class="tab-item active" data-page="home">
+      <button class="tab-item active" data-tab="shop" aria-label="Магазин">
         <span>🛍️</span>
         <span class="tab-label">Магазин</span>
       </button>
-      <button class="tab-item" data-page="cart">
-        <span>📦</span>
-        <span class="tab-label">Корзина</span>
+      <button class="tab-item" data-tab="support" aria-label="Поддержка">
+        <span>📞</span>
+        <span class="tab-label">Поддержка</span>
       </button>
-      <button class="tab-item" data-page="profile">
+      <button class="tab-item" data-tab="orders" aria-label="Заказы">
+        <span>📦</span>
+        <span class="tab-label">Заказы</span>
+      </button>
+      <button class="tab-item" data-tab="profile" aria-label="Профиль">
         <span>👤</span>
         <span class="tab-label">Профиль</span>
       </button>
-      <button class="tab-item" data-page="settings">
-        <span>⚙️</span>
-        <span class="tab-label">Настройки</span>
-      </button>
     </div>
-  </div>
 
-  <!-- Modal -->
-  <div class="modal-backdrop" id="modalBackdropEl">
-    <div class="modal-content">
-      <div class="modal-title" id="modalTitleEl">Подтвердить</div>
-      <div class="modal-body" id="modalBodyEl">Вы согласны?</div>
-      <div class="modal-actions">
-        <button class="modal-btn modal-btn-cancel" id="btnModalCancelEl">Отменить</button>
-        <button class="modal-btn modal-btn-confirm" id="btnModalConfirmEl">Подтвердить</button>
+    <!-- MODALS -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal-content">
+        <div class="modal-title" id="modalTitle">Заголовок</div>
+        <div class="modal-body" id="modalBody">Содержание</div>
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-cancel" id="btnModalCancel">Отменить</button>
+          <button class="modal-btn modal-btn-confirm" id="btnModalConfirm">Подтвердить</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Toast -->
-  <div id="toastContainerEl"></div>
-
   <script>
-    // ==================== TELEGRAM SDK ====================
-    const tg = window.Telegram?.WebApp || {};
-    if (tg.ready) {
-      try { tg.ready(); } catch (e) {}
+    // ===== TELEGRAM SDK =====
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
+    // ===== DONATION ALERTS CONFIG =====
+    const donationAlertsConfig = {
+      username: 'craftrush',
+      currency: 'RUB',
+      apiBaseUrl: 'https://www.donationalerts.com/api/v1'
+    };
+
+    // ===== DATA & STATE =====
+    let userState = {
+      username: 'User',
+      firstName: 'Ghost',
+      balance: 0,
+      spent: 0,
+      cashback: 0,
+      orders: [],
+      premiumStatus: 'none',
+      premiumExpires: null,
+      selectedGame: 'pubg',
+      cart: [],
+      payments: [],
+      animationsEnabled: true,
+      savedUID: '',
+      savedZoneID: '',
+      cardColor: 0,
+      cardHidden: false,
+      totalSpent: 0,
+      accumulatedCashback: 0
+    };
+
+    // ===== GAMES DATA =====
+    const games = [
+      { id: 'pubg', name: 'PUBG', icon: '🎮', fields: ['uid', 'zone'], price: 100 },
+      { id: 'brawl', name: 'Brawl Stars', icon: '⭐', fields: ['uid'], price: 80 },
+      { id: 'mlbb', name: 'MLBB', icon: '🌟', fields: ['uid', 'zone'], price: 90 },
+    ];
+
+    const products = [
+      { id: 1, name: 'Стартовый пак', icon: '🎁', price: 100, oldPrice: 120, discount: '-17%' },
+      { id: 2, name: 'Премиум пак', icon: '👑', price: 500, oldPrice: 600, discount: '-17%' },
+      { id: 3, name: 'Легендарный пак', icon: '⚡', price: 1000, oldPrice: 1200, discount: '-17%' },
+    ];
+
+    const balancePackages = [
+      { amount: 100, price: 100, discount: '' },
+      { amount: 500, price: 450, discount: '-10%' },
+      { amount: 1000, price: 850, discount: '-15%' },
+      { amount: 2000, price: 1600, discount: '-20%' },
+      { amount: 5000, price: 3750, discount: '-25%' },
+    ];
+
+    // ===== INIT =====
+    function initApp() {
+      loadFromLocalStorage();
+      initTelegramUser();
+      setupEventListeners();
+      renderGamesCarousel();
+      renderGameSelector();
+      renderColorPicker();
+      renderBalancePackages();
+      updateProfileUI();
+      updateCardUI();
+      updateFieldsContainer();
+      updateCatalog();
+      updateHeaderBalance();
     }
 
-    const haptic = (type = 'medium') => {
-      try { if (tg.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred(type); } catch (e) {}
-    };
-
-    const hapticNotify = (type = 'success') => {
-      try { if (tg.HapticFeedback?.notificationOccurred) tg.HapticFeedback.notificationOccurred(type); } catch (e) {}
-    };
-
-    // ==================== USER DATA ====================
-    const userData = tg.initDataUnsafe?.user || { id: 0, first_name: 'Guest', username: 'guest' };
-    const isAdminUser = userData.username === 'henotsosal';
-
-    // ==================== STATE ====================
-    const state = {
-      currentPage: 'home',
-      currentGame: 'pubg',
-      selectedPack: null,
-      cartItems: [],
-      userBalance: 0,
-      userPremium: 'free'
-    };
-
-    // ==================== GAME DATA ====================
-    const gamesData = {
-      pubg: {
-        name: 'PUBG Mobile',
-        emoji: '🎮',
-        fields: [
-          { id: 'uid', label: 'Игровой UID', placeholder: 'Введите UID...', required: true, validation: /^\d+$/ },
-          { id: 'zone', label: 'Zone ID', placeholder: 'Введите Zone (0-5)...', required: true, validation: /^[0-5]$/ }
-        ],
-        packs: [
-          { id: 'p60', name: '60 UC', price: 15, description: 'Базовый пакет' },
-          { id: 'p300', name: '300 UC', price: 65, description: 'Популярный пакет' },
-          { id: 'p600', name: '600 UC', price: 120, description: 'Выгодный пакет' }
-        ]
-      },
-      brawl: {
-        name: 'Brawl Stars',
-        emoji: '⭐',
-        fields: [
-          { id: 'tag', label: 'Тег игрока', placeholder: '#XXXXXX', required: true, validation: /^#[0-9A-Z]{3,}$/ }
-        ],
-        packs: [
-          { id: 'b80', name: '80 Gems', price: 18, description: 'Стартовый пакет' },
-          { id: 'b170', name: '170 Gems', price: 35, description: 'Средний пакет' },
-          { id: 'b360', name: '360 Gems', price: 69, description: 'Премиум пакет' }
-        ]
-      },
-      mlbb: {
-        name: 'Mobile Legends',
-        emoji: '👾',
-        fields: [
-          { id: 'uid', label: 'User ID', placeholder: 'Введите User ID...', required: true, validation: /^\d+$/ },
-          { id: 'server', label: 'Сервер', placeholder: 'Выберите сервер (1-5)...', required: true, validation: /^[1-5]$/ }
-        ],
-        packs: [
-          { id: 'm50', name: '50 Diamonds', price: 12, description: 'Мини пакет' },
-          { id: 'm100', name: '100 Diamonds', price: 24, description: 'Стандартный пакет' },
-          { id: 'm220', name: '220 Diamonds', price: 55, description: 'Максимальный пакет' }
-        ]
-      },
-      ff: {
-        name: 'Free Fire',
-        emoji: '🔥',
-        fields: [
-          { id: 'id', label: 'ID аккаунта', placeholder: 'Введите ID...', required: true, validation: /^\d+$/ }
-        ],
-        packs: [
-          { id: 'f100', name: '100 Diamonds', price: 25, description: 'Базовый' },
-          { id: 'f210', name: '210 Diamonds', price: 50, description: 'Стандартный' },
-          { id: 'f440', name: '440 Diamonds', price: 99, description: 'Максимальный' }
-        ]
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem('ghostmarket_state');
+      if (saved) {
+        userState = { ...userState, ...JSON.parse(saved) };
       }
-    };
-
-    // ==================== DOM ELEMENTS ====================
-    const scrollContent = document.getElementById('scrollContent');
-    const homePage = document.getElementById('homePage');
-    const cartPage = document.getElementById('cartPage');
-    const tabItems = document.querySelectorAll('.tab-item');
-
-    const gameSelectorContainer = document.getElementById('gameSelector');
-    const fieldsContainer = document.getElementById('fieldsContainer');
-    const packSelectorContainer = document.getElementById('packSelector');
-
-    const cartBadgeEl = document.getElementById('cartBadgeEl');
-    const modalBackdrop = document.getElementById('modalBackdropEl');
-    const modalTitle = document.getElementById('modalTitleEl');
-    const modalBody = document.getElementById('modalBodyEl');
-    const btnModalConfirm = document.getElementById('btnModalConfirmEl');
-    const btnModalCancel = document.getElementById('btnModalCancelEl');
-    const toastContainer = document.getElementById('toastContainerEl');
-
-    const cartList = document.getElementById('cartList');
-    const cartTotalAmount = document.getElementById('cartTotalAmount');
-
-    // ==================== HELPER FUNCTIONS ====================
-
-    function showToast(message, type = 'info') {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      toastContainer.appendChild(toast);
-      setTimeout(() => toast.remove(), 2000);
     }
 
-    function showModal(title, body, onConfirm) {
-      modalTitle.textContent = title;
-      modalBody.textContent = body;
-      btnModalConfirm.onclick = () => {
-        if (onConfirm) onConfirm();
+    function saveToLocalStorage() {
+      localStorage.setItem('ghostmarket_state', JSON.stringify(userState));
+    }
+
+    function initTelegramUser() {
+      if (tg.initDataUnsafe?.user) {
+        const user = tg.initDataUnsafe.user;
+        userState.username = user.username || user.first_name || 'User';
+        userState.firstName = user.first_name || 'Ghost';
+      }
+    }
+
+    // ===== SETUP EVENTS =====
+    function setupEventListeners() {
+      document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+      document.getElementById('btnBalance').addEventListener('click', openBalancePanel);
+      document.getElementById('btnCloseBalance').addEventListener('click', closeBalancePanel);
+      document.getElementById('balancePanelBackdrop').addEventListener('click', closeBalancePanel);
+
+      document.querySelectorAll('.tab-item').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tabName = e.currentTarget.dataset.tab;
+          switchTab(tabName);
+        });
+      });
+
+      document.getElementById('btnCopyPromo').addEventListener('click', () => {
+        copyToClipboard('FIRST15');
+        showToast('✅ Код скопирован!');
+      });
+
+      document.getElementById('cardSectionTitle').addEventListener('click', () => {
+        toggleCardVisibility();
+      });
+
+      document.getElementById('ghostCard').addEventListener('click', () => {
+        switchTab('profile');
+        setTimeout(() => {
+          const profilePage = document.getElementById('profilePage');
+          const cardSection = document.getElementById('cardSection');
+          cardSection.scrollIntoView({ behavior: 'smooth' });
+        }, 200);
+      });
+
+      document.querySelectorAll('.color-dot').forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          changeCardColor(idx);
+        });
+      });
+
+      document.getElementById('toggleAnimations').addEventListener('click', () => {
+        userState.animationsEnabled = !userState.animationsEnabled;
+        updateToggleUI();
+        saveToLocalStorage();
+      });
+
+      document.getElementById('btnSaveSettings').addEventListener('click', () => {
+        userState.savedUID = document.getElementById('settingsUID').value;
+        userState.savedZoneID = document.getElementById('settingsZoneID').value;
+        saveToLocalStorage();
+        showToast('✅ Настройки сохранены!');
+      });
+
+      document.getElementById('btnModalCancel').addEventListener('click', closeModal);
+      document.getElementById('btnModalConfirm').addEventListener('click', () => {
+        if (window.pendingAction) {
+          window.pendingAction();
+        }
         closeModal();
+      });
+    }
+
+    // ===== BALANCE PANEL =====
+    function openBalancePanel() {
+      document.getElementById('balancePanel').classList.remove('hidden');
+      document.getElementById('balancePanelBackdrop').classList.add('visible');
+    }
+
+    function closeBalancePanel() {
+      document.getElementById('balancePanel').classList.add('hidden');
+      document.getElementById('balancePanelBackdrop').classList.remove('visible');
+    }
+
+    function renderBalancePackages() {
+      const container = document.getElementById('balancePackagesPanel');
+      container.innerHTML = balancePackages.map(pkg => `
+        <div class="balance-package-panel">
+          ${pkg.discount ? `<div class="balance-badge-tag">${pkg.discount}</div>` : ''}
+          <div class="balance-amount-panel">+${pkg.amount} ₽</div>
+          <div class="balance-price-panel">${pkg.price} ₽</div>
+          <button class="balance-btn-panel" onclick="openDonationAlerts(${pkg.amount})">💳 DonationAlerts</button>
+        </div>
+      `).join('');
+    }
+
+    function updateHeaderBalance() {
+      document.getElementById('headerBalance').textContent = `${userState.balance} ₽`;
+      document.getElementById('balancePanelAmount').textContent = `${userState.balance} ₽`;
+    }
+
+    // ===== THEME =====
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('ghostmarket_theme', newTheme);
+      document.getElementById('btnTheme').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    const savedTheme = localStorage.getItem('ghostmarket_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('btnTheme').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    // ===== TAB NAVIGATION =====
+    function switchTab(tabName) {
+      document.querySelectorAll('.page-content').forEach(page => {
+        page.classList.add('hidden');
+      });
+
+      const pageId = tabName + 'Page';
+      const selectedPage = document.getElementById(pageId);
+      if (selectedPage) {
+        selectedPage.classList.remove('hidden');
+      }
+
+      document.querySelectorAll('.tab-item').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tab === tabName) {
+          btn.classList.add('active');
+        }
+      });
+
+      document.getElementById('scrollContent').scrollTop = 0;
+    }
+
+    // ===== RENDER GAMES CAROUSEL =====
+    function renderGamesCarousel() {
+      const carousel = document.getElementById('gamesCarousel');
+      carousel.innerHTML = games.map(game => `
+        <div class="game-card" onclick="selectGame('${game.id}')">
+          <div class="game-icon">${game.icon}</div>
+          <div class="game-name">${game.name}</div>
+          <div class="game-price">${game.price} ₽</div>
+          ${game.discount ? `<div class="game-discount">${game.discount}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // ===== RENDER GAME SELECTOR =====
+    function renderGameSelector() {
+      const selector = document.getElementById('gameSelectorInline');
+      selector.innerHTML = games.map(game => `
+        <button class="game-select-btn ${game.id === userState.selectedGame ? 'active' : ''}" 
+                onclick="selectGame('${game.id}')">
+          ${game.icon} ${game.name}
+        </button>
+      `).join('');
+    }
+
+    function selectGame(gameId) {
+      userState.selectedGame = gameId;
+      renderGameSelector();
+      updateFieldsContainer();
+      updateCatalog();
+      autoFillFields();
+      saveToLocalStorage();
+    }
+
+    // ===== RENDER COLOR PICKER =====
+    function renderColorPicker() {
+      const picker = document.getElementById('colorPicker');
+      picker.innerHTML = [0, 1, 2, 3].map(idx => `
+        <div class="color-dot color-dot-${idx} ${idx === userState.cardColor ? 'active' : ''}"
+             onclick="changeCardColor(${idx})"></div>
+      `).join('');
+    }
+
+    function changeCardColor(idx) {
+      userState.cardColor = idx;
+      renderColorPicker();
+      updateCardStyle();
+      saveToLocalStorage();
+      if (userState.animationsEnabled) {
+        document.getElementById('ghostCard').classList.add('animating');
+        setTimeout(() => {
+          document.getElementById('ghostCard').classList.remove('animating');
+        }, 600);
+      }
+    }
+
+    function updateCardStyle() {
+      const card = document.getElementById('ghostCard');
+      const gradients = [
+        'linear-gradient(135deg, #7c3aed 0%, #6366f1 100%)',
+        'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+        'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
+      ];
+      card.style.background = gradients[userState.cardColor];
+    }
+
+    // ===== FIELDS CONTAINER =====
+    function updateFieldsContainer() {
+      const container = document.getElementById('fieldsContainer');
+      const game = games.find(g => g.id === userState.selectedGame);
+      if (!game) return;
+
+      container.innerHTML = game.fields.map(field => {
+        const label = field === 'uid' ? 'Игровой ID (UID)' : 'Zone ID / Сервер';
+        const placeholder = field === 'uid' ? 'Введите ваш UID' : 'Введите Zone ID';
+        const value = field === 'uid' ? userState.savedUID : userState.savedZoneID;
+
+        return `
+          <div class="field-group">
+            <label class="field-label">${label}</label>
+            <input type="text" class="field-input" id="field_${field}" 
+                   placeholder="${placeholder}" value="${value}">
+            <div class="field-error hidden" id="error_${field}"></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function autoFillFields() {
+      const game = games.find(g => g.id === userState.selectedGame);
+      if (!game) return;
+
+      game.fields.forEach(field => {
+        const input = document.getElementById(`field_${field}`);
+        if (input) {
+          if (field === 'uid') {
+            input.value = userState.savedUID;
+          } else if (field === 'zone') {
+            input.value = userState.savedZoneID;
+          }
+        }
+      });
+    }
+
+    // ===== CATALOG =====
+    function updateCatalog() {
+      const container = document.getElementById('catalogContainer');
+      const game = games.find(g => g.id === userState.selectedGame);
+      if (!game) return;
+
+      container.innerHTML = `
+        <div class="catalog">
+          ${products.map(prod => {
+            const canBuy = userState.balance >= prod.price;
+            return `
+            <div class="product-card">
+              <div class="product-icon">${prod.icon}</div>
+              <div class="product-info">
+                <div class="product-name">${prod.name}</div>
+                <div class="product-details">${game.name}</div>
+                <div class="product-pricing">
+                  <span class="product-price">${prod.price} ₽</span>
+                  ${prod.oldPrice ? `<span class="product-price-old">${prod.oldPrice} ₽</span>` : ''}
+                  ${prod.discount ? `<span class="product-discount">${prod.discount}</span>` : ''}
+                </div>
+              </div>
+              <div class="product-btn-group">
+                <button class="product-buy-btn quick" ${!canBuy ? 'disabled' : ''} onclick="buyProductQuick(${prod.id})" title="Купить в 1 клик">⚡</button>
+                <button class="product-buy-btn" ${!canBuy ? 'disabled' : ''} onclick="addToCart(${prod.id})" title="Добавить в корзину">🛒</button>
+              </div>
+            </div>
+          `}).join('')}
+        </div>
+      `;
+    }
+
+    // ===== VALIDATION =====
+    function validateFields() {
+      const game = games.find(g => g.id === userState.selectedGame);
+      if (!game) return false;
+
+      let valid = true;
+      game.fields.forEach(field => {
+        const input = document.getElementById(`field_${field}`);
+        const errorDiv = document.getElementById(`error_${field}`);
+        const value = input.value.trim();
+
+        if (!value) {
+          input.classList.add('error');
+          errorDiv.textContent = 'Это поле обязательно';
+          errorDiv.classList.remove('hidden');
+          valid = false;
+        } else {
+          input.classList.remove('error');
+          errorDiv.classList.add('hidden');
+        }
+      });
+
+      return valid;
+    }
+
+    // ===== CART OPERATIONS =====
+    function addToCart(productId) {
+      if (!validateFields()) {
+        showToast('❌ Заполните все поля!');
+        triggerHaptic('notificationOccurred', 'error');
+        return;
+      }
+
+      const product = products.find(p => p.id === productId);
+      const game = games.find(g => g.id === userState.selectedGame);
+
+      const cartItem = {
+        id: Date.now(),
+        productId,
+        productName: product.name,
+        gameName: game.name,
+        price: product.price,
+        uid: document.getElementById('field_uid')?.value || '',
+        zone: document.getElementById('field_zone')?.value || ''
       };
-      modalBackdrop.classList.add('visible');
-      haptic('light');
+
+      userState.cart.push(cartItem);
+      saveToLocalStorage();
+      showToast('✅ Товар добавлен в корзину!');
+      triggerHaptic('notificationOccurred', 'success');
+    }
+
+    function buyProductQuick(productId) {
+      if (!validateFields()) {
+        showToast('❌ Заполните все поля!');
+        triggerHaptic('notificationOccurred', 'error');
+        return;
+      }
+
+      const product = products.find(p => p.id === productId);
+
+      if (userState.balance < product.price) {
+        showModal(
+          '❌ Недостаточно средств',
+          `Вам не хватает ${product.price - userState.balance} ₽ для покупки "${product.name}". Пополните баланс?`,
+          () => {
+            openBalancePanel();
+          }
+        );
+        return;
+      }
+
+      processPurchase(product.price, product.name);
+    }
+
+    // ===== PURCHASE LOGIC =====
+    function processPurchase(amount, itemName) {
+      if (userState.animationsEnabled) {
+        animateCardPayment(amount, itemName);
+      } else {
+        completePayment(amount, itemName);
+      }
+    }
+
+    function animateCardPayment(amount, itemName) {
+      const card = document.getElementById('ghostCard');
+      card.classList.add('animating');
+
+      setTimeout(() => {
+        completePayment(amount, itemName);
+        card.classList.remove('animating');
+      }, 600);
+    }
+
+    function completePayment(amount, itemName) {
+      userState.balance -= amount;
+      userState.totalSpent += amount;
+      userState.accumulatedCashback += Math.floor(amount * 0.02);
+      userState.spent += amount;
+
+      const order = {
+        id: userState.orders.length + 1,
+        item: itemName,
+        amount: amount,
+        date: new Date().toLocaleString('ru-RU'),
+        uid: document.getElementById('field_uid')?.value || 'N/A'
+      };
+      userState.orders.push(order);
+      userState.payments.push(order);
+
+      saveToLocalStorage();
+      updateCardUI();
+      updateHeaderBalance();
+      updateProfileUI();
+      updateCatalog();
+      showToast(`✅ Успешно куплено: ${itemName}`);
+      triggerHaptic('notificationOccurred', 'success');
+
+      if (tg.sendData) {
+        tg.sendData(JSON.stringify({
+          action: 'purchase',
+          item: itemName,
+          amount: amount,
+          timestamp: new Date().toISOString()
+        }));
+      }
+    }
+
+    // ===== DONATION ALERTS INTEGRATION =====
+    function openDonationAlerts(amount) {
+      const uid = document.getElementById('settingsUID')?.value.trim() || userState.savedUID || 'не указан';
+      const zoneName = document.getElementById('settingsZoneID')?.value.trim() || userState.savedZoneID || '';
+      
+      let comment = `GhostMarket | UID: ${uid}`;
+      if (zoneName) {
+        comment += ` | Zone: ${zoneName}`;
+      }
+      comment += ` | @${userState.username}`;
+
+      const encodedComment = encodeURIComponent(comment);
+      
+      const donationUrl = `https://www.donationalerts.com/r/${donationAlertsConfig.username}?amount=${amount}&currency=${donationAlertsConfig.currency}&comment=${encodedComment}`;
+      
+      console.log('🔗 DonationAlerts URL:', donationUrl);
+      console.log('💰 Сумма:', amount, donationAlertsConfig.currency);
+      console.log('📝 Комментарий:', comment);
+
+      // Перед редиректом добавляем баланс (можете изменить если нужна проверка от сервера)
+      userState.balance += amount;
+      updateCardUI();
+      updateHeaderBalance();
+      updateCatalog();
+      saveToLocalStorage();
+
+      // Анимация карты при пополнении
+      if (userState.animationsEnabled) {
+        const card = document.getElementById('ghostCard');
+        card.classList.add('animating');
+      }
+
+      if (tg.sendData) {
+        tg.sendData(JSON.stringify({
+          action: 'donation_redirect',
+          amount: amount,
+          currency: donationAlertsConfig.currency,
+          uid: uid,
+          username: userState.username,
+          timestamp: new Date().toISOString()
+        }));
+      }
+
+      closeBalancePanel();
+      showToast('🔄 Перенаправляю на DonationAlerts...');
+      triggerHaptic('notificationOccurred', 'success');
+
+      if (tg.openLink) {
+        tg.openLink(donationUrl);
+      } else {
+        window.open(donationUrl, '_blank');
+      }
+
+      saveDonationAttempt(amount, uid);
+    }
+
+    function saveDonationAttempt(amount, uid) {
+      const attempt = {
+        timestamp: new Date().toISOString(),
+        amount: amount,
+        uid: uid,
+        status: 'pending'
+      };
+
+      let attempts = JSON.parse(localStorage.getItem('donation_attempts') || '[]');
+      attempts.push(attempt);
+      localStorage.setItem('donation_attempts', JSON.stringify(attempts.slice(-50)));
+      
+      console.log('💾 Сохранена попытка платежа:', attempt);
+    }
+
+    // ===== CARD UI UPDATE =====
+    function updateCardUI() {
+      document.getElementById('cardBalance').textContent = `Баланс: ${userState.balance} ₽`;
+      document.getElementById('totalSpent').textContent = `${userState.totalSpent} ₽`;
+      document.getElementById('accumulatedCashback').textContent = `${userState.accumulatedCashback} ₽`;
+      updateCardStyle();
+    }
+
+    // ===== CARD VISIBILITY =====
+    function toggleCardVisibility() {
+      const card = document.getElementById('ghostCard');
+      const icon = document.querySelector('.card-toggle-icon');
+
+      userState.cardHidden = !userState.cardHidden;
+      saveToLocalStorage();
+
+      if (userState.cardHidden) {
+        card.classList.add('hidden');
+        icon.classList.add('hidden');
+      } else {
+        card.classList.remove('hidden');
+        icon.classList.remove('hidden');
+      }
+    }
+
+    // ===== PROFILE UI UPDATE =====
+    function updateProfileUI() {
+      const avatar = userState.firstName.charAt(0).toUpperCase();
+      document.getElementById('profileAvatar').textContent = avatar;
+      document.getElementById('profileName').textContent = userState.firstName;
+      document.getElementById('profileUsername').textContent = `@${userState.username}`;
+      document.getElementById('profileOrders').textContent = userState.orders.length;
+      document.getElementById('profileSpent').textContent = `${userState.spent} ₽`;
+      document.getElementById('profileCashback').textContent = `${userState.accumulatedCashback} ₽`;
+
+      const statusBadge = document.getElementById('profileStatus');
+      if (userState.premiumStatus === 'premium_plus') {
+        statusBadge.textContent = '👑 Ghost Premium+';
+      } else if (userState.premiumStatus === 'premium') {
+        statusBadge.textContent = '⭐ Ghost Premium';
+      } else {
+        statusBadge.textContent = '🎮 Обычный игрок';
+      }
+
+      updatePremiumSection();
+      updatePaymentHistory();
+      updateOrdersList();
+
+      document.getElementById('settingsUID').value = userState.savedUID;
+      document.getElementById('settingsZoneID').value = userState.savedZoneID;
+      updateToggleUI();
+    }
+
+    function updateToggleUI() {
+      const toggle = document.getElementById('toggleAnimations');
+      if (userState.animationsEnabled) {
+        toggle.classList.add('active');
+      } else {
+        toggle.classList.remove('active');
+      }
+    }
+
+    function updatePaymentHistory() {
+      const container = document.getElementById('paymentHistory');
+      if (userState.payments.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Пока нет платежей</div>`;
+        return;
+      }
+
+      container.innerHTML = userState.payments.slice().reverse().map(p => `
+        <div class="payment-item">
+          <div class="payment-item-info">
+            <div class="payment-item-title">${p.item}</div>
+            <div class="payment-item-detail">${p.date}</div>
+          </div>
+          <div class="payment-item-amount">-${p.amount} ₽</div>
+        </div>
+      `).join('');
+    }
+
+    function updateOrdersList() {
+      const container = document.getElementById('ordersList');
+      if (userState.orders.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 12px;">Здесь появятся ваши заказы 📦</div>`;
+        return;
+      }
+
+      container.innerHTML = userState.orders.slice().reverse().map(o => `
+        <div class="payment-item">
+          <div class="payment-item-info">
+            <div class="payment-item-title">${o.item}</div>
+            <div class="payment-item-detail">UID: ${o.uid} • ${o.date}</div>
+          </div>
+          <div class="payment-item-amount">-${o.amount} ₽</div>
+        </div>
+      `).join('');
+    }
+
+    // ===== PREMIUM SECTION =====
+    function updatePremiumSection() {
+      const container = document.getElementById('premiumSection');
+
+      if (userState.premiumStatus === 'none') {
+        container.innerHTML = `
+          <div class="card-section">
+            <div style="margin-bottom: 14px; font-weight: 800; font-size: 14px;">👑 Перейди на Premium</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="background: var(--bg-dark-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px;">
+                <div style="font-weight: 800; font-size: 14px; margin-bottom: 8px;">Ghost Premium</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+                  +5% кэшбэк на все покупки<br>Эксклюзивные скидки<br>Приоритетная поддержка
+                </div>
+                <button class="premium-btn" onclick="buyPremium('premium')">Подписаться - 100 ₽/мес</button>
+              </div>
+
+              <div style="background: var(--bg-dark-card); border: 2px solid var(--accent-purple); border-radius: 14px; padding: 16px; animation: pulse 2s infinite;">
+                <div style="font-weight: 800; font-size: 14px; margin-bottom: 8px;">👑 Ghost Premium+</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+                  +15% кэшбэк на все покупки<br>Секретные кейсы<br>Еженедельные промокоды<br>VIP поддержка 24/7
+                </div>
+                <button class="premium-btn" onclick="buyPremium('premium_plus')">Подписаться - 300 ₽/мес</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        const daysLeft = Math.ceil((userState.premiumExpires - Date.now()) / (1000 * 60 * 60 * 24));
+        const cashbackRate = userState.premiumStatus === 'premium_plus' ? 15 : 5;
+
+        container.innerHTML = `
+          <div class="premium-section">
+            <div class="premium-status">
+              <span style="font-size: 20px;">${userState.premiumStatus === 'premium_plus' ? '👑' : '⭐'}</span>
+              <div class="premium-status-badge">${userState.premiumStatus === 'premium_plus' ? 'Ghost Premium+' : 'Ghost Premium'}</div>
+            </div>
+            <div class="premium-info">
+              🎁 Вы экономите ${cashbackRate}% с каждой покупки благодаря встроенному кэшбэку!
+            </div>
+            <div class="premium-cashback">
+              💰 +${cashbackRate}% кэшбэк на все покупки
+            </div>
+            <div class="premium-timer">
+              ⏰ Продление через: ${daysLeft} дней
+            </div>
+            <div class="premium-actions">
+              <button class="premium-btn" onclick="buyPremium('${userState.premiumStatus}')">🔄 Продлить</button>
+              <button class="premium-btn premium-btn-cancel" onclick="showCancelPremiumModal()">❌ Отменить</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function buyPremium(tier) {
+      const price = tier === 'premium' ? 100 : 300;
+      const tierName = tier === 'premium' ? 'Ghost Premium' : 'Ghost Premium+';
+
+      if (userState.balance < price) {
+        showModal(
+          '❌ Недостаточно средств',
+          `Вам не хватает ${price - userState.balance} ₽ для подписки на ${tierName}. Пополните баланс?`,
+          () => {
+            openBalancePanel();
+          }
+        );
+        return;
+      }
+
+      showModal(
+        `Подписка на ${tierName}`,
+        `Это стоит ${price} ₽ в месяц. Вы получите все привилегии подписки. Продолжить?`,
+        () => {
+          userState.balance -= price;
+          userState.premiumStatus = tier;
+          userState.premiumExpires = Date.now() + (30 * 24 * 60 * 60 * 1000);
+          userState.spent += price;
+          saveToLocalStorage();
+          updateProfileUI();
+          updateCardUI();
+          updateHeaderBalance();
+          updateCatalog();
+          showToast(`✅ Подписка активирована!`);
+          triggerHaptic('notificationOccurred', 'success');
+        }
+      );
+    }
+
+    function showCancelPremiumModal() {
+      showModal(
+        'Отменить подписку?',
+        '⚠️ При отмене вы потеряете все привилегии: повышенный кэшбэк, доступ к секретным кейсам и еженедельным промокодам!',
+        () => {
+          userState.premiumStatus = 'none';
+          userState.premiumExpires = null;
+          saveToLocalStorage();
+          updateProfileUI();
+          showToast('✅ Подписка отменена');
+          triggerHaptic('notificationOccurred', 'success');
+        }
+      );
+    }
+
+    // ===== MODAL =====
+    function showModal(title, body, onConfirm) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').textContent = body;
+      window.pendingAction = onConfirm;
+      document.getElementById('modalBackdrop').classList.add('visible');
     }
 
     function closeModal() {
-      modalBackdrop.classList.remove('visible');
-      btnModalConfirm.onclick = null;
+      document.getElementById('modalBackdrop').classList.remove('visible');
+      window.pendingAction = null;
     }
 
-    function updateCartBadge() {
-      if (state.cartItems.length > 0) {
-        cartBadgeEl.textContent = state.cartItems.length;
-        cartBadgeEl.style.display = 'flex';
-      } else {
-        cartBadgeEl.style.display = 'none';
-      }
+    // ===== TOAST =====
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 2000);
     }
 
-    function renderGameSelector() {
-      gameSelectorContainer.innerHTML = '';
-      Object.keys(gamesData).forEach(gameKey => {
-        const gameInfo = gamesData[gameKey];
-        const btn = document.createElement('button');
-        btn.className = 'game-btn' + (gameKey === 'pubg' ? ' active' : '');
-        btn.dataset.game = gameKey;
-        btn.textContent = gameInfo.emoji + ' ' + gameInfo.name;
-        btn.addEventListener('click', () => selectGame(gameKey));
-        gameSelectorContainer.appendChild(btn);
+    // ===== UTILS =====
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).catch(() => {
+        alert(text);
       });
     }
 
-    function selectGame(gameKey) {
-      state.currentGame = gameKey;
-      state.selectedPack = null;
-      document.querySelectorAll('.game-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`[data-game="${gameKey}"]`).classList.add('active');
-      renderFields();
-      renderPacks();
-      haptic('light');
+    function triggerHaptic(method, type) {
+      if (tg.HapticFeedback && tg.HapticFeedback[method]) {
+        tg.HapticFeedback[method](type);
+      }
     }
 
-    function renderFields() {
-      fieldsContainer.innerHTML = '';
-      const gameInfo = gamesData[state.currentGame];
-      gameInfo.fields.forEach(field => {
-        const group = document.createElement('div');
-        group.className = 'field-group';
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'field-input';
-        input.dataset.field = field.id;
-        input.placeholder = field.placeholder;
-        input.dataset.validation = field.validation.toString();
-        input.dataset.required = field.required;
-
-        const label = document.createElement('label');
-        label.className = 'field-label';
-        label.textContent = field.label;
-
-        const error = document.createElement('div');
-        error.className = 'field-error';
-        error.dataset.field = field.id;
-        error.textContent = `Неверный формат ${field.label.toLowerCase()}`;
-
-        input.addEventListener('blur', validateField);
-        input.addEventListener('input', () => {
-          input.classList.remove('error');
-          error.classList.remove('show');
-        });
-
-        group.appendChild(label);
-        group.appendChild(input);
-        group.appendChild(error);
-        fieldsContainer.appendChild(group);
-      });
-    }
-
-    function validateField(e) {
-      const field = e.target;
-      const value = field.value.trim();
-      const validationStr = field.dataset.validation;
-      const isRequired = field.dataset.required === 'true';
-
-      if (!value && isRequired) {
-        field.classList.add('error');
-        document.querySelector(`[data-field="${field.dataset.field}"]`).nextElementSibling?.classList.add('show');
-        return false;
-      }
-
-      if (value) {
-        try {
-          const regex = new RegExp(validationStr.slice(1, -1));
-          if (!regex.test(value)) {
-            field.classList.add('error');
-            document.querySelector(`.field-error[data-field="${field.dataset.field}"]`)?.classList.add('show');
-            return false;
-          }
-        } catch (e) {}
-      }
-
-      field.classList.remove('error');
-      document.querySelector(`.field-error[data-field="${field.dataset.field}"]`)?.classList.remove('show');
-      return true;
-    }
-
-    function validateAllFields() {
-      let isValid = true;
-      document.querySelectorAll('.field-input').forEach(input => {
-        if (!validateField({ target: input })) {
-          isValid = false;
-        }
-      });
-      return isValid;
-    }
-
-    function getFieldValues() {
-      const values = {};
-      document.querySelectorAll('.field-input').forEach(input => {
-        values[input.dataset.field] = input.value.trim();
-      });
-      return values;
-    }
-
-    function renderPacks() {
-      packSelectorContainer.innerHTML = '';
-      const gameInfo = gamesData[state.currentGame];
-      gameInfo.packs.forEach(pack => {
-        const item = document.createElement('div');
-        item.className = 'pack-item';
-        item.dataset.pack = pack.id;
-        item.innerHTML = `
-          <div class="pack-info">
-            <div class="pack-name">${pack.emoji ? pack.emoji + ' ' : ''}${pack.name}</div>
-            <div class="pack-description">${pack.description}</div>
-          </div>
-          <div class="pack-price">${pack.price} ₽</div>
-        `;
-        item.addEventListener('click', () => selectPack(pack.id));
-        packSelectorContainer.appendChild(item);
-      });
-    }
-
-    function selectPack(packId) {
-      document.querySelectorAll('.pack-item').forEach(item => item.classList.remove('selected'));
-      document.querySelector(`[data-pack="${packId}"]`).classList.add('selected');
-      state.selectedPack = packId;
-      haptic('light');
-    }
-
-    function switchPage(pageName) {
-      state.currentPage = pageName;
-      haptic('light');
-
-      homePage.classList.add('hidden');
-      cartPage.classList.remove('active');
-
-      if (pageName === 'home') {
-        homePage.classList.remove('hidden');
-      } else if (pageName === 'cart') {
-        cartPage.classList.add('active');
-        renderCartPage();
-      }
-
-      tabItems.forEach(item => {
-        item.classList.toggle('active', item.dataset.page === pageName);
-      });
-      scrollContent.scrollTop = 0;
-    }
-
-    function renderCartPage() {
-      if (state.cartItems.length === 0) {
-        cartList.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Корзина пуста 😢</p>';
-        cartTotalAmount.textContent = '0 ₽';
-        document.getElementById('btnCheckout').disabled = true;
-        return;
-      }
-
-      document.getElementById('btnCheckout').disabled = false;
-
-      let total = 0;
-      cartList.innerHTML = '';
-
-      state.cartItems.forEach((item, idx) => {
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-          <div class="cart-item-info">
-            <div class="cart-item-name">${item.gameName} - ${item.packName}</div>
-            <div class="cart-item-details">UID: ${item.uid || 'N/A'}</div>
-          </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <div class="cart-item-price">${item.price} ₽</div>
-            <button class="cart-remove" onclick="removeFromCart(${idx})">Удалить</button>
-          </div>
-        `;
-        cartList.appendChild(cartItem);
-        total += item.price;
-      });
-
-      cartTotalAmount.textContent = total + ' ₽';
-    }
-
-    function removeFromCart(idx) {
-      state.cartItems.splice(idx, 1);
-      updateCartBadge();
-      renderCartPage();
-      hapticNotify('success');
-      showToast('Товар удален из корзины', 'warning');
-    }
-
-    window.removeFromCart = removeFromCart;
-
-    // ==================== EVENT LISTENERS ====================
-
-    document.getElementById('btnAddToCart').addEventListener('click', () => {
-      haptic('light');
-
-      if (!state.selectedPack) {
-        showToast('⚠️ Выберите пакет', 'warning');
-        return;
-      }
-
-      if (!validateAllFields()) {
-        showToast('❌ Заполните все поля корректно', 'error');
-        return;
-      }
-
-      const gameInfo = gamesData[state.currentGame];
-      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
-      const fieldValues = getFieldValues();
-
-      state.cartItems.push({
-        gameName: gameInfo.name,
-        packName: packInfo.name,
-        price: packInfo.price,
-        ...fieldValues
-      });
-
-      updateCartBadge();
-      hapticNotify('success');
-      showToast('✅ Товар добавлен в корзину', 'success');
-
-      // Clear fields
-      document.querySelectorAll('.field-input').forEach(input => input.value = '');
-      state.selectedPack = null;
-      renderPacks();
-    });
-
-    document.getElementById('btnBuyNow').addEventListener('click', () => {
-      haptic('light');
-
-      if (!state.selectedPack) {
-        showToast('⚠️ Выберите пакет', 'warning');
-        return;
-      }
-
-      if (!validateAllFields()) {
-        showToast('❌ Заполните все поля корректно', 'error');
-        return;
-      }
-
-      const gameInfo = gamesData[state.currentGame];
-      const packInfo = gameInfo.packs.find(p => p.id === state.selectedPack);
-      const fieldValues = getFieldValues();
-
-      const item = {
-        gameName: gameInfo.name,
-        packName: packInfo.name,
-        price: packInfo.price,
-        ...fieldValues
-      };
-
-      const payload = {
-        action: 'checkout',
-        items: [item],
-        total: item.price
-      };
-
-      try {
-        if (tg.sendData) {
-          tg.sendData(JSON.stringify(payload));
-        }
-      } catch (e) {
-        console.error('Send failed', e);
-      }
-
-      hapticNotify('success');
-      showToast('✅ Заказ отправлен!', 'success');
-    });
-
-    document.getElementById('btnCheckout').addEventListener('click', () => {
-      haptic('light');
-
-      if (state.cartItems.length === 0) return;
-
-      const total = state.cartItems.reduce((sum, item) => sum + item.price, 0);
-
-      const payload = {
-        action: 'checkout',
-        items: state.cartItems.map(item => ({
-          game: state.currentGame.toUpperCase(),
-          title: `${item.gameName} - ${item.packName}`,
-          price: item.price,
-          uid: item.uid || '',
-          zone: item.zone || ''
-        })),
-        total: total
-      };
-
-      try {
-        if (tg.sendData) {
-          tg.sendData(JSON.stringify(payload));
-        }
-      } catch (e) {
-        console.error('Send failed', e);
-      }
-
-      state.cartItems = [];
-      updateCartBadge();
-      renderCartPage();
-      hapticNotify('success');
-      showToast('✅ Заказ успешно оформлен!', 'success');
-      switchPage('home');
-    });
-
-    document.getElementById('btnCartHeader').addEventListener('click', () => {
-      haptic('light');
-      switchPage('cart');
-    });
-
-    document.getElementById('btnBackFromCart').addEventListener('click', () => {
-      haptic('light');
-      switchPage('home');
-    });
-
-    tabItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const page = item.dataset.page;
-        if (page === 'home' || page === 'cart') {
-          switchPage(page);
-        } else if (page === 'profile') {
-          showToast('👤 Профиль', 'info');
-        } else if (page === 'settings') {
-          showToast('⚙️ Настройки', 'info');
-        }
-      });
-    });
-
-    btnModalCancel.addEventListener('click', closeModal);
-    modalBackdrop.addEventListener('click', (e) => {
-      if (e.target === modalBackdrop) closeModal();
-    });
-
-    document.getElementById('btnNotifications').addEventListener('click', () => {
-      haptic('light');
-      showToast('🔔 Нет новых уведомлений', 'info');
-    });
-
-    document.getElementById('btnPremiumHeader').addEventListener('click', () => {
-      haptic('light');
-      showToast('⭐ Скоро!', 'info');
-    });
-
-    document.getElementById('btnConstructorScroll').addEventListener('click', () => {
-      haptic('light');
-      switchPage('home');
-    });
-
-    document.getElementById('btnTopup').addEventListener('click', () => {
-      haptic('light');
-      showToast('💳 Пополнение в разработке', 'info');
-    });
-
-    // Initialize
-    renderGameSelector();
-    renderFields();
-    renderPacks();
+    // ===== INIT =====
+    initApp();
   </script>
 </body>
 </html>
