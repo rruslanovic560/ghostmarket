@@ -1972,7 +1972,7 @@
     ];
 
     const balancePackages = [
-      { amount: 100, price: 100, discount: '' },
+      { amount: 101, price: 101, discount: '' },
       { amount: 500, price: 450, discount: '-10%' },
       { amount: 1000, price: 850, discount: '-15%' },
       { amount: 2000, price: 1600, discount: '-20%' },
@@ -1982,6 +1982,7 @@
     // ===== INIT =====
     function initApp() {
       loadFromLocalStorage();
+      checkDonationResult();
       initTelegramUser();
       setupEventListeners();
       renderGamesCarousel();
@@ -2004,6 +2005,23 @@
 
     function saveToLocalStorage() {
       localStorage.setItem('ghostmarket_state', JSON.stringify(userState));
+    }
+
+    function checkDonationResult() {
+      const params = new URLSearchParams(window.location.search);
+      const amount = parseInt(params.get('donation_success_amount'), 10);
+
+      if (params.get('donation_success') === '1' && amount >= 100) {
+        userState.balance += amount;
+        saveToLocalStorage();
+        updateCardUI();
+        updateHeaderBalance();
+        updateCatalog();
+        showToast(`✅ Баланс пополнен на ${amount} ₽`);
+
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl);
+      }
     }
 
     function initTelegramUser() {
@@ -2404,9 +2422,14 @@
 
     // ===== DONATION ALERTS INTEGRATION =====
     function openDonationAlerts(amount) {
+      if (amount < 100) {
+        showToast('Минимальное пополнение — 100 ₽');
+        return;
+      }
+
       const uid = document.getElementById('settingsUID')?.value.trim() || userState.savedUID || 'не указан';
       const zoneName = document.getElementById('settingsZoneID')?.value.trim() || userState.savedZoneID || '';
-      
+
       let comment = `GhostMarket | UID: ${uid}`;
       if (zoneName) {
         comment += ` | Zone: ${zoneName}`;
@@ -2414,48 +2437,16 @@
       comment += ` | @${userState.username}`;
 
       const encodedComment = encodeURIComponent(comment);
-      
-      const donationUrl = `https://www.donationalerts.com/r/${donationAlertsConfig.username}?amount=${amount}&currency=${donationAlertsConfig.currency}&comment=${encodedComment}`;
-      
-      console.log('🔗 DonationAlerts URL:', donationUrl);
-      console.log('💰 Сумма:', amount, donationAlertsConfig.currency);
-      console.log('📝 Комментарий:', comment);
-
-      // Перед редиректом добавляем баланс (можете изменить если нужна проверка от сервера)
-      userState.balance += amount;
-      updateCardUI();
-      updateHeaderBalance();
-      updateCatalog();
-      saveToLocalStorage();
-
-      // Анимация карты при пополнении
-      if (userState.animationsEnabled) {
-        const card = document.getElementById('ghostCard');
-        card.classList.add('animating');
-      }
-
-      if (tg.sendData) {
-        tg.sendData(JSON.stringify({
-          action: 'donation_redirect',
-          amount: amount,
-          currency: donationAlertsConfig.currency,
-          uid: uid,
-          username: userState.username,
-          timestamp: new Date().toISOString()
-        }));
-      }
+      const donationPage = `donation.html?amount=${amount}&comment=${encodedComment}`;
 
       closeBalancePanel();
-      showToast('🔄 Перенаправляю на DonationAlerts...');
-      triggerHaptic('notificationOccurred', 'success');
+      showToast('🔄 Открываю страницу оплаты...');
 
       if (tg.openLink) {
-        tg.openLink(donationUrl);
+        tg.openLink(donationPage);
       } else {
-        window.open(donationUrl, '_blank');
+        window.location.href = donationPage;
       }
-
-      saveDonationAttempt(amount, uid);
     }
 
     function saveDonationAttempt(amount, uid) {
@@ -2610,7 +2601,7 @@
               <div class="premium-status-badge">${userState.premiumStatus === 'premium_plus' ? 'Ghost Premium+' : 'Ghost Premium'}</div>
             </div>
             <div class="premium-info">
-              🎁 Вы экономите ${cashbackRate}% с каждой покупки благодаря встроенному кэшбэку!
+              🎁 Вы экономите ${cashbackRate}% с каждой покупке благодаря встроенному кэшбэку!
             </div>
             <div class="premium-cashback">
               💰 +${cashbackRate}% кэшбэк на все покупки

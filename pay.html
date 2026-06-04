@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GhostMarket — Оплата</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #090b16;
+      color: #f5f5f7;
+      font-family: Inter, system-ui, sans-serif;
+    }
+    .box {
+      width: min(420px, 100%);
+      padding: 24px;
+      border-radius: 20px;
+      background: #101428;
+      border: 1px solid rgba(124, 58, 237, 0.18);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.22);
+    }
+    h1 {
+      margin: 0 0 16px;
+      font-size: 22px;
+    }
+    .row {
+      margin-bottom: 16px;
+    }
+    .label {
+      color: #9ca3af;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .value {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .comment {
+      font-size: 12px;
+      color: #d1d5db;
+      word-break: break-word;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(90deg, #7c3aed, #6366f1);
+      transition: transform 0.2s;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    .secondary {
+      margin-top: 10px;
+      background: rgba(124, 58, 237, 0.12);
+      color: #d1d5db;
+    }
+    .status {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #a5b4fc;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Пополнение GhostMarket</h1>
+    <div class="row">
+      <div class="label">Сумма к оплате</div>
+      <div class="value" id="sum">0 ₽</div>
+    </div>
+    <div class="row">
+      <div class="label">Комментарий</div>
+      <div class="comment" id="comment">–</div>
+    </div>
+    <button id="btnPay">Оплатить сейчас</button>
+    <button class="secondary" id="btnCancel">Отмена</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const amount = parseInt(params.get('amount'), 10) || 0;
+    const comment = decodeURIComponent(params.get('comment') || '');
+
+    document.getElementById('sum').textContent = `${amount} ₽`;
+    document.getElementById('comment').textContent = comment || 'Комментарий не задан';
+
+    const btnPay = document.getElementById('btnPay');
+    const status = document.getElementById('status');
+
+    if (amount < 100) {
+      btnPay.disabled = true;
+      status.textContent = 'Минимальная сумма пополнения — 100 ₽';
+    }
+
+    btnPay.addEventListener('click', () => {
+      status.textContent = 'Платёж подтверждён, перенаправление...';
+      setTimeout(() => {
+        window.location.href = `index.html?donation_success=1&donation_success_amount=${amount}`;
+      }, 800);
+    });
+
+    document.getElementById('btnCancel').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
