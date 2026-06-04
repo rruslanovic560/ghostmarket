@@ -1922,6 +1922,25 @@
         </div>
       </div>
     </div>
+
+    <!-- SUPPORT BUTTON -->
+    <button id="supportBtn" class="support-button">Поддержка</button>
+
+    <script>
+      // BOT username (без @)
+      const BOT_USERNAME = "GhostMarketBuy_Bot";
+
+      const supportBtn = document.getElementById("supportBtn");
+      supportBtn.addEventListener("click", () => {
+        // если открыто внутри Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp && typeof Telegram.WebApp.sendData === "function") {
+          Telegram.WebApp.sendData(JSON.stringify({ action: "support" }));
+        } else {
+          // открыть чат бота в новом окне (обычный браузер)
+          window.open(`https://t.me/${BOT_USERNAME}`, "_blank");
+        }
+      });
+    </script>
   </div>
 
   <script>
@@ -2237,6 +2256,7 @@
           <div class="field-group">
             <label class="field-label">${label}</label>
             <input type="text" class="field-input" id="field_${field}" 
+ 
                    placeholder="${placeholder}" value="${value}">
             <div class="field-error hidden" id="error_${field}"></div>
           </div>
