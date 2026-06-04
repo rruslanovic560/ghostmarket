@@ -2437,15 +2437,16 @@
       comment += ` | @${userState.username}`;
 
       const encodedComment = encodeURIComponent(comment);
-      const donationPage = `donation.html?amount=${amount}&comment=${encodedComment}`;
+      const paymentPage = `pay.html?amount=${amount}&comment=${encodedComment}`;
 
       closeBalancePanel();
       showToast('🔄 Открываю страницу оплаты...');
 
+      // Открываем локальную страницу оплаты (pay.html)
       if (tg.openLink) {
-        tg.openLink(donationPage);
+        tg.openLink(paymentPage);
       } else {
-        window.location.href = donationPage;
+        window.location.href = paymentPage;
       }
     }
 
