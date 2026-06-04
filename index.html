@@ -1375,6 +1375,29 @@
     const auctionBots = ['shadow_bot', 'market_ai', 'ghost_bidder', 'neon_wraith', 'cyber_dream'];
     const auctionIntervals = {};
     let currentExchange = null;
+    
+    const inventoryItems = [
+      { id: 'gcoin', name: 'Ghost Coin ($GCOIN)', grade: 'Common', icon: '🪙', count: 100, desc: 'Главный токен экосистемы. Используется для ставок на Живом Аукционе.' },
+      { id: 'weth', name: 'Wraith Ethereum ($WETH)', grade: 'Common', icon: '🔹', count: 1, desc: 'Фантомная обертка крипто-эфира. Имеет высокую волатильность на бирже.' },
+      { id: 'usde', name: 'Ecto-Dollar ($USDE)', grade: 'Common', icon: '💵', count: 5, desc: 'Эктоплазматический стейблкоин. Самый стабильный цифровой актив.' },
+      { id: 'asset', name: 'Spectral Asset (XSA)', grade: 'Common', icon: '📊', count: 2, desc: 'Спектральный цифровой ваучер для торгов.' },
+      { id: 'shard', name: 'Soul Shard', grade: 'Common', icon: '🔮', count: 4, desc: 'Осколок души. Накопи 5 штук в рюкзаке, чтобы переплавить их в реальную скидку 10%!' },
+      { id: 'dust', name: 'Crypto Dust', grade: 'Common', icon: '✨', count: 10, desc: 'Крипто-пыль. Мелкий хлам из Ghost Pass для продажи за Ghost Coins.' },
+      { id: 'ticket', name: 'Wraith Ticket', grade: 'Rare', icon: '🎟️', count: 1, desc: 'Призрачный билет. Активация вносит твой ID в еженедельный розыгрыш 50 ТГ Звёзд!' },
+      { id: 'crate', name: 'Ecto-Crate', grade: 'Rare', icon: '📦', count: 1, desc: 'Базовый сундук с крипто-ресурсами. Можно выгодно продать на аукционе.' },
+      { id: 'disk', name: 'Data Disk "Spike"', grade: 'Rare', icon: '💾', count: 1, desc: 'Старый накопитель с утерянными кодами. Ценный лот для коллекционеров.' },
+      { id: 'battery', name: 'Plasma Battery', grade: 'Rare', icon: '🔋', count: 2, desc: 'Плазменная батарея. Нужна для зарядки и активации премиальных квестов.' },
+      { id: 'essence', name: 'Ectoplasm Essence', grade: 'Rare', icon: '🧪', count: 1, desc: 'Жидкий крипто-ресурс с изменчивым курсом цены.' },
+      { id: 'vault', name: 'Quantum Vault', grade: 'Epic', icon: '🔐', count: 1, desc: 'Квантовый Сейф. Заблокирован. Открой его с помощью Phantom Key, чтобы забрать промокод на донат!' },
+      { id: 'key', name: 'Phantom Key', grade: 'Epic', icon: '🔑', count: 1, desc: 'Фантомный Ключ. Единственный инструмент, способный взломать Quantum Vault.' },
+      { id: 'node', name: 'Anomalous Node', grade: 'Epic', icon: '📟', count: 1, desc: 'Зашифрованный узел мистической сети. Дает прибавку к пассивному доходу пасса.' },
+      { id: 'cipher', name: 'Anomalous Cipher', grade: 'Legendary', icon: '🧬', count: 1, desc: 'Шифр от @henotsosal. Раз в неделю при активации начисляет реальные Telegram Stars!' },
+      { id: 'mask', name: 'Cyber Ghost Mask', grade: 'Legendary', icon: '🎭', count: 1, desc: 'Маска Призрака. Дает владельцу пожизненную скидку 5% на весь каталог доната.' },
+      { id: 'core', name: 'Wraith Core v2.0', grade: 'Legendary', icon: '🦾', count: 1, desc: 'Ядро навьего духа. Процессор для генерации ультра-рандомных кодов.' },
+      { id: 'ledger', name: 'Dark Web Ledger', grade: 'Legendary', icon: '🌌', count: 1, desc: 'Холодный кошелек. Содержит засекреченные активы высокой стоимости.' },
+      { id: 'spark', name: 'Supernova Spark', grade: 'Legendary', icon: '💥', count: 1, desc: 'Искра Сверхновой. Ультра-редкий артефакт 50-го уровня Ghost Pass. Мега-цена на бирже!' }
+    ];
+
     const DEFAULT_STATE = {
       firstName: 'Ghost',
       username: 'username',
@@ -1391,17 +1414,24 @@
       savedZone: '',
       selectedGame: 'pubg',
       active_discount: 0,
+      permanent_discount: 0,
       pass: { level: 1, xp: 0, inventory: [], questsCompleted: [] },
       auctionLots: [],
       cart: [],
       promoCode: '',
       cardColor: 0,
-      cardHidden: false
+      cardHidden: false,
+      inventory: JSON.parse(JSON.stringify(inventoryItems))
     };
     let state = { ...DEFAULT_STATE };
+    
     function initApp() {
       loadState();
       if (!state.selectedGame) state.selectedGame = 'pubg';
+      if (!state.inventory || state.inventory.length === 0) {
+        state.inventory = JSON.parse(JSON.stringify(inventoryItems));
+        saveState();
+      }
       initTelegramUser();
       applyTheme();
       attachListeners();
@@ -1410,6 +1440,7 @@
       resumeAuctionTimers();
       switchTab('shop');
     }
+    
     function loadState() {
       const saved = localStorage.getItem('ghostmarket_state');
       if (saved) {
@@ -1421,8 +1452,10 @@
           if (!Array.isArray(state.cart)) state.cart = [];
           if (!Array.isArray(state.orders)) state.orders = [];
           if (!Array.isArray(state.notifications)) state.notifications = [];
+          if (!Array.isArray(state.inventory)) state.inventory = JSON.parse(JSON.stringify(inventoryItems));
           if (typeof state.cardColor !== 'number') state.cardColor = 0;
           if (typeof state.cardHidden !== 'boolean') state.cardHidden = false;
+          if (typeof state.permanent_discount !== 'number') state.permanent_discount = 0;
         } catch (error) {
           console.warn('state load error', error);
           state = { ...DEFAULT_STATE };
@@ -1434,11 +1467,13 @@
       if (theme) document.documentElement.setAttribute('data-theme', theme);
       else document.documentElement.setAttribute('data-theme', 'dark');
     }
+    
     function saveState() {
       localStorage.setItem('ghostmarket_state', JSON.stringify(state));
       if (state.active_discount > 0) localStorage.setItem('active_discount', state.active_discount.toFixed(2));
       else localStorage.removeItem('active_discount');
     }
+    
     function initTelegramUser() {
       try {
         if (tg?.initDataUnsafe?.user) {
@@ -1448,6 +1483,7 @@
         }
       } catch (error) {}
     }
+    
     function attachListeners() {
       document.getElementById('themeButton').addEventListener('click', toggleTheme);
       document.getElementById('bannerTopUpBtn').addEventListener('click', openBalancePanel);
@@ -1488,23 +1524,27 @@
         switchTab(tabName);
       }));
     }
+    
     function applyTheme() {
       const current = document.documentElement.getAttribute('data-theme') || 'dark';
       document.getElementById('themeButton').textContent = current === 'dark' ? '🌙 Темная' : '☀️ Светлая';
       updateCardStyle();
     }
+    
     function toggleTheme() {
       const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('ghostmarket_theme', next);
       applyTheme();
     }
+    
     function openSupportLink() {
       if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me');
       else window.open('https://t.me', '_blank');
       showToast('Открываю поддержку...');
       triggerHaptic('impactOccurred', 'medium');
     }
+    
     function switchTab(tab) {
       document.querySelectorAll('.page').forEach(page => page.classList.toggle('page-active', page.id === 'page-' + tab));
       document.querySelectorAll('.tab-item').forEach(item => item.classList.toggle('active', item.dataset.tab === tab));
@@ -1514,15 +1554,18 @@
       triggerHaptic('impactOccurred', 'medium');
       document.getElementById('page-' + tab).scrollIntoView({ behavior: 'smooth' });
     }
+    
     function openBalancePanel() {
       document.getElementById('balancePanel').classList.add('visible');
       document.getElementById('balanceBackdrop').classList.add('visible');
       document.getElementById('balancePanelAmount').textContent = `Текущий баланс: ${state.balance} ₽`;
     }
+    
     function closeBalancePanel() {
       document.getElementById('balancePanel').classList.remove('visible');
       document.getElementById('balanceBackdrop').classList.remove('visible');
     }
+    
     function topUp(amount) {
       state.balance += amount;
       saveState();
@@ -1532,6 +1575,7 @@
       showToast(`✅ Баланс пополнен на ${amount} ₽`);
       closeBalancePanel();
     }
+    
     function renderAll() {
       renderHeader();
       renderGames();
@@ -1542,10 +1586,12 @@
       renderProfilePage();
       renderAdminPanel();
     }
+    
     function renderHeader() {
       document.getElementById('profileAvatar').textContent = (state.firstName || 'G').charAt(0).toUpperCase();
       document.getElementById('headerBalance')?.textContent = `${state.balance} ₽`;
     }
+    
     function renderGames() {
       const container = document.getElementById('gamesList');
       container.innerHTML = games.map(game => `
@@ -1558,20 +1604,23 @@
         selectGame(node.dataset.game);
       }));
     }
+    
     function selectGame(gameId) {
       state.selectedGame = gameId;
       saveState();
       renderGames();
       renderConstructor();
     }
+    
     function renderConstructor() {
       const game = games.find(item => item.id === state.selectedGame);
       const price = getFinalPrice(donationProduct.price);
       document.getElementById('donationPrice').textContent = `${price} ₽`;
       const discountNote = document.getElementById('discountNote');
       const discountChip = document.getElementById('discountChip');
-      if (state.active_discount > 0) {
-        discountNote.textContent = 'Скидка 10% активирована';
+      if (state.active_discount > 0 || state.permanent_discount > 0) {
+        const totalDiscount = Math.max(state.active_discount, state.permanent_discount);
+        discountNote.textContent = `Скидка ${Math.round(totalDiscount * 100)}% активирована`;
         discountChip.classList.remove('hidden');
       } else {
         discountNote.textContent = 'Скидка неактивна';
@@ -1579,6 +1628,7 @@
       }
       renderShopFields();
     }
+    
     function renderShopFields() {
       const game = games.find(item => item.id === state.selectedGame);
       if (!game) return;
@@ -1603,6 +1653,7 @@
         `;
       }
     }
+    
     function validateShopFields() {
       const game = games.find(item => item.id === state.selectedGame);
       let valid = true;
@@ -1616,6 +1667,7 @@
       if (!valid) showToast('❌ Заполните все поля');
       return valid;
     }
+    
     function getShopFields() {
       const result = {};
       const uid = document.getElementById('uid-input');
@@ -1624,6 +1676,7 @@
       if (zone) result.zone = zone.value.trim();
       return result;
     }
+    
     function addDonationToCart() {
       if (!validateShopFields()) return;
       const game = games.find(item => item.id === state.selectedGame);
@@ -1641,6 +1694,7 @@
       renderCartPreview();
       showToast('🛒 Товар добавлен в корзину');
     }
+    
     function renderCartPreview() {
       const container = document.getElementById('cartPreview');
       if (!state.cart.length) {
@@ -1660,11 +1714,13 @@
         </div>
       `).join('');
     }
+    
     function removeFromCart(index) {
       state.cart.splice(index, 1);
       saveState();
       renderCartPreview();
     }
+    
     function buyDonationQuick() {
       if (!validateShopFields()) return;
       const price = getFinalPrice(donationProduct.price);
@@ -1688,9 +1744,12 @@
         if (confirm(`Списать ${price} ₽ за ${donationProduct.name}?`)) confirmAction();
       }
     }
+    
     function getFinalPrice(basePrice) {
-      return Math.max(1, Math.round(basePrice * (1 - (state.active_discount || 0))));
+      const totalDiscount = Math.max(state.active_discount || 0, state.permanent_discount || 0);
+      return Math.max(1, Math.round(basePrice * (1 - totalDiscount)));
     }
+    
     function completePurchase(itemName, amount) {
       state.balance -= amount;
       state.spent += amount;
@@ -1707,7 +1766,7 @@
       if (state.active_discount > 0) {
         state.active_discount = 0;
         localStorage.removeItem('active_discount');
-        showToast('✅ Скидка сброшена после покупки');
+        showToast('✅ Одноразовая скидка сброшена после покупки');
       }
       saveState();
       renderHeader();
@@ -1719,6 +1778,7 @@
       triggerHaptic('notificationOccurred', 'success');
       if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'purchase', item: itemName, amount }));
     }
+    
     function renderPassPage() {
       const pass = state.pass;
       const level = Math.min(50, pass.level);
@@ -1731,6 +1791,7 @@
       renderAuctionList();
       renderInventory();
     }
+    
     function renderPassLine(containerId, items, premiumOnly) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
@@ -1746,6 +1807,7 @@
         container.appendChild(card);
       }
     }
+    
     function renderQuests() {
       const container = document.getElementById('questsGrid');
       container.innerHTML = '';
@@ -1767,6 +1829,7 @@
         container.appendChild(card);
       });
     }
+    
     function claimQuest(questId) {
       const quest = quests.find(item => item.id === questId);
       if (!quest || state.pass.questsCompleted.includes(questId)) return;
@@ -1787,12 +1850,14 @@
       showToast('✅ Награда добавлена в рюкзак');
       triggerHaptic('impactOccurred', 'light');
     }
+    
     function inferRarity(name) {
       if (name.includes('Void') || name.includes('Nebula') || name.includes('Quantum')) return 'Legendary';
       if (name.includes('Wraith') || name.includes('Cyber') || name.includes('Anomalous')) return 'Epic';
       if (name.includes('Phantom')) return 'Rare';
       return 'Common';
     }
+    
     function addInventoryItem(item) {
       const fullItem = {
         id: Date.now() + Math.floor(Math.random() * 999),
@@ -1805,117 +1870,187 @@
       state.pass.inventory.unshift(fullItem);
       saveState();
     }
+    
     function renderInventory() {
-      const inventory = state.pass.inventory;
+      const inventory = state.inventory || [];
       const container = document.getElementById('inventoryGrid');
       if (!inventory.length) {
         container.innerHTML = '<div class="cart-empty">Рюкзак пуст. Встречайте артефакты после выполнения квестов.</div>';
         return;
       }
-      container.innerHTML = inventory.map((item, index) => `
-        <div class="inventory-item" onclick="openExchangeModal(${index})">
-          <div class="inventory-title">${item.icon} ${item.name}</div>
-          <div class="inventory-subtitle">≈ ${item.basePrice} ₽ • ${item.rarity}</div>
-        </div>
-      `).join('');
+      container.innerHTML = inventory.map((item, index) => {
+        const gradeClass = {
+          'Common': 'text-slate-400',
+          'Rare': 'text-blue-400',
+          'Epic': 'text-purple-400',
+          'Legendary': 'text-amber-400'
+        }[item.grade] || 'text-slate-400';
+        
+        const gradeBg = {
+          'Common': 'bg-slate-500/10',
+          'Rare': 'bg-blue-500/10',
+          'Epic': 'bg-purple-500/10',
+          'Legendary': 'bg-amber-500/10'
+        }[item.grade] || 'bg-slate-500/10';
+        
+        return `
+          <div class="inventory-item" onclick="openInventoryModal(${index})">
+            <div class="inventory-title">${item.icon} ${item.name}</div>
+            <div class="inventory-subtitle">
+              <span class="${gradeClass} ${gradeBg} px-2 py-1 rounded text-xs font-bold">
+                ${item.grade} ${item.count > 1 ? '×' + item.count : ''}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
-    function openExchangeModal(index) {
-      const item = state.pass.inventory[index];
+    
+    function openInventoryModal(index) {
+      const item = state.inventory[index];
       if (!item) return;
       const movement = Math.random() > 0.5;
       const changeValue = (Math.random() * 18 + 2).toFixed(1);
       const changeLabel = movement ? `📈 Выросло на +${changeValue}%` : `📉 Упало на -${changeValue}%`;
-      const price = Math.max(20, item.basePrice + Math.round((movement ?  1 : -1) * changeValue));
+      const basePrice = item.grade === 'Common' ? 50 : item.grade === 'Rare' ? 150 : item.grade === 'Epic' ? 400 : 1000;
+      const price = Math.max(20, basePrice + Math.round((movement ? 1 : -1) * changeValue));
+      
       currentExchange = { item, index, price };
       const title = `${item.icon} ${item.name}`;
-      const description = `Текущая цена: ${price} ₽\n${changeLabel}`;
+      const description = `Текущая цена за 1 единицу: ${price} ₽\nВ наличии: ${item.count}\n${changeLabel}`;
       document.getElementById('exchangeTitle').textContent = title;
       document.getElementById('exchangeDescription').textContent = description;
       document.getElementById('exchangeDetails').innerHTML = `
-        <div class="quest-card-meta">Редкость: ${item.rarity}</div>
+        <div class="quest-card-meta">Грейд: ${item.grade} | Описание: ${item.desc}</div>
       `;
+      
       const actions = [];
-      actions.push(`<button class="primary-btn" type="button" onclick="handleActivateItem()">⚡ Использовать</button>`);
-      actions.push(`<button class="secondary-btn" type="button" onclick="sellExchangeItem()">💸 Продать на бирже</button>`);
-      if (item.rarity === 'Epic' || item.rarity === 'Legendary') {
-        actions.push(`<button class="primary-btn" type="button" onclick="listItemToAuction(${index})">🏷️ На аукцион</button>`);
+      if (item.id === 'shard' || item.id === 'vault' || item.id === 'ticket' || item.id === 'cipher' || item.id === 'mask') {
+        actions.push(`<button class="primary-btn" type="button" onclick="useInventoryItem('${item.id}')">⚡ Использовать</button>`);
       }
+      actions.push(`<button class="secondary-btn" type="button" onclick="sellInventoryItem(${index})">💸 Продать на бирже</button>`);
+      
       document.getElementById('exchangeActions').innerHTML = actions.join('');
       document.getElementById('exchangeBackdrop').classList.add('visible');
     }
-    function closeExchangeModal() {
-      document.getElementById('exchangeBackdrop').classList.remove('visible');
-      currentExchange = null;
-    }
-    function handleActivateItem() {
-      if (!currentExchange) return;
-      const item = currentExchange.item;
-      if (item.name.includes('Soul Shard')) {
-        const shards = state.pass.inventory.filter(i => i.name.includes('Soul Shard'));
-        if (shards.length < 5) {
-          showToast('Соберите 5 Soul Shard для скидки 10%');
+    
+    function useInventoryItem(itemId) {
+      const item = state.inventory.find(i => i.id === itemId);
+      if (!item) return;
+      
+      if (itemId === 'shard') {
+        if (item.count < 5) {
+          if (tg?.showAlert) tg.showAlert('❌ Соберите 5 Soul Shard для скидки 10%');
+          else alert('❌ Соберите 5 Soul Shard для скидки 10%');
           return;
         }
-        let removed = 0;
-        state.pass.inventory = state.pass.inventory.filter(i => {
-          if (removed < 5 && i.name.includes('Soul Shard')) {
-            removed += 1;
-            return false;
-          }
-          return true;
-        });
+        item.count -= 5;
+        if (item.count <= 0) {
+          state.inventory = state.inventory.filter(i => i.id !== itemId);
+        }
         state.active_discount = 0.10;
         saveState();
         renderInventory();
         renderConstructor();
-        showToast('✅ Получена скидка 10%');
+        showToast('✅ Получена скидка 10% на следующую покупку');
         closeExchangeModal();
         return;
       }
-      if (item.name.includes('Quantum Vault')) {
-        const keyIndex = state.pass.inventory.findIndex(i => i.name.includes('Phantom Key'));
-        if (keyIndex === -1) {
-          showToast('Нужен Phantom Key для активации');
+      
+      if (itemId === 'vault') {
+        const keyItem = state.inventory.find(i => i.id === 'key');
+        if (!keyItem || keyItem.count < 1) {
+          if (tg?.showAlert) tg.showAlert('❌ Нужен Phantom Key для открытия Quantum Vault');
+          else alert('❌ Нужен Phantom Key для открытия Quantum Vault');
           return;
         }
-        state.pass.inventory = state.pass.inventory.filter(i => i.id !== item.id);
-        const removeKey = state.pass.inventory.findIndex(i => i.name.includes('Phantom Key'));
-        if (removeKey !== -1) state.pass.inventory.splice(removeKey, 1);
+        item.count -= 1;
+        if (item.count <= 0) {
+          state.inventory = state.inventory.filter(i => i.id !== itemId);
+        }
+        keyItem.count -= 1;
+        if (keyItem.count <= 0) {
+          state.inventory = state.inventory.filter(i => i.id !== 'key');
+        }
         state.promoCode = 'GHOST-GIFT-777';
         saveState();
         renderInventory();
-        showToast('Промокод получен: GHOST-GIFT-777');
+        showToast('🔐 Сейф открыт! Промокод: GHOST-GIFT-777');
         closeExchangeModal();
         return;
       }
-      if (item.name.includes('Anomalous Cipher')) {
-        const last = parseInt(localStorage.getItem('anomalous_last') || '0', 10);
+      
+      if (itemId === 'ticket') {
+        item.count -= 1;
+        if (item.count <= 0) {
+          state.inventory = state.inventory.filter(i => i.id !== itemId);
+        }
+        saveState();
+        renderInventory();
+        if (tg?.showAlert) tg.showAlert('🎟️ Билет активирован! Ваш ID внесен в базу участников еженедельного розыгрыша 50 Telegram Stars!');
+        else alert('🎟️ Билет активирован! Ваш ID внесен в базу участников еженедельного розыгрыша 50 Telegram Stars!');
+        closeExchangeModal();
+        return;
+      }
+      
+      if (itemId === 'cipher') {
+        const last = parseInt(localStorage.getItem('cipher_last') || '0', 10);
         const weekMs = 7 * 24 * 60 * 60 * 1000;
         if (Date.now() - last < weekMs) {
-          showToast('Anomalous Cipher можно использовать раз в неделю');
+          if (tg?.showAlert) tg.showAlert('❌ Anomalous Cipher можно использовать раз в неделю');
+          else alert('❌ Anomalous Cipher можно использовать раз в неделю');
           return;
         }
-        localStorage.setItem('anomalous_last', String(Date.now()));
-        showToast('Начислено 20 Telegram Stars! Передайте ID админу');
+        item.count -= 1;
+        if (item.count <= 0) {
+          state.inventory = state.inventory.filter(i => i.id !== itemId);
+        }
+        localStorage.setItem('cipher_last', String(Date.now()));
+        saveState();
+        renderInventory();
+        if (tg?.showAlert) tg.showAlert('🧬 Шифр разгадан! Начислено 20 Telegram Stars. Напишите ваш ID администратору!');
+        else alert('🧬 Шифр разгадан! Начислено 20 Telegram Stars. Напишите ваш ID администратору!');
         closeExchangeModal();
         return;
       }
-      showToast('Этот предмет нельзя активировать сейчас');
+      
+      if (itemId === 'mask') {
+        item.count -= 1;
+        if (item.count <= 0) {
+          state.inventory = state.inventory.filter(i => i.id !== itemId);
+        }
+        state.permanent_discount = 0.05;
+        saveState();
+        renderInventory();
+        renderConstructor();
+        showToast('🎭 Маска надета! Получена пожизненная скидка 5%');
+        closeExchangeModal();
+        return;
+      }
     }
-    function sellExchangeItem() {
-      if (!currentExchange) return;
-      const item = currentExchange.item;
-      const amount = Math.max(1, Math.round(currentExchange.price * 0.12));
-      const index = state.pass.inventory.findIndex(i => i.id === item.id);
-      if (index !== -1) state.pass.inventory.splice(index, 1);
-      state.ghostCoin += amount;
-      state.notifications.unshift(`Продано ${item.name} за ${amount} GCOIN`);
+    
+    function sellInventoryItem(index) {
+      const item = state.inventory[index];
+      if (!item) return;
+      
+      const basePrice = item.grade === 'Common' ? 50 : item.grade === 'Rare' ? 150 : item.grade === 'Epic' ? 400 : 1000;
+      const ghostCoinReward = Math.max(1, Math.round((basePrice / 100)));
+      
+      item.count -= 1;
+      if (item.count <= 0) {
+        state.inventory.splice(index, 1);
+      }
+      
+      state.ghostCoin += ghostCoinReward;
+      state.notifications.unshift(`Продано ${item.name} за ${ghostCoinReward} GCOIN`);
+      
       saveState();
       renderInventory();
       renderProfilePage();
-      showToast(`💸 Продано за ${amount} GCOIN`);
+      showToast(`💸 Продано за ${ghostCoinReward} GCOIN`);
       closeExchangeModal();
     }
+    
     function openListAuctionPrompt() {
       if (!state.pass.inventory.length) {
         showToast('Рюкзак пуст, нет предметов для аукциона');
@@ -1939,6 +2074,7 @@
       }
       createAuctionLot(index, startPrice);
     }
+    
     function listItemToAuction(index) {
       const item = state.pass.inventory[index];
       if (!item) return;
@@ -1952,6 +2088,7 @@
       createAuctionLot(index, startPrice);
       closeExchangeModal();
     }
+    
     function createAuctionLot(index, startPrice) {
       const item = state.pass.inventory.splice(index, 1)[0];
       if (!item) return;
@@ -1973,6 +2110,7 @@
       showToast(`📦 Лот выставлен: ${item.name}`);
       startAuctionBotsForLot(lot.id);
     }
+    
     function renderAuctionList() {
       const container = document.getElementById('auctionList');
       if (!state.auctionLots.length) {
@@ -1994,6 +2132,7 @@
         </div>
       `).join('');
     }
+    
     function raiseAuctionBid(lotId) {
       const lot = state.auctionLots.find(item => item.id === lotId);
       if (!lot) return;
@@ -2012,6 +2151,7 @@
       showToast('✅ Ставка увеличена');
       triggerHaptic('impactOccurred', 'medium');
     }
+    
     function startAuctionBotsForLot(lotId) {
       if (auctionIntervals[lotId]) return;
       auctionIntervals[lotId] = setInterval(() => {
@@ -2037,6 +2177,7 @@
         }
       }, 12000);
     }
+    
     function finalizeAuctionLot(lotId) {
       const index = state.auctionLots.findIndex(item => item.id === lotId);
       if (index === -1) return;
@@ -2063,12 +2204,14 @@
       renderInventory();
       renderProfilePage();
     }
+    
     function resumeAuctionTimers() {
       state.auctionLots.forEach(lot => {
         if (Date.now() >= lot.timeEnd) finalizeAuctionLot(lot.id);
         else startAuctionBotsForLot(lot.id);
       });
     }
+    
     function viewLot(lotId) {
       const lot = state.auctionLots.find(item => item.id === lotId);
       if (!lot) return;
@@ -2088,6 +2231,7 @@
         </button>
       `).join('');
     }
+    
     function showOrderDetails(orderId) {
       const order = state.orders.find(item => String(item.id) === String(orderId));
       if (!order) return;
@@ -2110,6 +2254,7 @@
       updateCardUI();
       renderAdminPanel();
     }
+    
     function renderPremiumTiers() {
       const container = document.getElementById('premiumTiersList');
       if (!container) {
@@ -2141,6 +2286,7 @@
         `;
       }
     }
+    
     function confirmPremium(tier) {
       const price = tier === 'premium_plus' ? 300 : 100;
       const name = tier === 'premium_plus' ? 'Ghost Premium+' : 'Ghost Premium';
@@ -2150,6 +2296,7 @@
       }
       showModal(`Подписка ${name}`, `Списать ${price} ₽ и активировать подписку?`, () => activatePremium(tier));
     }
+    
     function activatePremium(tier) {
       const price = tier === 'premium_plus' ? 300 : 100;
       state.balance -= price;
@@ -2163,6 +2310,7 @@
       showToast('✅ Подписка активирована');
       triggerHaptic('notificationOccurred', 'success');
     }
+    
     function showCancelPremium() {
       const message = 'Отмена подписки приведёт к потере кэшбэка и Ghost Pass премиум. Продолжить?';
       if (tg?.showPopup) {
@@ -2180,6 +2328,7 @@
         if (confirm(message)) doCancelPremium();
       }
     }
+    
     function doCancelPremium() {
       state.premiumStatus = 'none';
       state.premiumExpires = null;
@@ -2187,7 +2336,141 @@
       renderProfilePage();
       showToast('✅ Подписка отменена');
     }
-
+    
+    function saveSettings() {
+      state.savedUID = document.getElementById('settingsUID').value.trim();
+      state.savedZone = document.getElementById('settingsZoneID').value.trim();
+      saveState();
+      renderConstructor();
+      showToast('✅ Настройки сохранены');
+    }
+    
+    function toggleAnimations() {
+      state.animationsEnabled = !state.animationsEnabled;
+      saveState();
+      document.getElementById('toggleAnimationsText').textContent = state.animationsEnabled ? 'Анимации вкл' : 'Анимации выкл';
+    }
+    
+    function renderAdminPanel() {
+      const panel = document.getElementById('adminPanel');
+      if (state.username === 'henotsosal') {
+        panel.classList.remove('hidden');
+        document.getElementById('adminPromoCode').textContent = state.promoCode || 'Промокод пока не создан';
+      } else panel.classList.add('hidden');
+    }
+    
+    function generatePromoCode() {
+      const suffix = Math.floor(1000 + Math.random() * 9000);
+      state.promoCode = `GHOST-${suffix}-RAND`;
+      saveState();
+      document.getElementById('adminPromoCode').textContent = state.promoCode;
+      showToast('🎁 Промокод создан');
+    }
+    
+    function updateCardUI() {
+      document.getElementById('cardBalance').textContent = `Баланс: ${state.balance} ₽`;
+      document.getElementById('totalSpent').textContent = `${state.spent} ₽`;
+      document.getElementById('accumulatedCashback').textContent = `${state.cashback} ₽`;
+      const icon = document.getElementById('cardToggleIcon');
+      if (state.cardHidden) {
+        document.getElementById('ghostCard').style.display = 'none';
+        icon.style.display = 'none';
+      } else {
+        document.getElementById('ghostCard').style.display = 'block';
+        icon.style.display = 'block';
+      }
+      updateCardStyle();
+    }
+    
+    function updateCardStyle() {
+      const card = document.getElementById('ghostCard');
+      if (!card) return;
+      const gradients = [
+        'linear-gradient(135deg, #7c3aed, #6366f1)',
+        'linear-gradient(135deg, #f97316, #ea580c)',
+        'linear-gradient(135deg, #10b981, #059669)',
+        'linear-gradient(135deg, #111827, #1f2937)'
+      ];
+      card.style.background = gradients[state.cardColor] || gradients[0];
+      if (document.documentElement.getAttribute('data-theme') === 'light') {
+        card.style.background = state.cardColor === 3 ? gradients[3] : 'linear-gradient(135deg, rgba(255,255,255,0.96), rgba(241,243,245,0.96))';
+        card.style.color = state.cardColor === 3 ? '#fff' : '#111827';
+      } else {
+        card.style.color = '#fff';
+      }
+    }
+    
+    function renderColorPicker() {
+      const container = document.getElementById('cardColors');
+      container.innerHTML = [0, 1, 2, 3].map(idx => `
+        <button class="color-dot color-dot-${idx} ${state.cardColor === idx ? 'active' : ''}" type="button" onclick="changeCardColor(${idx})"></button>
+      `).join('');
+    }
+    
+    function changeCardColor(idx) {
+      state.cardColor = idx;
+      saveState();
+      renderColorPicker();
+      updateCardStyle();
+      showToast('Цвет карты изменён');
+    }
+    
+    function toggleCardVisibility() {
+      state.cardHidden = !state.cardHidden;
+      saveState();
+      updateCardUI();
+      showToast(state.cardHidden ? 'Карта скрыта' : 'Карта показана');
+    }
+    
+    function showModal(title, text, action) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalText').textContent = text;
+      window.pendingAction = action || null;
+      document.getElementById('modalBackdrop').classList.add('visible');
+    }
+    
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.remove('visible');
+      window.pendingAction = null;
+    }
+    
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2200);
+    }
+    
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).catch(() => showToast('Копировать не удалось'));
+    }
+    
+    function triggerHaptic(type = 'impactOccurred', style = 'medium') {
+      try { tg?.HapticFeedback?.[type]?.(style); } catch (error) {}
+    }
+    
+    function seedAuctionLots() {
+      if (state.auctionLots.length) return;
+      const sample = [
+        { name: 'Void Diamond', icon: '💎', price: 120, rarity: 'Legendary' },
+        { name: 'Cyber Ghost Mask', icon: '🎭', price: 150, rarity: 'Legendary' },
+        { name: 'Wraith Core v2.0', icon: '🛠️', price: 180, rarity: 'Epic' }
+      ];
+      state.auctionLots = sample.map((item, index) => ({
+        id: 'lot-init-' + index,
+        name: item.name,
+        icon: item.icon,
+        owner: auctionBots[index % auctionBots.length],
+        currentBid: item.price,
+        highestBidder: auctionBots[index % auctionBots.length],
+        rarity: item.rarity,
+        timeEnd: Date.now() + 120000 + index * 20000,
+        itemData: { name: item.name, icon: item.icon, basePrice: item.price, rarity: item.rarity }
+      }));
+      saveState();
+    }
+    
     window.saveSettings = saveSettings;
     window.toggleAnimations = toggleAnimations;
     window.renderAdminPanel = renderAdminPanel;
@@ -2222,6 +2505,11 @@
     window.openListAuctionPrompt = openListAuctionPrompt;
     window.addDonationToCart = addDonationToCart;
     window.buyDonationQuick = buyDonationQuick;
+    window.openInventoryModal = openInventoryModal;
+    window.useInventoryItem = useInventoryItem;
+    window.sellInventoryItem = sellInventoryItem;
+    
+    initApp();
   </script>
 </body>
 </html>
