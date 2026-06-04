@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
@@ -9,68 +9,62 @@
   <style>
     :root {
       --bg: #070814;
-      --bg-panel: rgba(14, 17, 37, 0.96);
-      --bg-card: rgba(14, 17, 37, 0.92);
+      --bg-panel: rgba(14, 17, 37, 0.98);
+      --bg-card: #0e1125;
       --bg-alt: rgba(255, 255, 255, 0.04);
       --text: #e4e4e7;
       --text-muted: #a1a1a6;
       --text-strong: #ffffff;
-      --border: rgba(124, 58, 237, 0.12);
+      --border: rgba(124, 58, 237, 0.34);
       --accent-purple: #7c3aed;
       --accent-indigo: #6366f1;
       --accent-gold: #f59e0b;
       --success: #10b981;
       --error: #ef4444;
-      --shadow: 0 20px 80px rgba(0, 0, 0, 0.25);
-      --ghost-card: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
-      --card-text: #f8fafc;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
       --page-bg: radial-gradient(circle at top left, rgba(20, 23, 45, 1) 0%, var(--bg) 35%, var(--bg) 100%);
+      --card-radius: 24px;
+      --control-radius: 18px;
+      --font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
     [data-theme="light"] {
       --bg: #f4f6fa;
-      --bg-panel: rgba(255, 255, 255, 0.96);
+      --bg-panel: rgba(255, 255, 255, 0.98);
       --bg-card: #ffffff;
       --bg-alt: rgba(15, 23, 42, 0.04);
       --text: #111827;
       --text-muted: #6b7280;
       --text-strong: #111827;
       --border: rgba(15, 23, 42, 0.08);
-      --accent-purple: #8b5cf6;
-      --accent-indigo: #2563eb;
+      --accent-purple: #7c3aed;
+      --accent-indigo: #6366f1;
       --accent-gold: #f59e0b;
       --success: #059669;
       --error: #dc2626;
-      --shadow: 0 20px 80px rgba(15, 23, 42, 0.08);
-      --ghost-card: linear-gradient(135deg, #e2e8f0 0%, #f8fafc 100%);
-      --card-text: #111827;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
       --page-bg: radial-gradient(circle at top left, rgba(244, 246, 250, 1) 0%, var(--bg) 35%, var(--bg) 100%);
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
-    html,
-    body {
+    html, body {
       min-height: 100%;
-      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      width: 100%;
+      font-family: var(--font-family);
       background: var(--page-bg);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       overflow: hidden;
     }
-
     body {
       overflow: hidden;
     }
-
-    button,
-    input {
+    button, input {
       font: inherit;
+      outline: none;
     }
-
     .app {
       position: fixed;
       inset: 0;
@@ -78,7 +72,6 @@
       flex-direction: column;
       background: transparent;
     }
-
     .header {
       position: sticky;
       top: 0;
@@ -87,529 +80,677 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px 16px;
+      padding: 18px 16px;
       background: var(--bg-panel);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(18px);
     }
-
+    .header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
     .logo {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
-      -webkit-background-clip: text;
-      color: transparent;
-      background-clip: text;
+      color: var(--accent-purple);
+      text-shadow: 0 0 16px rgba(124, 58, 237, 0.35);
     }
-
+    .header-note {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
     .header-actions {
       display: flex;
       align-items: center;
       gap: 10px;
-      width: 100%;
-      justify-content: flex-end;
     }
-
-    .balance-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(90deg, rgba(124, 58, 237, 0.16), rgba(99, 102, 241, 0.16));
+    .theme-switch {
+      min-width: 112px;
+      padding: 14px 16px;
+      background: linear-gradient(90deg, rgba(124, 58, 237, 0.18), rgba(99, 102, 241, 0.18));
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
+      border-radius: 16px;
+      color: var(--text);
       cursor: pointer;
-      color: var(--text-light);
-      font-size: 12px;
       font-weight: 700;
-      transition: transform 0.2s ease;
+      letter-spacing: 0.3px;
     }
-
-    .balance-header:active {
-      transform: scale(0.96);
-    }
-
-    .btn-icon,
-    .btn-theme {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(124, 58, 237, 0.08);
-      color: var(--text-light);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transition: all 0.22s ease;
-    }
-
-    .btn-icon:active,
-    .btn-theme:active {
-      transform: scale(0.92);
-    }
-
-    .notification-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--error);
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 800;
-      box-shadow: 0 0 0 4px rgba(7, 8, 20, 0.25);
-    }
-
-    .scroll-content {
+    .page-shell {
       flex: 1;
       overflow-y: auto;
-      padding: 16px;
-      padding-bottom: 120px;
+      padding: 0 16px 90px;
       -webkit-overflow-scrolling: touch;
     }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .page {
+      display: none;
+      animation: fadeIn 0.25s ease forwards;
+      padding-top: 14px;
     }
-
-    .page-content {
-      animation: fadeIn 0.26s ease-out;
+    .page-active {
+      display: block;
     }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .banner {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(99, 102, 241, 0.14));
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 22px 18px;
+    .section {
       margin-bottom: 20px;
     }
-
-    .banner-title {
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-strong);
+    }
+    .section-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .shop-banner {
+      border-radius: var(--card-radius);
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.20), rgba(99, 102, 241, 0.14));
+      border: 1px solid rgba(124, 58, 237, 0.28);
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+    .shop-banner-title {
       font-size: 20px;
       font-weight: 800;
-      line-height: 1.3;
+      margin-bottom: 12px;
+      color: var(--text-strong);
+    }
+    .shop-banner-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .shop-banner-btn {
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: #fff;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+    }
+    .horizontal-list {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 6px;
+    }
+    .horizontal-list::-webkit-scrollbar {
+      display: none;
+    }
+    .game-pill {
+      flex: 0 0 auto;
+      min-width: 160px;
+      padding: 18px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.06);
+      cursor: pointer;
+      scroll-snap-align: start;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .game-pill.active {
+      border-color: rgba(124, 58, 237, 0.65);
+      box-shadow: 0 14px 40px rgba(124, 58, 237, 0.18);
+      transform: translateY(-2px);
+    }
+    .game-pill-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .game-pill-price {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .constructor-card {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 20px;
+    }
+    .field-group {
+      margin-bottom: 16px;
+    }
+    .field-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-strong);
+    }
+    .field-input {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    .field-input::placeholder {
+      color: var(--text-muted);
+    }
+    .donation-card {
+      border-radius: 22px;
+      border: 1px solid rgba(124, 58, 237, 0.18);
+      background: linear-gradient(180deg, rgba(124, 58, 237, 0.08), rgba(99, 102, 241, 0.05));
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .donation-card-title {
+      font-size: 15px;
+      font-weight: 800;
       margin-bottom: 10px;
       color: var(--text-strong);
     }
-
-    .banner-subtitle {
+    .donation-card-text {
+      font-size: 13px;
       color: var(--text-muted);
-      font-size: 12px;
-      line-height: 1.5;
+      margin-bottom: 16px;
     }
-
-    .promo-banner {
+    .price-block {
       display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
       gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(245, 158, 11, 0.05));
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
-
-    .promo-banner-text {
-      font-size: 12px;
-      color: #ffe082;
-      font-weight: 700;
-      flex: 1;
-      line-height: 1.4;
-    }
-
-    .promo-banner-btn {
-      background: var(--accent-gold);
-      color: #070814;
-      border: none;
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-weight: 700;
-      font-size: 11px;
-      cursor: pointer;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 20px 0 12px;
-    }
-
-    .section-title {
-      font-size: 16px;
+    .price-current {
+      font-size: 28px;
       font-weight: 800;
       color: var(--text-strong);
     }
-
-    .games-carousel,
+    .price-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .discount-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, 0.16);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .constructor-actions {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .primary-btn,
+    .secondary-btn,
+    .ghost-btn,
+    .small-btn {
+      border: none;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .primary-btn {
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: #fff;
+    }
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .primary-btn:active,
+    .secondary-btn:active,
+    .ghost-btn:active,
+    .small-btn:active {
+      transform: scale(0.97);
+    }
+    .cart-preview {
+      border-radius: 22px;
+      border: 1px solid rgba(124, 58, 237, 0.16);
+      background: rgba(124, 58, 237, 0.05);
+      padding: 18px;
+    }
+    .cart-empty {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      margin-bottom: 12px;
+    }
+    .cart-item:last-child {
+      margin-bottom: 0;
+    }
+    .cart-item-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-strong);
+      margin-bottom: 6px;
+    }
+    .cart-item-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .cart-item-amount {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--success);
+      text-align: right;
+    }
+    .cart-item-remove {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: none;
+      background: rgba(239, 68, 68, 0.14);
+      color: #fb7185;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pass-summary {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .pass-summary-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+    .pass-level {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-strong);
+    }
+    .pass-xp {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .pass-progress {
+      width: 100%;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      margin-top: 18px;
+    }
+    .pass-progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      transition: width 0.3s ease;
+    }
     .pass-line {
       display: flex;
       gap: 12px;
       overflow-x: auto;
-      scroll-behavior: smooth;
-      padding-bottom: 8px;
-      margin-bottom: 18px;
+      padding-bottom: 10px;
       scrollbar-width: none;
     }
-
-    .games-carousel::-webkit-scrollbar,
-    .pass-line::-webkit-scrollbar,
-    .inventory-grid::-webkit-scrollbar,
-    .quests-list::-webkit-scrollbar,
-    .payment-history-list::-webkit-scrollbar {
+    .pass-line::-webkit-scrollbar {
       display: none;
     }
-
-    .game-card,
-    .pass-card,
-    .inventory-card,
-    .quest-card,
-    .premium-card,
-    .product-card,
-    .settings-card {
-      background: var(--bg-card);
+    .pass-item {
+      flex: 0 0 auto;
+      min-width: 140px;
+      padding: 16px;
+      border-radius: 20px;
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-      min-width: 120px;
-      transition: all 0.22s ease;
-      cursor: pointer;
-    }
-
-    .game-card:hover,
-    .pass-card:hover,
-    .inventory-card:hover,
-    .premium-card:hover,
-    .product-card:hover,
-    .settings-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(124, 58, 237, 0.4);
-      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.12);
-    }
-
-    .game-icon,
-    .product-icon,
-    .inventory-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      margin: 0 auto 10px;
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(99, 102, 241, 0.12));
-      font-size: 26px;
-    }
-
-    .game-name,
-    .product-name,
-    .inventory-name {
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 1.3;
+      background: var(--bg-card);
       text-align: center;
-      margin-bottom: 6px;
+      scroll-snap-align: start;
+    }
+    .pass-item.premium {
+      background: rgba(124, 58, 237, 0.12);
+      border-color: rgba(124, 58, 237, 0.28);
+      box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.12);
+    }
+    .pass-item.locked {
+      opacity: 0.36;
+    }
+    .pass-item-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
       color: var(--text-strong);
     }
-
-    .game-price,
-    .product-price,
-    .inventory-price {
-      color: var(--success);
-      font-weight: 800;
-      font-size: 13px;
-      text-align: center;
+    .pass-item-level {
+      font-size: 11px;
+      color: var(--text-muted);
     }
-
-    .game-discount,
-    .product-discount {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: var(--error);
-      color: white;
-      padding: 3px 7px;
-      border-radius: 8px;
-      font-size: 10px;
-      font-weight: 800;
+    .quests-grid {
+      display: grid;
+      gap: 12px;
     }
-
-    .constructor,
-    .catalog,
-    .profile-card,
-    .card-section,
-    .payment-history-section,
-    .settings-section,
-    .premium-section,
-    .inventory-section,
-    .pass-section {
+    .quest-card {
+      padding: 18px;
+      border-radius: 22px;
       background: var(--bg-card);
       border: 1px solid var(--border);
+    }
+    .quest-card-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-strong);
+      margin-bottom: 10px;
+    }
+    .quest-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .auction-card {
+      border-radius: var(--card-radius);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 18px;
+    }
+    .auction-list {
+      display: grid;
+      gap: 12px;
+    }
+    .auction-item {
+      padding: 16px;
       border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .auction-item-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-strong);
+      margin-bottom: 8px;
+    }
+    .auction-item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .auction-item-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .inventory-item {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 18px;
+      cursor: pointer;
+    }
+    .inventory-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(124, 58, 237, 0.35);
+    }
+    .inventory-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .inventory-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-strong);
+    }
+    .inventory-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .orders-card {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
       padding: 18px;
       margin-bottom: 20px;
     }
-
-    .constructor-title,
-    .card-section-title,
-    .settings-title,
-    .inventory-title,
-    .pass-header-title {
-      font-size: 15px;
-      font-weight: 800;
-      margin-bottom: 14px;
-      color: var(--text-strong);
-    }
-
-    .game-select-btn,
-    .product-buy-btn,
-    .product-cart-btn,
-    .balance-btn-panel,
-    .settings-save-btn,
-    .premium-btn,
-    .modal-btn,
-    .quest-action-btn,
-    .admin-btn {
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: #fff;
-      cursor: pointer;
-      transition: all 0.22s ease;
-    }
-
-    .game-select-btn {
-      padding: 10px 14px;
-      background: rgba(124, 58, 237, 0.08);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      min-width: 100px;
-    }
-
-    .game-select-btn.active {
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      color: #fff;
-      border-color: rgba(124, 58, 237, 0.35);
-    }
-
-    .game-select-btn:active,
-    .premium-btn:active,
-    .modal-btn:active,
-    .quest-action-btn:active,
-    .admin-btn:active,
-    .product-buy-btn:active,
-    .product-cart-btn:active,
-    .balance-btn-panel:active {
-      transform: scale(0.97);
-    }
-
-    .field-group {
-      margin-bottom: 14px;
-    }
-
-    .field-label {
-      display: block;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .field-input,
-    .settings-input {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(124, 58, 237, 0.05);
-      padding: 14px;
-      color: var(--text);
+    .orders-notice {
       font-size: 13px;
-      outline: none;
+      color: var(--text-muted);
+      line-height: 1.6;
     }
-
-    .field-input:focus,
-    .settings-input:focus {
-      border-color: var(--accent-purple);
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.12);
-    }
-
-    .field-error {
-      margin-top: 6px;
-      color: var(--error);
-      font-size: 11px;
-      display: none;
-    }
-
-    .field-input.error + .field-error {
-      display: block;
-    }
-
-    .payment-history-list,
-    .quests-list {
-      display: flex;
-      flex-direction: column;
+    .orders-list {
+      display: grid;
       gap: 12px;
     }
-
-    .payment-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
+    .order-item {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
     }
-
-    .payment-item-title {
-      font-size: 12px;
-      font-weight: 700;
+    .order-item-title {
+      font-size: 14px;
+      font-weight: 800;
       color: var(--text-strong);
+      margin-bottom: 8px;
     }
-
-    .payment-item-detail {
-      font-size: 11px;
+    .order-item-detail {
+      font-size: 12px;
       color: var(--text-muted);
     }
-
-    .payment-item-amount {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--success);
-    }
-
     .profile-card {
-      overflow: hidden;
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 20px;
+      margin-bottom: 20px;
     }
-
-    .profile-header {
+    .profile-top {
       display: flex;
       align-items: center;
       gap: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
-
     .profile-avatar {
-      width: 78px;
-      height: 78px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
       display: grid;
       place-items: center;
-      font-size: 30px;
-      font-weight: 800;
-      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
       color: #fff;
-      flex-shrink: 0;
+      font-size: 32px;
+      font-weight: 800;
     }
-
     .profile-info {
       flex: 1;
     }
-
     .profile-name {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
-      margin-bottom: 4px;
       color: var(--text-strong);
+      margin-bottom: 6px;
     }
-
     .profile-username {
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-muted);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
-
-    .profile-badge {
+    .profile-status {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: rgba(124, 58, 237, 0.12);
+      color: var(--accent-purple);
+      font-size: 13px;
       font-weight: 700;
-      background: rgba(255, 193, 7, 0.16);
-      border: 1px solid rgba(255, 193, 7, 0.32);
-      color: #ffd966;
-      padding: 6px 10px;
-      border-radius: 14px;
     }
-
     .profile-stats {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
-
     .profile-stat {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 16px;
       text-align: center;
     }
-
     .profile-stat strong {
       display: block;
       font-size: 16px;
-      margin-bottom: 4px;
+      font-weight: 800;
+      margin-bottom: 6px;
       color: var(--accent-purple);
     }
-
     .profile-stat span {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
     }
-
-    .card-section-title {
+    .premium-section {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .premium-section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-strong);
+      margin-bottom: 16px;
+    }
+    .premium-buttons {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .premium-tier {
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.18);
+      background: rgba(124, 58, 237, 0.06);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .premium-tier:hover {
+      border-color: rgba(124, 58, 237, 0.45);
+      background: rgba(124, 58, 237, 0.12);
+    }
+    .premium-tier-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-strong);
+      margin-bottom: 6px;
+    }
+    .premium-tier-price {
+      font-size: 14px;
+      color: var(--accent-purple);
+      margin-bottom: 12px;
+    }
+    .premium-tier-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .premium-cancel-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(239, 68, 68, 0.28);
+      background: rgba(239, 68, 68, 0.08);
+      color: #fb7185;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .card-section {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
       cursor: pointer;
     }
-
-    .card-toggle-icon {
+    .card-header-row h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-strong);
+    }
+    .card-toggle {
+      font-size: 22px;
+      color: var(--accent-purple);
       transition: transform 0.25s ease;
     }
-
-    .card-toggle-icon.hidden {
+    .card-toggle.hidden {
       transform: rotate(-180deg);
     }
-
     .ghost-card {
-      position: relative;
-      border-radius: 24px;
-      padding: 22px;
-      margin-bottom: 18px;
-      min-height: 220px;
-      background: var(--ghost-card);
+      border-radius: 26px;
+      background: linear-gradient(135deg, #7c3aed, #6366f1);
       color: #fff;
+      padding: 24px;
+      position: relative;
       overflow: hidden;
       cursor: pointer;
-      box-shadow: 0 20px 50px rgba(124, 58, 237, 0.35);
-      transition: transform 0.25s ease, background 0.25s ease;
+      margin-bottom: 18px;
+      min-height: 220px;
+      box-shadow: 0 24px 50px rgba(124, 58, 237, 0.32);
     }
-
     .ghost-card::before {
       content: '';
       position: absolute;
@@ -617,495 +758,280 @@
       background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 30%);
       opacity: 0.35;
     }
-
-    .ghost-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .card-header {
+    .ghost-card-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 20px;
+      align-items: center;
+      margin-bottom: 26px;
       position: relative;
       z-index: 1;
     }
-
-    .card-logo {
-      font-size: 30px;
+    .ghost-card-logo {
+      font-size: 32px;
     }
-
-    .card-chip {
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.18);
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.92);
-    }
-
-    .card-number {
-      font-family: 'Courier New', monospace;
-      font-size: 18px;
-      letter-spacing: 3px;
-      font-weight: 700;
-      margin-bottom: 14px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-balance {
-      font-size: 14px;
-      opacity: 0.95;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-holder,
-    .card-valid {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      opacity: 0.95;
-    }
-
-    .card-holder-name,
-    .card-valid-date {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .card-system {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 34px;
-      opacity: 0.14;
-      z-index: 1;
-    }
-
-    .card-stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .card-stat {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .ghost-chip {
+      padding: 10px 14px;
       border-radius: 16px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .card-stat strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 6px;
-      color: #fff;
-    }
-
-    .card-stat span {
+      background: rgba(255, 255, 255, 0.18);
       font-size: 11px;
-      color: #d1d5db;
-    }
-
-    .color-picker {
-      display: flex;
-      gap: 10px;
-      margin-top: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .color-dot {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.25s ease;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
-    }
-
-    .color-dot.active {
-      border-color: rgba(255, 255, 255, 0.9);
-      transform: scale(1.05);
-    }
-
-    .color-dot-0 {
-      background: linear-gradient(135deg, #7c3aed, #6366f1);
-    }
-
-    .color-dot-1 {
-      background: linear-gradient(135deg, #f97316, #ea580c);
-    }
-
-    .color-dot-2 {
-      background: linear-gradient(135deg, #10b981, #059669);
-    }
-
-    .color-dot-3 {
-      background: linear-gradient(135deg, #111827, #1f2937);
-    }
-
-    .premium-section {
-      padding: 18px;
-      border: 1px solid rgba(255, 193, 7, 0.2);
-      background: linear-gradient(135deg, rgba(255, 193, 7, 0.08), rgba(124, 58, 237, 0.04));
-    }
-
-    .premium-status {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
       font-weight: 800;
+      letter-spacing: 0.8px;
     }
-
-    .premium-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 14px;
-      font-size: 12px;
-      background: rgba(255, 193, 7, 0.14);
-      color: #ffd966;
-      border: 1px solid rgba(255, 193, 7, 0.28);
-    }
-
-    .premium-info {
-      color: var(--text-muted);
-      font-size: 12px;
-      line-height: 1.6;
-      margin-bottom: 14px;
-    }
-
-    .premium-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .premium-btn {
-      flex: 1;
-      padding: 14px;
-      min-width: 140px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .premium-btn.cancel {
-      background: rgba(239, 68, 68, 0.14);
-      color: #fb7185;
-    }
-
-    .pass-summary {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .pass-summary strong {
-      font-size: 15px;
+    .ghost-number {
+      font-size: 20px;
       font-weight: 800;
-      display: block;
-    }
-
-    .pass-progress-bar {
-      width: 100%;
-      height: 12px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      margin-top: 8px;
-    }
-
-    .pass-progress-fill {
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
-      transition: width 0.3s ease;
-    }
-
-    .pass-section {
-      padding-bottom: 8px;
-    }
-
-    .pass-line-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .pass-card {
-      min-width: 95px;
-      padding: 12px;
-      border-radius: 18px;
-      text-align: center;
+      letter-spacing: 4px;
+      margin-bottom: 16px;
       position: relative;
-      overflow: hidden;
+      z-index: 1;
     }
-
-    .pass-card.locked {
-      opacity: 0.35;
-      cursor: default;
+    .ghost-balance {
+      font-size: 14px;
+      margin-bottom: 24px;
+      opacity: 0.94;
+      position: relative;
+      z-index: 1;
     }
-
-    .pass-card .pass-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      margin: 0 auto 10px;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .pass-card strong {
-      display: block;
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
-    .pass-card small {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .pass-card .locked-label {
-      margin-top: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .quests-section {
-      margin-top: 10px;
-    }
-
-    .quest-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .quest-text {
-      flex: 1;
-    }
-
-    .quest-title {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--text-strong);
-    }
-
-    .quest-meta {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      color: var(--text-muted);
-      font-size: 11px;
-    }
-
-    .quest-action-btn {
-      padding: 10px 12px;
-      min-width: 95px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .inventory-section {
-      padding-bottom: 12px;
-    }
-
-    .inventory-grid {
+    .ghost-meta {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
+      position: relative;
+      z-index: 1;
     }
-
-    .inventory-card {
+    .ghost-meta-block {
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
       padding: 16px;
-      min-height: 140px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
-
-    .inventory-subtitle {
-      font-size: 11px;
+    .ghost-meta-block strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .ghost-meta-block span {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .card-colors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .color-dot {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+      transition: transform 0.22s ease, border-color 0.22s ease;
+    }
+    .color-dot.active {
+      transform: scale(1.05);
+      border-color: #fff;
+    }
+    .color-dot-0 { background: linear-gradient(135deg, #7c3aed, #6366f1); }
+    .color-dot-1 { background: linear-gradient(135deg, #f97316, #ea580c); }
+    .color-dot-2 { background: linear-gradient(135deg, #10b981, #059669); }
+    .color-dot-3 { background: linear-gradient(135deg, #111827, #1f2937); }
+    .settings-card {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 20px;
+    }
+    .settings-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-strong);
+      margin-bottom: 16px;
+    }
+    .settings-row {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .settings-input {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-size: 15px;
+    }
+    .settings-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+    }
+    .settings-toggle span {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-strong);
+    }
+    .settings-save {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .admin-panel {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .admin-panel.hidden {
+      display: none;
+    }
+    .admin-panel p {
       color: var(--text-muted);
+      font-size: 13px;
       margin-bottom: 14px;
     }
-
-    .exchange-modal-backdrop,
-    .modal-backdrop {
+    .admin-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .promo-code {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(255, 255, 255, 0.10);
+      color: var(--text);
+      font-size: 14px;
+      text-align: center;
+      word-break: break-all;
+    }
+    .balance-panel-backdrop,
+    .modal-backdrop,
+    .exchange-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.72);
-      z-index: 120;
+      background: rgba(7, 8, 20, 0.72);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      z-index: 120;
     }
-
-    .exchange-modal-backdrop.visible,
-    .modal-backdrop.visible {
+    .balance-panel-backdrop.visible,
+    .modal-backdrop.visible,
+    .exchange-backdrop.visible {
       display: flex;
     }
-
-    .modal-content,
-    .exchange-modal {
+    .panel-card,
+    .modal-card,
+    .exchange-card {
       width: 100%;
       max-width: 420px;
-      border-radius: 22px;
-      padding: 20px;
+      border-radius: 26px;
       background: var(--bg-card);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
       box-shadow: var(--shadow);
+      padding: 20px;
     }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
+    .panel-title,
     .modal-title,
     .exchange-title {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
+      margin-bottom: 10px;
       color: var(--text-strong);
     }
-
+    .panel-close,
     .modal-close {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
       border: 1px solid var(--border);
       background: rgba(124, 58, 237, 0.08);
+      color: var(--text);
+      cursor: pointer;
       display: grid;
       place-items: center;
-      cursor: pointer;
       font-size: 18px;
     }
-
-    .modal-body,
-    .exchange-body {
-      font-size: 13px;
+    .panel-row,
+    .modal-row {
+      margin-bottom: 16px;
       color: var(--text-muted);
       line-height: 1.6;
-      margin-bottom: 18px;
-    }
-
-    .exchange-price {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      color: var(--text-strong);
-      font-weight: 700;
       font-size: 14px;
     }
-
-    .exchange-trend {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: #a5b4fc;
-      margin-bottom: 18px;
-    }
-
-    .modal-actions {
-      display: flex;
+    .panel-actions,
+    .modal-actions,
+    .exchange-actions {
+      display: grid;
       gap: 12px;
     }
-
-    .modal-btn {
-      flex: 1;
-      padding: 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
+    .balance-control {
+      display: grid;
+      gap: 12px;
     }
-
-    .modal-btn.cancel {
-      background: rgba(124, 58, 237, 0.08);
-      color: var(--text-light);
-    }
-
-    .modal-btn.confirm {
+    .balance-control button {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: none;
       background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
       color: #fff;
+      font-weight: 800;
+      cursor: pointer;
     }
-
+    .balance-close {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+    }
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 110px;
+      bottom: 100px;
       transform: translateX(-50%);
-      padding: 12px 18px;
-      border-radius: 14px;
+      padding: 14px 18px;
+      border-radius: 18px;
       background: rgba(7, 8, 20, 0.95);
       color: #fff;
       font-weight: 700;
-      font-size: 13px;
-      border: 1px solid rgba(124, 58, 237, 0.3);
+      font-size: 14px;
       z-index: 140;
-      animation: toastIn 0.24s ease forwards, toastOut 0.24s ease forwards 1.8s;
+      animation: toastIn 0.24s ease forwards, toastOut 0.24s ease forwards 2s;
     }
-
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     @keyframes toastIn {
-      from {
-        opacity: 0;
-        transform: translate(-50%, 8px);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
-
     @keyframes toastOut {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-      }
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
-
     .tab-bar {
       position: fixed;
       inset: auto 0 0 0;
@@ -1114,10 +1040,9 @@
       grid-template-columns: repeat(4, 1fr);
       background: var(--bg-panel);
       border-top: 1px solid var(--border);
-      padding: 8px 0 env(safe-area-inset-bottom) 0;
+      padding: 10px 0 calc(env(safe-area-inset-bottom) + 10px) 0;
       backdrop-filter: blur(16px);
     }
-
     .tab-item {
       border: none;
       background: transparent;
@@ -1127,236 +1052,163 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      padding: 10px 0 4px;
+      padding: 8px 0;
       cursor: pointer;
-      transition: color 0.24s ease;
+      transition: color 0.22s ease;
       font-size: 18px;
     }
-
     .tab-item.active {
       color: var(--accent-purple);
     }
-
     .tab-label {
       font-size: 10px;
       font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
-
-    .product-card {
-      display: grid;
-      grid-template-columns: 72px 1fr auto;
-      gap: 14px;
-      align-items: center;
-      position: relative;
-    }
-
-    .product-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .product-actions {
-      display: grid;
-      gap: 8px;
-    }
-
-    .cart-preview {
-      background: rgba(124, 58, 237, 0.06);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-      margin-top: 18px;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.04);
-      margin-bottom: 10px;
-    }
-
-    .cart-item-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-strong);
-    }
-
-    .cart-item-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .cart-item-remove {
-      border: none;
-      border-radius: 12px;
-      padding: 8px 10px;
-      background: rgba(239, 68, 68, 0.14);
-      color: #fb7185;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .inventory-grid.empty,
-    .payment-history-list.empty {
-      min-height: 110px;
-    }
-
     @media (max-width: 420px) {
-      .profile-stats,
-      .card-stats-grid {
-        grid-template-columns: 1fr;
+      .header {
+        padding: 16px 14px;
       }
-
-      .inventory-grid {
-        grid-template-columns: 1fr;
+      .header-title { gap: 2px; }
+      .section-title { font-size: 16px; }
+      .shop-banner { padding: 18px; }
+      .game-pill { min-width: 140px; }
+      .field-input, .settings-input, .primary-btn, .secondary-btn, .ghost-btn, .small-btn {
+        padding: 14px;
       }
-
-      .pass-card {
-        min-width: 95px;
-      }
-
-      .payment-history-list {
-        gap: 10px;
-      }
-
-      .product-card {
-        grid-template-columns: 1fr;
-      }
+      .ghost-card { min-height: 200px; padding: 20px; }
+      .ghost-meta { grid-template-columns: 1fr; }
+      .inventory-grid { grid-template-columns: 1fr; }
+      .profile-stats { grid-template-columns: 1fr; }
+      .fetch { gap: 10px; }
     }
   </style>
 </head>
 <body>
   <div class="app">
     <header class="header">
-      <div class="logo">💜 GhostMarket</div>
+      <div class="header-title">
+        <div class="logo">GhostMarket</div>
+        <div class="header-note">★ 5.0 Premium</div>
+      </div>
       <div class="header-actions">
-        <button class="balance-header" id="btnBalance" aria-label="Пополнить баланс">
-          <span>Баланс: <strong id="headerBalance">0 ₽</strong></span>
-        </button>
-        <button class="btn-theme" id="btnTheme" aria-label="Переключить тему">☀️</button>
-        <button class="btn-icon" id="btnSupport" aria-label="Перейти в поддержку">
-          🔔
-          <span class="notification-badge" id="notificationBadge">3</span>
-        </button>
+        <button class="theme-switch" id="themeButton" type="button">🌙 Темная</button>
       </div>
     </header>
-
-    <div class="scroll-content" id="scrollContent">
-      <div id="shopPage" class="page-content">
-        <div class="banner">
-          <div class="banner-title">Игровая валюта дешевле официальных цен</div>
-          <div class="banner-subtitle">Моментальная доставка, безопасно и надежно в Telegram WebApp.</div>
+    <div class="page-shell">
+      <section class="page page-active" id="page-shop">
+        <div class="shop-banner">
+          <div class="shop-banner-title">Игровая валюта дешевле официальных цен</div>
+          <div class="shop-banner-text">Моментальная доставка, безопасно и надежно прямо в Telegram WebApp.</div>
+          <button class="shop-banner-btn" id="bannerTopUpBtn" type="button">Пополнить счёт</button>
         </div>
-
-        <div class="promo-banner">
-          <div class="promo-banner-text">🎁 СКИДКА 15% НА ПЕРВЫЙ ЗАКАЗ! Код: FIRST15</div>
-          <button class="promo-banner-btn" id="btnCopyPromo">Копировать</button>
+        <div class="section">
+          <div class="section-head">
+            <h2 class="section-title">Популярные игры</h2>
+            <span class="section-caption">Смахните влево для выбора</span>
+          </div>
+          <div class="horizontal-list" id="gamesList"></div>
         </div>
-
-        <div class="section-header">
-          <div class="section-title">Популярные игры</div>
-        </div>
-        <div class="games-carousel" id="gamesCarousel"></div>
-
-        <div class="constructor">
-          <div class="constructor-title">🛍️ Конструктор доната</div>
-          <div class="game-selector-inline" id="gameSelectorInline"></div>
+        <div class="section constructor-card" id="constructor-card">
+          <div class="section-head">
+            <h2 class="section-title">🛍️ Конструктор доната</h2>
+          </div>
           <div id="fieldsContainer"></div>
-          <div id="catalogContainer"></div>
+          <div class="donation-card">
+            <div class="donation-card-title">Express Pack</div>
+            <div class="donation-card-text">Один клик, быстрый донат для выбранной игры. Скидка 10% активна, если накоплена.</div>
+            <div class="price-block">
+              <div>
+                <div class="price-current" id="donationPrice">0 ₽</div>
+                <div class="price-note" id="discountNote">Скидка неактивна</div>
+              </div>
+              <div class="discount-chip hidden" id="discountChip">-10%</div>
+            </div>
+            <div class="constructor-actions">
+              <button class="secondary-btn" id="addToCartButton" type="button">🛒 В корзину</button>
+              <button class="primary-btn" id="buyNowButton" type="button">⚡ Купить в 1 клик</button>
+            </div>
+          </div>
           <div class="cart-preview" id="cartPreview"></div>
         </div>
-      </div>
-
-      <div id="ordersPage" class="page-content hidden">
-        <div class="section-header">
-          <div class="section-title">📦 Заказы и уведомления</div>
-        </div>
-
-        <div class="card-section">
-          <div class="section-title">Уведомления</div>
-          <div class="payment-item" style="background: transparent; border-color: transparent; padding: 0;">
-            <div class="payment-item-title" id="notificationsCard">Уведомлений нет</div>
+      </section>
+      <section class="page" id="page-pass">
+        <div class="section">
+          <div class="section-head">
+            <h2 class="section-title">Ghost Pass</h2>
+            <span class="section-caption">Уровень, опыт и награды</span>
           </div>
-        </div>
-
-        <div class="payment-history-section">
-          <div class="section-title">История покупок</div>
-          <div class="payment-history-list empty" id="ordersHistory">
-            <div style="text-align:center; color: var(--text-muted); padding: 18px;">История пуста</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="passPage" class="page-content hidden">
-        <div class="pass-section">
           <div class="pass-summary">
-            <div>
-              <strong>Ваш уровень: <span id="passLevel">1</span></strong>
-              <div style="color: var(--text-muted); font-size: 12px; margin-top: 5px;">Опыт: <span id="passXp">0</span> / 100 XP</div>
+            <div class="pass-summary-head">
+              <div>
+                <div class="pass-level">Уровень 1</div>
+                <div class="pass-xp" id="passXpText">0 / 100 XP</div>
+              </div>
+              <div class="pass-status" id="passStatusLabel">Free Line</div>
             </div>
-            <div style="font-size: 12px; color: var(--text-muted); text-align: right; min-width: 100px;" id="passModeLabel">Режим: Free</div>
-          </div>
-
-          <div class="pass-progress-bar">
-            <div class="pass-progress-fill" id="passProgressFill"></div>
-          </div>
-
-          <div class="pass-line-section">
-            <div class="pass-line-header">
-              <span>Premium+ Line</span>
-              <span style="font-size: 11px; color: var(--text-muted);">Только для Ghost Premium+</span>
+            <div class="pass-progress">
+              <div class="pass-progress-fill" id="passProgressFill"></div>
             </div>
-            <div class="pass-line" id="premiumLine"></div>
-          </div>
-
-          <div class="pass-line-section">
-            <div class="pass-line-header">
-              <span>Free Line</span>
-              <span style="font-size: 11px; color: var(--text-muted);">Доступно всем</span>
-            </div>
-            <div class="pass-line" id="freeLine"></div>
           </div>
         </div>
-
-        <div class="pass-section quests-section">
-          <div class="section-title">📜 Квесты на опыт</div>
-          <div class="quests-list" id="questsList"></div>
-        </div>
-
-        <div class="pass-section">
-          <div class="pass-header-title">🔥 Живой Аукцион</div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
-            <button class="premium-btn" id="btnListAuction">📦 Выставить свой лот</button>
-            <div style="font-size: 12px; color: var(--text-muted);">Epic/Legendary предметы привлекают ботов и создают реальный бой.</div>
+        <div class="section">
+          <div class="section-head">
+            <h2 class="section-title">Premium+ Line</h2>
+            <span class="section-caption">Доступно только на Ghost Premium+</span>
           </div>
-          <div class="payment-history-list" id="auctionList"></div>
+          <div class="pass-line" id="premiumLine"></div>
         </div>
-
-        <div class="inventory-section">
-          <div class="inventory-title">🎒 Рюкзак</div>
+        <div class="section">
+          <div class="section-head">
+            <h2 class="section-title">Free Line</h2>
+          </div>
+          <div class="pass-line" id="freeLine"></div>
+        </div>
+        <div class="section">
+          <div class="section-head">
+            <h2 class="section-title">Реферальные квесты</h2>
+          </div>
+          <div class="quests-grid" id="questsGrid"></div>
+        </div>
+        <div class="section auction-card">
+          <div class="section-head">
+            <h2 class="section-title">Живой аукцион</h2>
+            <button class="primary-btn" id="btnListAuction" type="button">📦 Выставить свой лот</button>
+          </div>
+          <div class="auction-list" id="auctionList"></div>
+        </div>
+        <div class="section">
+          <div class="section-head">
+            <h2 class="section-title">Рюкзак</h2>
+          </div>
           <div class="inventory-grid" id="inventoryGrid"></div>
         </div>
-      </div>
-
-      <div id="profilePage" class="page-content hidden">
+      </section>
+      <section class="page" id="page-orders">
+        <div class="orders-card">
+          <div class="section-head">
+            <h2 class="section-title">Уведомления</h2>
+          </div>
+          <div class="orders-notice" id="ordersNotification">Здесь будут последние новости и важные сообщения.</div>
+        </div>
+        <div class="section orders-card">
+          <div class="section-head">
+            <h2 class="section-title">История покупок</h2>
+          </div>
+          <div class="orders-list" id="ordersList"></div>
+        </div>
+      </section>
+      <section class="page" id="page-profile">
         <div class="profile-card">
-          <div class="profile-header">
-            <div class="profile-avatar" id="profileAvatar">👤</div>
+          <div class="profile-top">
+            <div class="profile-avatar" id="profileAvatar">G</div>
             <div class="profile-info">
               <div class="profile-name" id="profileName">Ghost</div>
               <div class="profile-username" id="profileUsername">@username</div>
-              <div class="profile-badge" id="profileStatus">🎮 Обычный игрок</div>
+              <div class="profile-status" id="profileSubscription">Обычный</div>
             </div>
           </div>
-
           <div class="profile-stats">
             <div class="profile-stat">
               <strong id="profileOrders">0</strong>
@@ -1376,163 +1228,153 @@
             </div>
           </div>
         </div>
-
-        <div class="premium-section" id="premiumSection"></div>
-
         <div class="card-section">
-          <div class="card-section-title" id="cardSectionTitle">
-            <span>💳 Твоя Ghost Card</span>
-            <span class="card-toggle-icon" id="cardToggleIcon">▼</span>
+          <div class="card-header-row" id="cardToggleRow">
+            <h3>💳 Твоя Ghost Card</h3>
+            <div class="card-toggle" id="cardToggleIcon">▼</div>
           </div>
-
           <div class="ghost-card" id="ghostCard">
-            <div class="card-header">
-              <div class="card-logo">👻</div>
-              <div class="card-chip">GHOST</div>
+            <div class="ghost-card-header">
+              <div class="ghost-card-logo">👻</div>
+              <div class="ghost-chip">GHOST</div>
             </div>
-            <div class="card-number" id="cardNumber">•••• •••• •••• 1337</div>
-            <div class="card-balance" id="cardBalance">Баланс: 0 ₽</div>
-            <div class="card-footer">
-              <div class="card-holder">
-                <span>CARDHOLDER</span>
-                <span class="card-holder-name" id="cardHolder">GHOST USER</span>
+            <div class="ghost-number" id="cardNumber">•••• •••• •••• 1337</div>
+            <div class="ghost-balance" id="cardBalance">Баланс: 0 ₽</div>
+            <div class="ghost-meta">
+              <div class="ghost-meta-block">
+                <strong id="totalSpent">0 ₽</strong>
+                <span>Потрачено за все время</span>
               </div>
-              <div class="card-valid">
-                <span>VALID THRU</span>
-                <span class="card-valid-date">12/25</span>
+              <div class="ghost-meta-block">
+                <strong id="accumulatedCashback">0 ₽</strong>
+                <span>Накопительный кэшбэк</span>
               </div>
             </div>
-            <div class="card-system">💳</div>
           </div>
-
-          <div class="color-picker" id="colorPicker"></div>
-
-          <div class="card-stats-grid">
-            <div class="card-stat">
-              <strong id="totalSpent">0 ₽</strong>
-              <span>Потрачено за все время</span>
-            </div>
-            <div class="card-stat">
-              <strong id="accumulatedCashback">0 ₽</strong>
-              <span>Накопительный кэшбэк</span>
-            </div>
-          </div>
+          <div class="card-colors" id="cardColors"></div>
         </div>
-
-        <div class="settings-section">
-          <div class="settings-title">⚙️ Настройки профиля</div>
-
-          <div class="field-group">
-            <label class="field-label">Отключить тяжелые анимации</label>
-            <button class="game-select-btn" id="toggleAnimations">Вкл/Выкл</button>
+        <div class="settings-card">
+          <div class="settings-title">Настройки профиля</div>
+          <div class="settings-toggle" id="toggleAnimationsRow">
+            <span>Отключить тяжелые анимации</span>
+            <span id="toggleAnimationsText">Анимации вкл</span>
           </div>
-
-          <div class="field-group">
-            <label class="field-label">Игровой UID (сохраняется)</label>
-            <input type="text" class="settings-input" id="settingsUID" placeholder="Введите ваш UID">
+          <div class="settings-row">
+            <div class="field-group">
+              <label class="field-label">Игровой UID</label>
+              <input id="settingsUID" class="settings-input" placeholder="UID из профиля" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Zone ID / Сервер</label>
+              <input id="settingsZoneID" class="settings-input" placeholder="Zone ID / Сервер" />
+            </div>
           </div>
-
-          <div class="field-group">
-            <label class="field-label">Zone ID / Сервер (сохраняется)</label>
-            <input type="text" class="settings-input" id="settingsZoneID" placeholder="Введите Zone ID">
-          </div>
-
-          <button class="settings-save-btn" id="btnSaveSettings">💾 Сохранить</button>
+          <button class="settings-save" id="btnSaveSettings" type="button">💾 Сохранить настройки</button>
         </div>
-
         <div class="admin-panel hidden" id="adminPanel">
-          <p>Админка @henotsosal: создайте ультра-рандомный промокод для GhostMarket.</p>
-          <button class="admin-btn" id="btnGeneratePromo">🎁 Создать ультра-рандомный промокод</button>
-          <div class="admin-code" id="adminPromoCode"></div>
+          <p>Админка @henotsosal: генератор промокодов для GhostMarket.</p>
+          <button class="admin-btn" id="btnGeneratePromo" type="button">🎁 Создать код</button>
+          <div class="promo-code" id="adminPromoCode"></div>
         </div>
-      </div>
+        <div class="premium-section">
+          <div class="premium-section-title">👻 Подписка Ghost Premium</div>
+          <div class="premium-buttons" id="premiumTiersList"></div>
+        </div>
+      </section>
     </div>
-
-    <div class="balance-panel-backdrop hidden" id="balancePanelBackdrop"></div>
-    <div class="balance-panel hidden" id="balancePanel" style="position: fixed; right: 0; top: 0; bottom: 0; width: 84%; max-width: 360px; background: var(--bg-card); border-left: 1px solid var(--border); z-index: 80; box-shadow: -10px 0 40px rgba(0,0,0,0.35); display: flex; flex-direction: column;">
-      <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 18px; border-bottom: 1px solid var(--border);">
-        <div>
-          <div style="font-weight: 800; font-size: 16px;">💳 Пополнение баланса</div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Клик по карте открывает эту панель</div>
-        </div>
-        <button class="btn-icon" id="btnCloseBalance">✕</button>
-      </div>
-      <div style="padding: 18px; display: flex; flex-direction: column; gap: 16px;">
-        <div style="background: rgba(124, 58, 237, 0.1); border: 1px solid var(--border); border-radius: 18px; padding: 18px;">
-          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">Текущий баланс</div>
-          <div style="font-size: 28px; font-weight: 800;" id="balancePanelAmount">0 ₽</div>
-        </div>
-        <button class="balance-btn-panel" onclick="topUp(100)">+100 ₽</button>
-        <button class="balance-btn-panel" onclick="topUp(500)">+500 ₽</button>
-        <button class="balance-btn-panel" style="background: rgba(124, 58, 237, 0.12); color: var(--text-light);" onclick="closeBalancePanel()">Закрыть</button>
-      </div>
-    </div>
-
-    <div class="modal-backdrop hidden" id="modalBackdrop">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="modal-title" id="modalTitle">Заголовок</div>
-          <button class="modal-close" id="btnModalCancel">✕</button>
-        </div>
-        <div class="modal-body" id="modalBody">Содержание</div>
-        <div class="modal-actions">
-          <button class="modal-btn cancel" id="btnModalBack">Отмена</button>
-          <button class="modal-btn confirm" id="btnModalConfirm">Подтвердить</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="exchange-modal-backdrop" id="exchangeModalBackdrop">
-      <div class="exchange-modal">
-        <div class="modal-header">
-          <div class="exchange-title" id="exchangeTitle">Биржа</div>
-          <button class="modal-close" onclick="closeExchangeModal()">✕</button>
-        </div>
-        <div class="exchange-body">
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-            <div style="width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; background: rgba(124, 58, 237, 0.14); font-size: 28px;" id="exchangeIcon">💠</div>
-            <div>
-              <div style="font-size: 16px; font-weight: 800;" id="exchangeName">Предмет</div>
-              <div style="font-size: 11px; color: var(--text-muted);" id="exchangeType">Тип волатильности</div>
-            </div>
-          </div>
-          <div class="exchange-price">
-            <span>Стоимость:</span>
-            <span id="exchangePrice">0 ₽</span>
-          </div>
-          <div class="exchange-trend" id="exchangeTrend">Выросло на +0.0% 📈</div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;" id="exchangeDescription">Динамика рынка изменяется при каждом открытии.</div>
-          <div id="exchangeActions"></div>
-        </div>
-      </div>
-    </div>
-
     <div class="tab-bar">
-      <button class="tab-item active" data-tab="shop">
+      <button class="tab-item active" data-tab="shop" id="tabShop" type="button">
         <span>🛍️</span>
         <span class="tab-label">Магазин</span>
       </button>
-      <button class="tab-item" data-tab="support">
+      <button class="tab-item" data-tab="support" id="tabSupport" type="button">
         <span>📞</span>
         <span class="tab-label">Поддержка</span>
       </button>
-      <button class="tab-item" data-tab="orders">
-        <span>📦</span>
-        <span class="tab-label">Заказы</span>
+      <button class="tab-item" data-tab="pass" id="tabPass" type="button">
+        <span>🏆</span>
+        <span class="tab-label">Ghost Pass</span>
       </button>
-      <button class="tab-item" data-tab="profile">
+      <button class="tab-item" data-tab="profile" id="tabProfile" type="button">
         <span>👤</span>
         <span class="tab-label">Профиль</span>
       </button>
     </div>
   </div>
 
+  <div class="balance-panel-backdrop" id="balanceBackdrop"></div>
+  <div class="balance-panel-backdrop" id="balancePanel" aria-hidden="true">
+    <div class="panel-card">
+      <div class="panel-row">
+        <div class="panel-title">Пополнение баланса</div>
+        <button class="panel-close" id="btnCloseBalance" type="button">✕</button>
+      </div>
+      <div class="panel-row" id="balancePanelAmount">Текущий баланс: 0 ₽</div>
+      <div class="balance-control">
+        <button type="button" data-amount="100">+100 ₽</button>
+        <button type="button" data-amount="500">+500 ₽</button>
+        <button class="secondary-btn balance-close" id="btnBalanceCancel" type="button">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-card">
+      <div class="panel-row">
+        <div class="modal-title" id="modalTitle">Заголовок</div>
+        <button class="panel-close" id="btnModalClose" type="button">✕</button>
+      </div>
+      <div class="modal-row" id="modalText">Описание</div>
+      <div class="modal-actions">
+        <button class="secondary-btn" id="btnModalCancel" type="button">Отмена</button>
+        <button class="primary-btn" id="btnModalConfirm" type="button">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="exchange-backdrop" id="exchangeBackdrop">
+    <div class="exchange-card">
+      <div class="panel-row">
+        <div class="exchange-title" id="exchangeTitle">Биржа</div>
+        <button class="panel-close" id="btnExchangeClose" type="button">✕</button>
+      </div>
+      <div class="modal-row" id="exchangeDescription">Описание предмета</div>
+      <div class="exchange-row" id="exchangeDetails"></div>
+      <div class="exchange-actions" id="exchangeActions"></div>
+    </div>
+  </div>
+
   <script>
     const tg = window.Telegram?.WebApp || null;
-    try {
-      tg?.ready?.();
-    } catch (error) {}
-
+    try { tg?.ready?.(); } catch (error) {}
+    const donationProduct = { id: 'donation', name: 'Express Pack', price: 250 };
+    const games = [
+      { id: 'pubg', name: 'PUBG', icon: '🎮', fields: ['uid', 'zone'], label: 'UID + Zone ID' },
+      { id: 'brawl', name: 'Brawl Stars', icon: '💥', fields: ['uid'], label: 'Тег игрока (#XXXXXX)' },
+      { id: 'mlbb', name: 'MLBB', icon: '🌟', fields: ['uid', 'zone'], label: 'UID + Zone ID' },
+      { id: 'ff', name: 'Free Fire', icon: '🔥', fields: ['uid'], label: 'Тег игрока (#XXXXXX)' }
+    ];
+    const premiumPlusItems = [
+      { name: 'Void Diamond', icon: '💎' },
+      { name: 'Cyber Ghost Mask', icon: '🎭' },
+      { name: 'Wraith Core v2.0', icon: '🛠️' },
+      { name: 'Anomalous Cipher', icon: '🧬' },
+      { name: 'Nebula Cluster', icon: '☄️' }
+    ];
+    const freeLineItems = [
+      { name: 'Ghost Coin', icon: '👻' },
+      { name: 'Wraith Ethereum', icon: '💠' },
+      { name: 'Soul Shard', icon: '🔮' },
+      { name: 'Phantom Key', icon: '🗝️' }
+    ];
+    const quests = [
+      { id: 'ref', title: 'Пригласить друга', xp: 10, premiumOnly: false, reward: { name: 'Ecto-Crate', icon: '📦', basePrice: 120 } },
+      { id: 'don', title: 'Оформить донат', xp: 15, premiumOnly: false, reward: { name: 'Spectral Asset', icon: '📦', basePrice: 180 } },
+      { id: 'promo', title: 'Ввести код от @henotsosal', xp: 20, premiumOnly: true, reward: { name: 'Void Diamond', icon: '💎', basePrice: 320 } }
+    ];
+    const auctionBots = ['shadow_bot', 'market_ai', 'ghost_bidder', 'neon_wraith', 'cyber_dream'];
+    const auctionIntervals = {};
+    let currentExchange = null;
     const DEFAULT_STATE = {
       firstName: 'Ghost',
       username: 'username',
@@ -1549,70 +1391,25 @@
       savedZone: '',
       selectedGame: 'pubg',
       active_discount: 0,
-      pass: {
-        level: 1,
-        xp: 0,
-        inventory: [],
-        questsCompleted: []
-      },
+      pass: { level: 1, xp: 0, inventory: [], questsCompleted: [] },
       auctionLots: [],
       cart: [],
-      promoCode: ''
+      promoCode: '',
+      cardColor: 0,
+      cardHidden: false
     };
-
-    const games = [
-      { id: 'pubg', name: 'PUBG', icon: '🎮', fields: ['uid', 'zone'], price: 100, server: true },
-      { id: 'brawl', name: 'Brawl Stars', icon: '💥', fields: ['uid'], price: 90, server: false },
-      { id: 'mlbb', name: 'MLBB', icon: '🌟', fields: ['uid', 'zone'], price: 95, server: true },
-      { id: 'ff', name: 'Free Fire', icon: '🔥', fields: ['uid'], price: 85, server: false }
-    ];
-
-    const products = [
-      { id: 1, name: 'Стартовый пак', icon: '🎁', price: 120 },
-      { id: 2, name: 'Премиум пак', icon: '👑', price: 450 },
-      { id: 3, name: 'Легендарный пак', icon: '⚡', price: 980 }
-    ];
-
-    const premiumPlusItems = [
-      { name: 'Void Diamond', icon: '💎' },
-      { name: 'Cyber Ghost Mask', icon: '🎭' },
-      { name: 'Wraith Core v2.0', icon: '🛠️' },
-      { name: 'Anomalous Cipher', icon: '🧬' },
-      { name: 'Nebula Cluster', icon: '☄️' }
-    ];
-
-    const freeLineItems = [
-      { name: 'Ghost Coin', icon: '👻' },
-      { name: 'Wraith Ethereum', icon: '💠' },
-      { name: 'Ecto-Dollar', icon: '💵' },
-      { name: 'Spectral Asset', icon: '📦' },
-      { name: 'Soul Shard', icon: '🔮' },
-      { name: 'Phantom Key', icon: '🗝️' }
-    ];
-
-    const quests = [
-      { id: 'ref', title: 'Пригласить друга по ссылке', xp: 10, premium: false, reward: { name: 'Ecto-Crate', icon: '📦', basePrice: 120 } },
-      { id: 'don', title: 'Оформить быстрый донат', xp: 15, premium: false, reward: { name: 'Spectral Asset', icon: '📦', basePrice: 180 } },
-      { id: 'promo', title: 'Ввести код от @henotsosal', xp: 20, premium: true, reward: { name: 'Void Diamond', icon: '💎', basePrice: 320 } }
-    ];
-
-    const auctionBots = ['shadow_bot', 'market_ai', 'ghost_bidder', 'neon_wraith', 'cyber_dream'];
-    const auctionIntervals = {};
-
     let state = { ...DEFAULT_STATE };
-
     function initApp() {
       loadState();
-      if (!state.selectedGame) state.selectedGame = games[0].id;
+      if (!state.selectedGame) state.selectedGame = 'pubg';
       initTelegramUser();
       applyTheme();
       attachListeners();
-      renderAll();
       seedAuctionLots();
+      renderAll();
       resumeAuctionTimers();
       switchTab('shop');
     }
-
     function loadState() {
       const saved = localStorage.getItem('ghostmarket_state');
       if (saved) {
@@ -1624,23 +1421,24 @@
           if (!Array.isArray(state.cart)) state.cart = [];
           if (!Array.isArray(state.orders)) state.orders = [];
           if (!Array.isArray(state.notifications)) state.notifications = [];
+          if (typeof state.cardColor !== 'number') state.cardColor = 0;
+          if (typeof state.cardHidden !== 'boolean') state.cardHidden = false;
         } catch (error) {
-          console.warn('Не удалось загрузить состояние', error);
+          console.warn('state load error', error);
+          state = { ...DEFAULT_STATE };
         }
       }
+      const discount = parseFloat(localStorage.getItem('active_discount'));
+      if (!Number.isNaN(discount) && discount > 0) state.active_discount = discount;
       const theme = localStorage.getItem('ghostmarket_theme');
       if (theme) document.documentElement.setAttribute('data-theme', theme);
+      else document.documentElement.setAttribute('data-theme', 'dark');
     }
-
     function saveState() {
       localStorage.setItem('ghostmarket_state', JSON.stringify(state));
-      if (state.active_discount > 0) {
-        localStorage.setItem('active_discount', state.active_discount.toFixed(2));
-      } else {
-        localStorage.removeItem('active_discount');
-      }
+      if (state.active_discount > 0) localStorage.setItem('active_discount', state.active_discount.toFixed(2));
+      else localStorage.removeItem('active_discount');
     }
-
     function initTelegramUser() {
       try {
         if (tg?.initDataUnsafe?.user) {
@@ -1650,522 +1448,412 @@
         }
       } catch (error) {}
     }
-
     function attachListeners() {
-      document.getElementById('btnTheme').addEventListener('click', toggleTheme);
-      document.getElementById('btnBalance').addEventListener('click', openBalancePanel);
+      document.getElementById('themeButton').addEventListener('click', toggleTheme);
+      document.getElementById('bannerTopUpBtn').addEventListener('click', openBalancePanel);
       document.getElementById('btnCloseBalance').addEventListener('click', closeBalancePanel);
-      document.getElementById('balancePanelBackdrop').addEventListener('click', closeBalancePanel);
-      document.getElementById('btnCopyPromo').addEventListener('click', () => {
+      document.getElementById('btnBalanceCancel').addEventListener('click', closeBalancePanel);
+      document.getElementById('balancePanel').addEventListener('click', event => {
+        if (event.target === document.getElementById('balancePanel')) closeBalancePanel();
+      });
+      document.querySelectorAll('[data-amount]').forEach(node => node.addEventListener('click', () => topUp(Number(node.dataset.amount))));
+      document.getElementById('addToCartButton').addEventListener('click', addDonationToCart);
+      document.getElementById('buyNowButton').addEventListener('click', buyDonationQuick);
+      document.getElementById('btnCopyPromo')?.addEventListener('click', () => {
         copyToClipboard('FIRST15');
         showToast('✅ Код скопирован');
       });
       document.getElementById('btnSaveSettings').addEventListener('click', saveSettings);
-      document.getElementById('toggleAnimations').addEventListener('click', toggleAnimations);
+      document.getElementById('toggleAnimationsRow').addEventListener('click', toggleAnimations);
+      document.getElementById('btnModalClose').addEventListener('click', closeModal);
       document.getElementById('btnModalCancel').addEventListener('click', closeModal);
-      document.getElementById('btnModalBack').addEventListener('click', closeModal);
-      document.getElementById('btnModalConfirm').addEventListener('click', () => {
+      document.getElementById('btnModalConfirm')?.addEventListener('click', () => {
         if (window.pendingAction) window.pendingAction();
         closeModal();
       });
       document.getElementById('btnGeneratePromo')?.addEventListener('click', generatePromoCode);
       document.getElementById('btnListAuction').addEventListener('click', openListAuctionPrompt);
-      document.getElementById('btnSupport').addEventListener('click', openSupportLink);
-
-      document.querySelectorAll('.tab-item').forEach(tab => {
-        tab.addEventListener('click', () => {
-          const tabName = tab.dataset.tab;
-          if (tabName === 'support') {
-            openSupportLink();
-            return;
-          }
-          switchTab(tabName);
-        });
+      document.getElementById('btnExchangeClose').addEventListener('click', closeExchangeModal);
+      document.getElementById('exchangeBackdrop').addEventListener('click', event => {
+        if (event.target === document.getElementById('exchangeBackdrop')) closeExchangeModal();
       });
+      document.getElementById('cardToggleRow').addEventListener('click', toggleCardVisibility);
+      document.getElementById('ghostCard').addEventListener('click', openBalancePanel);
+      document.querySelectorAll('.tab-item').forEach(tab => tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        if (tabName === 'support') {
+          openSupportLink();
+          return;
+        }
+        switchTab(tabName);
+      }));
     }
-
     function applyTheme() {
       const current = document.documentElement.getAttribute('data-theme') || 'dark';
-      document.getElementById('btnTheme').textContent = current === 'dark' ? '☀️' : '🌙';
-      if (!document.documentElement.getAttribute('data-theme')) document.documentElement.setAttribute('data-theme', 'dark');
+      document.getElementById('themeButton').textContent = current === 'dark' ? '🌙 Темная' : '☀️ Светлая';
       updateCardStyle();
     }
-
     function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme') || 'dark';
-      const next = current === 'dark' ? 'light' : 'dark';
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('ghostmarket_theme', next);
-      document.getElementById('btnTheme').textContent = next === 'dark' ? '☀️' : '🌙';
-      updateCardStyle();
+      applyTheme();
     }
-
-    function switchTab(tab) {
-      document.querySelectorAll('.page-content').forEach(page => {
-        page.classList.toggle('hidden', page.id !== tab + 'Page');
-      });
-      document.querySelectorAll('.tab-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.tab === tab);
-      });
-      document.getElementById('scrollContent').scrollTop = 0;
-      if (tab === 'orders') renderOrdersPage();
-      if (tab === 'pass') renderPassPage();
-      if (tab === 'profile') renderProfilePage();
-    }
-
     function openSupportLink() {
-      if (tg?.openTelegramLink) {
-        tg.openTelegramLink('https://t.me');
-      } else {
-        window.open('https://t.me', '_blank');
-      }
+      if (tg?.openTelegramLink) tg.openTelegramLink('https://t.me');
+      else window.open('https://t.me', '_blank');
       showToast('Открываю поддержку...');
+      triggerHaptic('impactOccurred', 'medium');
     }
-
-    function updateHeaderBalance() {
-      document.getElementById('headerBalance').textContent = `${state.balance} ₽`;
-      document.getElementById('balancePanelAmount').textContent = `${state.balance} ₽`;
+    function switchTab(tab) {
+      document.querySelectorAll('.page').forEach(page => page.classList.toggle('page-active', page.id === 'page-' + tab));
+      document.querySelectorAll('.tab-item').forEach(item => item.classList.toggle('active', item.dataset.tab === tab));
+      if (tab === 'pass') renderPassPage();
+      if (tab === 'orders') renderOrdersPage();
+      if (tab === 'profile') renderProfilePage();
+      triggerHaptic('impactOccurred', 'medium');
+      document.getElementById('page-' + tab).scrollIntoView({ behavior: 'smooth' });
     }
-
     function openBalancePanel() {
-      document.getElementById('balancePanel').classList.remove('hidden');
-      document.getElementById('balancePanelBackdrop').classList.remove('hidden');
+      document.getElementById('balancePanel').classList.add('visible');
+      document.getElementById('balanceBackdrop').classList.add('visible');
+      document.getElementById('balancePanelAmount').textContent = `Текущий баланс: ${state.balance} ₽`;
     }
-
     function closeBalancePanel() {
-      document.getElementById('balancePanel').classList.add('hidden');
-      document.getElementById('balancePanelBackdrop').classList.add('hidden');
+      document.getElementById('balancePanel').classList.remove('visible');
+      document.getElementById('balanceBackdrop').classList.remove('visible');
     }
-
     function topUp(amount) {
       state.balance += amount;
       saveState();
-      updateHeaderBalance();
-      updateCardUI();
+      renderHeader();
+      renderProfilePage();
+      renderConstructor();
       showToast(`✅ Баланс пополнен на ${amount} ₽`);
       closeBalancePanel();
     }
-
     function renderAll() {
       renderHeader();
-      renderGamesCarousel();
-      renderGameSelector();
-      updateFieldsContainer();
-      updateCatalog();
+      renderGames();
+      renderConstructor();
       renderCartPreview();
       renderPassPage();
       renderOrdersPage();
       renderProfilePage();
       renderAdminPanel();
-      updateHeaderBalance();
-      updateCardUI();
     }
-
     function renderHeader() {
-      document.getElementById('headerBalance').textContent = `${state.balance} ₽`;
-      document.getElementById('notificationBadge').textContent = state.notifications.length || '0';
+      document.getElementById('profileAvatar').textContent = (state.firstName || 'G').charAt(0).toUpperCase();
+      document.getElementById('headerBalance')?.textContent = `${state.balance} ₽`;
     }
-
-    function renderGamesCarousel() {
-      const container = document.getElementById('gamesCarousel');
+    function renderGames() {
+      const container = document.getElementById('gamesList');
       container.innerHTML = games.map(game => `
-        <div class="game-card ${game.id === state.selectedGame ? 'active' : ''}" onclick="selectGame('${game.id}')">
-          <div class="game-icon">${game.icon}</div>
-          <div class="game-name">${game.name}</div>
-          <div class="game-price">${game.price} ₽</div>
-        </div>
-      `).join('');
-    }
-
-    function renderGameSelector() {
-      const selector = document.getElementById('gameSelectorInline');
-      selector.innerHTML = games.map(game => `
-        <button class="game-select-btn ${game.id === state.selectedGame ? 'active' : ''}" onclick="selectGame('${game.id}')">
-          ${game.icon} ${game.name}
+        <button class="game-pill ${game.id === state.selectedGame ? 'active' : ''}" type="button" data-game="${game.id}">
+          <div class="game-pill-title">${game.icon} ${game.name}</div>
+          <div class="game-pill-price">${game.label}</div>
         </button>
       `).join('');
+      container.querySelectorAll('[data-game]').forEach(node => node.addEventListener('click', () => {
+        selectGame(node.dataset.game);
+      }));
     }
-
     function selectGame(gameId) {
       state.selectedGame = gameId;
-      renderGameSelector();
-      updateFieldsContainer();
-      updateCatalog();
       saveState();
+      renderGames();
+      renderConstructor();
     }
-
-    function updateFieldsContainer() {
-      const container = document.getElementById('fieldsContainer');
+    function renderConstructor() {
+      const game = games.find(item => item.id === state.selectedGame);
+      const price = getFinalPrice(donationProduct.price);
+      document.getElementById('donationPrice').textContent = `${price} ₽`;
+      const discountNote = document.getElementById('discountNote');
+      const discountChip = document.getElementById('discountChip');
+      if (state.active_discount > 0) {
+        discountNote.textContent = 'Скидка 10% активирована';
+        discountChip.classList.remove('hidden');
+      } else {
+        discountNote.textContent = 'Скидка неактивна';
+        discountChip.classList.add('hidden');
+      }
+      renderShopFields();
+    }
+    function renderShopFields() {
       const game = games.find(item => item.id === state.selectedGame);
       if (!game) return;
-      container.innerHTML = game.fields.map(field => {
-        const label = field === 'uid' ? 'Игровой ID (UID)' : 'Zone ID / Сервер';
-        const placeholder = field === 'uid' ? 'Введите UID' : 'Введите Zone ID';
-        const value = field === 'uid' ? state.savedUID : state.savedZone;
-        return `
+      const container = document.getElementById('fieldsContainer');
+      if (game.fields.length === 2) {
+        container.innerHTML = `
           <div class="field-group">
-            <label class="field-label">${label}</label>
-            <input type="text" class="field-input" id="field_${field}" placeholder="${placeholder}" value="${value}">
-            <div class="field-error" id="error_${field}">Заполните поле</div>
+            <label class="field-label">UID</label>
+            <input id="uid-input" class="field-input" placeholder="Введите UID" value="${state.savedUID || ''}" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Zone ID / Сервер</label>
+            <input id="zone-input" class="field-input" placeholder="Введите Zone ID" value="${state.savedZone || ''}" />
           </div>
         `;
-      }).join('');
+      } else {
+        container.innerHTML = `
+          <div class="field-group">
+            <label class="field-label">Тег игрока (#XXXXXX)</label>
+            <input id="uid-input" class="field-input" placeholder="Введите тег" value="${state.savedUID || ''}" />
+          </div>
+        `;
+      }
     }
-
-    function validateFields() {
+    function validateShopFields() {
       const game = games.find(item => item.id === state.selectedGame);
-      if (!game) return false;
       let valid = true;
-      game.fields.forEach(field => {
-        const input = document.getElementById(`field_${field}`);
-        const error = document.getElementById(`error_${field}`);
-        if (!input) return;
-        if (!input.value.trim()) {
-          input.classList.add('error');
-          if (error) error.style.display = 'block';
-          valid = false;
-        } else {
-          input.classList.remove('error');
-          if (error) error.style.display = 'none';
-        }
-      });
+      if (!game) return false;
+      const uid = document.getElementById('uid-input');
+      if (!uid || !uid.value.trim()) valid = false;
+      if (game.fields.length === 2) {
+        const zone = document.getElementById('zone-input');
+        if (!zone || !zone.value.trim()) valid = false;
+      }
+      if (!valid) showToast('❌ Заполните все поля');
       return valid;
     }
-
-    function getFieldValues() {
-      const game = games.find(item => item.id === state.selectedGame);
-      if (!game) return {};
+    function getShopFields() {
       const result = {};
-      game.fields.forEach(field => {
-        const input = document.getElementById(`field_${field}`);
-        if (input) result[field] = input.value.trim();
-      });
+      const uid = document.getElementById('uid-input');
+      if (uid) result.uid = uid.value.trim();
+      const zone = document.getElementById('zone-input');
+      if (zone) result.zone = zone.value.trim();
       return result;
     }
-
-    function renderCatalog() {
-      const container = document.getElementById('catalogContainer');
+    function addDonationToCart() {
+      if (!validateShopFields()) return;
       const game = games.find(item => item.id === state.selectedGame);
-      if (!game) {
-        container.innerHTML = '<div style="color: var(--text-muted);">Выберите игру</div>';
-        return;
-      }
-      const discount = state.active_discount || 0;
-      container.innerHTML = `
-        <div class="catalog">
-          ${products.map(product => {
-            const final = Math.max(1, Math.round(product.price * (1 - discount)));
-            const canBuy = state.balance >= final;
-            return `
-              <div class="product-card">
-                <div class="product-icon">${product.icon}</div>
-                <div class="product-meta">
-                  <div class="product-name">${product.name}</div>
-                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Цена для ${game.name}</div>
-                  <div class="product-price">${final} ₽${discount ? ` <small style="opacity:.7">(скидка ${Math.round(discount * 100)}%)</small>` : ''}</div>
-                </div>
-                <div class="product-actions">
-                  <button class="product-cart-btn" onclick="addToCart(${product.id})">🛒 В корзину</button>
-                  <button class="product-buy-btn" onclick="buyProductQuick(${product.id})" ${canBuy ? '' : 'disabled'}>⚡ Купить</button>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
-    }
-
-    function addToCart(productId) {
-      if (!validateFields()) {
-        showToast('❌ Заполните UID/Zone');
-        return;
-      }
-      const product = products.find(item => item.id === productId);
-      if (!product) return;
-      const fields = getFieldValues();
-      state.cart.push({
-        id: Date.now() + Math.floor(Math.random() * 999),
-        productId,
-        productName: product.name,
-        price: product.price,
-        game: state.selectedGame,
+      const fields = getShopFields();
+      state.savedUID = fields.uid || '';
+      state.savedZone = fields.zone || '';
+      state.cart.unshift({
+        id: Date.now(),
+        name: `${donationProduct.name} для ${game.name}`,
+        price: donationProduct.price,
+        game: game.name,
         fields
       });
       saveState();
       renderCartPreview();
-      showToast('🛒 Добавлено в корзину');
+      showToast('🛒 Товар добавлен в корзину');
     }
-
     function renderCartPreview() {
       const container = document.getElementById('cartPreview');
       if (!state.cart.length) {
-        container.innerHTML = '<div style="color: var(--text-muted);">Корзина пуста</div>';
+        container.innerHTML = '<div class="cart-empty">Корзина пуста. Добавьте донат, чтобы оформить заказ.</div>';
         return;
       }
-      container.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <div style="font-weight:800;">Корзина</div>
-          <div style="font-size:12px;color:var(--text-muted);">Нажмите купить в карточке товара для оплаты</div>
-        </div>
-        ${state.cart.map((item, index) => `
-          <div class="cart-item">
-            <div>
-              <div class="cart-item-title">${item.productName}</div>
-              <div class="cart-item-meta">${games.find(g => g.id === item.game)?.name || ''} • ${item.fields.uid || ''}${item.fields.zone ? ' • ' + item.fields.zone : ''}</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="cart-item-amount">${item.price} ₽</div>
-              <button class="cart-item-remove" onclick="removeFromCart(${index})">Удалить</button>
-            </div>
+      container.innerHTML = state.cart.map((item, index) => `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item-title">${item.name}</div>
+            <div class="cart-item-meta">${item.game} • ${item.fields.uid}${item.fields.zone ? ' • ' + item.fields.zone : ''}</div>
           </div>
-        `).join('')}
-      `;
+          <div style="text-align:right;">
+            <div class="cart-item-amount">${item.price} ₽</div>
+            <button class="cart-item-remove" type="button" onclick="removeFromCart(${index})">Удалить</button>
+          </div>
+        </div>
+      `).join('');
     }
-
     function removeFromCart(index) {
       state.cart.splice(index, 1);
       saveState();
       renderCartPreview();
     }
-
-    function buyProductQuick(productId) {
-      if (!validateFields()) {
-        showToast('❌ Заполните UID/Zone');
-        triggerHaptic('notificationOccurred', 'error');
+    function buyDonationQuick() {
+      if (!validateShopFields()) return;
+      const price = getFinalPrice(donationProduct.price);
+      if (state.balance < price) {
+        showModal('Недостаточно средств', `Для покупки нужно ещё ${price - state.balance} ₽`, openBalancePanel);
         return;
       }
-      const product = products.find(item => item.id === productId);
-      if (!product) return;
-      const finalPrice = getFinalPrice(product.price);
-      if (state.balance < finalPrice) {
-        showModal('Недостаточно средств', `Для покупки нужно ещё ${finalPrice - state.balance} ₽`, openBalancePanel);
-        return;
-      }
-      const confirmButton = () => {
-        completePurchase(product, finalPrice);
-      };
+      const confirmAction = () => completePurchase(donationProduct.name, price);
       if (tg?.showPopup) {
         tg.showPopup({
-          title: 'Покупка',
-          message: `Купить ${product.name} за ${finalPrice} ₽?`,
+          title: 'Купить донат',
+          message: `Списать ${price} ₽ за ${donationProduct.name}?`,
           buttons: [
             { id: 'cancel', type: 'secondary', text: 'Отмена' },
             { id: 'ok', type: 'default', text: 'Купить' }
           ]
         }).then(response => {
-          if (response?.id === 'ok') confirmButton();
+          if (response?.id === 'ok') confirmAction();
         }).catch(() => {});
       } else {
-        if (confirm(`Купить ${product.name} за ${finalPrice} ₽?`)) confirmButton();
+        if (confirm(`Списать ${price} ₽ за ${donationProduct.name}?`)) confirmAction();
       }
     }
-
     function getFinalPrice(basePrice) {
-      const discount = state.active_discount || 0;
-      return Math.max(1, Math.round(basePrice * (1 - discount)));
+      return Math.max(1, Math.round(basePrice * (1 - (state.active_discount || 0))));
     }
-
-    function completePurchase(product, finalPrice) {
-      state.balance -= finalPrice;
-      state.spent += finalPrice;
-      const cashbackPercent = state.premiumStatus === 'premium_plus' ? 0.15 : state.premiumStatus === 'premium' ? 0.05 : 0.02;
-      state.cashback += Math.floor(finalPrice * cashbackPercent);
-      state.orders.push({
+    function completePurchase(itemName, amount) {
+      state.balance -= amount;
+      state.spent += amount;
+      state.cashback += Math.floor(amount * (state.premiumStatus === 'premium_plus' ? 0.15 : state.premiumStatus === 'premium' ? 0.05 : 0.02));
+      state.orders.unshift({
         id: Date.now(),
-        item: product.name,
-        amount: finalPrice,
+        item: itemName,
+        amount,
         date: new Date().toLocaleString('ru-RU')
       });
-      state.notifications.unshift(`Заказ оформлен: ${product.name} за ${finalPrice} ₽`);
+      state.notifications.unshift(`Заказ оформлен: ${itemName} за ${amount} ₽`);
+      state.savedUID = document.getElementById('uid-input')?.value.trim() || state.savedUID;
+      state.savedZone = document.getElementById('zone-input')?.value.trim() || state.savedZone;
       if (state.active_discount > 0) {
         state.active_discount = 0;
         localStorage.removeItem('active_discount');
-        showToast('✅ Скидка 10% применена и сброшена');
+        showToast('✅ Скидка сброшена после покупки');
       }
       saveState();
-      updateHeaderBalance();
+      renderHeader();
       renderCartPreview();
       renderOrdersPage();
       renderProfilePage();
-      renderCatalog();
-      showToast(`✅ Куплено: ${product.name} за ${finalPrice} ₽`);
+      renderConstructor();
+      showToast(`✅ Покупка выполнена: ${itemName}`);
       triggerHaptic('notificationOccurred', 'success');
-      if (tg?.sendData) {
-        tg.sendData(JSON.stringify({ action: 'purchase', item: product.name, amount: finalPrice }));
-      }
+      if (tg?.sendData) tg.sendData(JSON.stringify({ action: 'purchase', item: itemName, amount }));
     }
-
     function renderPassPage() {
       const pass = state.pass;
-      document.getElementById('passLevel').textContent = pass.level;
-      document.getElementById('passXp').textContent = pass.xp;
-      document.getElementById('passModeLabel').textContent = state.premiumStatus === 'premium_plus' ? 'Режим: Premium+' : 'Режим: Free';
+      const level = Math.min(50, pass.level);
+      document.getElementById('passXpText').textContent = `${pass.xp} / 100 XP`;
+      document.getElementById('passStatusLabel').textContent = state.premiumStatus === 'premium_plus' ? 'Premium+ Line' : 'Free Line';
       document.getElementById('passProgressFill').style.width = `${Math.min(100, (pass.xp / 100) * 100)}%`;
       renderPassLine('premiumLine', premiumPlusItems, true);
       renderPassLine('freeLine', freeLineItems, false);
       renderQuests();
       renderAuctionList();
-      renderInventoryGrids();
+      renderInventory();
     }
-
     function renderPassLine(containerId, items, premiumOnly) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
-      for (let level = 1; level <= 50; level++) {
-        const item = items[(level - 1) % items.length];
+      for (let i = 1; i <= 50; i++) {
+        const item = items[(i - 1) % items.length];
         const card = document.createElement('div');
-        card.className = 'pass-card' + (premiumOnly && state.premiumStatus !== 'premium_plus' ? ' locked' : '');
+        card.className = `pass-item ${premiumOnly ? 'premium' : ''} ${premiumOnly && state.premiumStatus !== 'premium_plus' ? 'locked' : ''}`;
         card.innerHTML = `
-          <div class="pass-icon">${item.icon}</div>
-          <strong>${item.name}</strong>
-          <small>Уровень ${level}</small>
-          ${premiumOnly && state.premiumStatus !== 'premium_plus' ? '<div class="locked-label">Закрыто</div>' : ''}
+          <div class="pass-item-title">${item.icon} ${item.name}</div>
+          <div class="pass-item-level">Уровень ${i}</div>
+          ${premiumOnly && state.premiumStatus !== 'premium_plus' ? '<div class="pass-item-level">Только Premium+</div>' : ''}
         `;
         container.appendChild(card);
       }
     }
-
     function renderQuests() {
-      const container = document.getElementById('questsList');
+      const container = document.getElementById('questsGrid');
       container.innerHTML = '';
       quests.forEach(quest => {
-        if (quest.premium && state.premiumStatus === 'none') return;
+        if (quest.premiumOnly && state.premiumStatus === 'none') return;
         const completed = state.pass.questsCompleted.includes(quest.id);
         const card = document.createElement('div');
         card.className = 'quest-card';
         card.innerHTML = `
-          <div class="quest-text">
-            <div class="quest-title">${quest.title}</div>
-            <div class="quest-meta">
-              <span>${quest.progress} / ${quest.max}</span>
-              <span>+${quest.xp} XP</span>
-              ${quest.premium ? '<span style="color:#fbbf24;">Premium</span>' : ''}
-            </div>
+          <div class="quest-card-title">${quest.title}</div>
+          <div class="quest-card-meta">
+            <span>${completed ? 'Выполнено' : '+ ' + quest.xp + ' XP'}</span>
+            ${quest.premiumOnly ? '<span style="color:#fbbf24;">Premium</span>' : ''}
           </div>
-          <button class="quest-action-btn" ${completed ? 'disabled' : ''} onclick="claimQuest('${quest.id}')">
+          <button class="secondary-btn" type="button" ${completed ? 'disabled' : ''} onclick="claimQuest('${quest.id}')">
             ${completed ? 'Забрано' : 'Забрать'}
           </button>
         `;
         container.appendChild(card);
       });
     }
-
     function claimQuest(questId) {
       const quest = quests.find(item => item.id === questId);
       if (!quest || state.pass.questsCompleted.includes(questId)) return;
-      if (quest.premium && state.premiumStatus === 'none') {
-        showToast('🔒 Только для Ghost Premium');
+      if (quest.premiumOnly && state.premiumStatus === 'none') {
+        showToast('🔒 Доступно только для Premium');
         return;
       }
       state.pass.questsCompleted.push(questId);
       state.pass.xp += quest.xp;
       while (state.pass.xp >= 100 && state.pass.level < 50) {
-       
         state.pass.xp -= 100;
         state.pass.level += 1;
       }
       addInventoryItem({ ...quest.reward });
       saveState();
       renderPassPage();
-      showToast('✅ Задание выполнено, предмет в рюкзаке');
-      triggerHaptic('impactOccurred', 'medium');
+      renderProfilePage();
+      showToast('✅ Награда добавлена в рюкзак');
+      triggerHaptic('impactOccurred', 'light');
     }
-
     function inferRarity(name) {
-      const legendary = ['Void', 'Nebula', 'Quantum', 'Supernova', 'Legendary'];
-      const epic = ['Wraith', 'Cyber', 'Anomalous', 'Mask', 'Core'];
-      if (legendary.some(keyword => name.includes(keyword))) return 'Legendary';
-      if (epic.some(keyword => name.includes(keyword))) return 'Epic';
-      if (name.includes('Phantom Key')) return 'Rare';
-      if (name.includes('Soul Shard')) return 'Common';
+      if (name.includes('Void') || name.includes('Nebula') || name.includes('Quantum')) return 'Legendary';
+      if (name.includes('Wraith') || name.includes('Cyber') || name.includes('Anomalous')) return 'Epic';
+      if (name.includes('Phantom')) return 'Rare';
       return 'Common';
     }
-
     function addInventoryItem(item) {
       const fullItem = {
         id: Date.now() + Math.floor(Math.random() * 999),
         name: item.name,
         icon: item.icon,
-        basePrice: item.basePrice || 100,
+        basePrice: item.basePrice || 120,
         rarity: item.rarity || inferRarity(item.name),
         created: Date.now()
       };
-      state.pass.inventory.push(fullItem);
+      state.pass.inventory.unshift(fullItem);
       saveState();
     }
-
-    function renderInventoryGrids() {
+    function renderInventory() {
       const inventory = state.pass.inventory;
-      const profileGrid = document.getElementById('inventoryGridProfile');
-      const passGrid = document.getElementById('inventoryGrid');
-      [profileGrid, passGrid].forEach(grid => {
-        if (!grid) return;
-        if (!inventory.length) {
-          grid.classList.add('empty');
-          grid.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 18px;">
-              <div style="font-size: 13px; margin-bottom: 6px;">Рюкзак пуст</div>
-              <div style="font-size: 11px;">Забирай награды из квестов и продавай их на аукционе.</div>
-            </div>`;
-          return;
-        }
-        grid.classList.remove('empty');
-        grid.innerHTML = inventory.map((item, index) => `
-          <div class="inventory-card" onclick="openExchangeModal(${index})">
-            <div class="inventory-icon">${item.icon}</div>
-            <div class="inventory-name">${item.name}</div>
-            <div class="inventory-subtitle">≈ ${item.basePrice} ₽ • ${item.rarity}</div>
-            <div class="inventory-price">Нажмите, чтобы открыть</div>
-          </div>
-        `).join('');
-      });
+      const container = document.getElementById('inventoryGrid');
+      if (!inventory.length) {
+        container.innerHTML = '<div class="cart-empty">Рюкзак пуст. Встречайте артефакты после выполнения квестов.</div>';
+        return;
+      }
+      container.innerHTML = inventory.map((item, index) => `
+        <div class="inventory-item" onclick="openExchangeModal(${index})">
+          <div class="inventory-title">${item.icon} ${item.name}</div>
+          <div class="inventory-subtitle">≈ ${item.basePrice} ₽ • ${item.rarity}</div>
+        </div>
+      `).join('');
     }
-
     function openExchangeModal(index) {
       const item = state.pass.inventory[index];
       if (!item) return;
-      const volatility = Math.random() > 0.5 ? 'Высокая' : 'Средняя';
-      const changeValue = (Math.random() * 20 - 10).toFixed(1);
-      const changeLabel = changeValue >= 0 ? `📈 Выросло на +${changeValue}%` : `📉 Упало на ${Math.abs(changeValue)}%`;
-      const price = Math.max(20, item.basePrice + Math.round(Math.random() * 80 - 30));
-      const exchangeIcon = document.getElementById('exchangeIcon');
-      const exchangeName = document.getElementById('exchangeName');
-      const exchangeType = document.getElementById('exchangeType');
-      const exchangePrice = document.getElementById('exchangePrice');
-      const exchangeTrend = document.getElementById('exchangeTrend');
-      const exchangeDescription = document.getElementById('exchangeDescription');
-      const exchangeActions = document.getElementById('exchangeActions');
-
-      exchangeIcon.textContent = item.icon;
-      exchangeName.textContent = item.name;
-      exchangeType.textContent = `Волатильность: ${volatility} • ${item.rarity}`;
-      exchangePrice.textContent = `${price} ₽`;
-      exchangeTrend.textContent = changeLabel;
-      exchangeDescription.textContent = 'Выберите действие: активировать, продать или выставить на аукцион.';
+      const movement = Math.random() > 0.5;
+      const changeValue = (Math.random() * 18 + 2).toFixed(1);
+      const changeLabel = movement ? `📈 Выросло на +${changeValue}%` : `📉 Упало на -${changeValue}%`;
+      const price = Math.max(20, item.basePrice + Math.round((movement ?  1 : -1) * changeValue));
       currentExchange = { item, index, price };
-
-      const buttons = [];
-      buttons.push(`<button class="modal-btn confirm" onclick="handleActivateItem(${index})">⚡ Использовать</button>`);
-      buttons.push(`<button class="modal-btn cancel" onclick="sellExchangeItem()">💸 Продать на бирже</button>`);
+      const title = `${item.icon} ${item.name}`;
+      const description = `Текущая цена: ${price} ₽\n${changeLabel}`;
+      document.getElementById('exchangeTitle').textContent = title;
+      document.getElementById('exchangeDescription').textContent = description;
+      document.getElementById('exchangeDetails').innerHTML = `
+        <div class="quest-card-meta">Редкость: ${item.rarity}</div>
+      `;
+      const actions = [];
+      actions.push(`<button class="primary-btn" type="button" onclick="handleActivateItem()">⚡ Использовать</button>`);
+      actions.push(`<button class="secondary-btn" type="button" onclick="sellExchangeItem()">💸 Продать на бирже</button>`);
       if (item.rarity === 'Epic' || item.rarity === 'Legendary') {
-        buttons.push(`<button class="modal-btn confirm" onclick="listItemToAuction(${index})">🏷️ Выставить на аукцион</button>`);
+        actions.push(`<button class="primary-btn" type="button" onclick="listItemToAuction(${index})">🏷️ На аукцион</button>`);
       }
-      exchangeActions.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap;">${buttons.join('')}</div>`;
-      document.getElementById('exchangeModalBackdrop').classList.add('visible');
+      document.getElementById('exchangeActions').innerHTML = actions.join('');
+      document.getElementById('exchangeBackdrop').classList.add('visible');
     }
-
     function closeExchangeModal() {
-      document.getElementById('exchangeModalBackdrop').classList.remove('visible');
+      document.getElementById('exchangeBackdrop').classList.remove('visible');
       currentExchange = null;
     }
-
-    function handleActivateItem(index) {
-      const item = state.pass.inventory[index];
-      if (!item) return;
+    function handleActivateItem() {
+      if (!currentExchange) return;
+      const item = currentExchange.item;
       if (item.name.includes('Soul Shard')) {
         const shards = state.pass.inventory.filter(i => i.name.includes('Soul Shard'));
         if (shards.length < 5) {
-          showToast('Соберите 5 Soul Shard, чтобы активировать скидку');
+          showToast('Соберите 5 Soul Shard для скидки 10%');
           return;
         }
         let removed = 0;
@@ -2177,35 +1865,33 @@
           return true;
         });
         state.active_discount = 0.10;
-        localStorage.setItem('active_discount', '0.10');
         saveState();
-        renderInventoryGrids();
-        renderCatalog();
-        showToast('Вы получили скидку 10% на следующую покупку доната!');
+        renderInventory();
+        renderConstructor();
+        showToast('✅ Получена скидка 10%');
         closeExchangeModal();
         return;
       }
       if (item.name.includes('Quantum Vault')) {
         const keyIndex = state.pass.inventory.findIndex(i => i.name.includes('Phantom Key'));
         if (keyIndex === -1) {
-          showToast('Для открытия нужен Phantom Key!');
+          showToast('Нужен Phantom Key для активации');
           return;
         }
-        const vaultId = item.id;
-        state.pass.inventory = state.pass.inventory.filter(i => i.id !== vaultId);
-        const keyToRemove = state.pass.inventory.findIndex(i => i.name.includes('Phantom Key'));
-        if (keyToRemove !== -1) state.pass.inventory.splice(keyToRemove, 1);
+        state.pass.inventory = state.pass.inventory.filter(i => i.id !== item.id);
+        const removeKey = state.pass.inventory.findIndex(i => i.name.includes('Phantom Key'));
+        if (removeKey !== -1) state.pass.inventory.splice(removeKey, 1);
         state.promoCode = 'GHOST-GIFT-777';
         saveState();
-        renderInventoryGrids();
-        showToast('Ваш промокод: GHOST-GIFT-777');
+        renderInventory();
+        showToast('Промокод получен: GHOST-GIFT-777');
         closeExchangeModal();
         return;
       }
       if (item.name.includes('Anomalous Cipher')) {
-        const lastUsed = parseInt(localStorage.getItem('anomalous_last') || '0', 10);
+        const last = parseInt(localStorage.getItem('anomalous_last') || '0', 10);
         const weekMs = 7 * 24 * 60 * 60 * 1000;
-        if (Date.now() - lastUsed < weekMs) {
+        if (Date.now() - last < weekMs) {
           showToast('Anomalous Cipher можно использовать раз в неделю');
           return;
         }
@@ -2214,9 +1900,8 @@
         closeExchangeModal();
         return;
       }
-      showToast('Этот предмет нельзя активировать прямо сейчас');
+      showToast('Этот предмет нельзя активировать сейчас');
     }
-
     function sellExchangeItem() {
       if (!currentExchange) return;
       const item = currentExchange.item;
@@ -2226,15 +1911,14 @@
       state.ghostCoin += amount;
       state.notifications.unshift(`Продано ${item.name} за ${amount} GCOIN`);
       saveState();
-      renderInventoryGrids();
+      renderInventory();
       renderProfilePage();
-      closeExchangeModal();
       showToast(`💸 Продано за ${amount} GCOIN`);
+      closeExchangeModal();
     }
-
     function openListAuctionPrompt() {
       if (!state.pass.inventory.length) {
-        showToast('В рюкзаке нет предметов для аукциона');
+        showToast('Рюкзак пуст, нет предметов для аукциона');
         return;
       }
       const items = state.pass.inventory.map((item, index) => `${index + 1}. ${item.name} (${item.rarity})`).join('\n');
@@ -2246,7 +1930,7 @@
         return;
       }
       const item = state.pass.inventory[index];
-      const priceInput = prompt(`Установите стартовую цену для ${item.name} в GCOIN`, Math.max(50, Math.round(item.basePrice * 0.6)));
+      const priceInput = prompt(`Стартовая цена для ${item.name} в GCOIN`, Math.max(50, Math.round(item.basePrice * 0.6)));
       if (!priceInput) return;
       const startPrice = parseInt(priceInput, 10);
       if (isNaN(startPrice) || startPrice < 10) {
@@ -2255,11 +1939,10 @@
       }
       createAuctionLot(index, startPrice);
     }
-
     function listItemToAuction(index) {
       const item = state.pass.inventory[index];
       if (!item) return;
-      const priceInput = prompt(`Установите стартовую цену для ${item.name} в GCOIN`, Math.max(50, Math.round(item.basePrice * 0.6)));
+      const priceInput = prompt(`Стартовая цена для ${item.name} в GCOIN`, Math.max(50, Math.round(item.basePrice * 0.6)));
       if (!priceInput) return;
       const startPrice = parseInt(priceInput, 10);
       if (isNaN(startPrice) || startPrice < 10) {
@@ -2269,7 +1952,6 @@
       createAuctionLot(index, startPrice);
       closeExchangeModal();
     }
-
     function createAuctionLot(index, startPrice) {
       const item = state.pass.inventory.splice(index, 1)[0];
       if (!item) return;
@@ -2284,43 +1966,40 @@
         timeEnd: Date.now() + 90 * 1000,
         itemData: item
       };
-      state.auctionLots.push(lot);
+      state.auctionLots.unshift(lot);
       saveState();
-      showToast(`Лот выставлен: ${item.name} за ${startPrice} GCOIN`);
       renderAuctionList();
-      renderInventoryGrids();
+      renderInventory();
+      showToast(`📦 Лот выставлен: ${item.name}`);
       startAuctionBotsForLot(lot.id);
     }
-
     function renderAuctionList() {
       const container = document.getElementById('auctionList');
       if (!state.auctionLots.length) {
-        container.classList.add('empty');
-        container.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding: 18px;">Нет активных лотов</div>`;
+        container.innerHTML = '<div class="cart-empty">Нет активных лотов. Выставьте предмет, чтобы начать торги.</div>';
         return;
       }
-      container.classList.remove('empty');
       container.innerHTML = state.auctionLots.map(lot => `
-        <div class="payment-item">
-          <div>
-            <div class="payment-item-title">${lot.icon} ${lot.name}</div>
-            <div class="payment-item-detail">Ставка: ${lot.currentBid} GCOIN • ${lot.highestBidder === lot.owner ? 'Ваш лот' : 'Лидер: ' + lot.highestBidder}</div>
-            <div class="payment-item-detail">До конца: ${Math.max(0, Math.ceil((lot.timeEnd - Date.now()) / 1000))} сек</div>
+        <div class="auction-item">
+          <div class="auction-item-title">${lot.icon} ${lot.name}</div>
+          <div class="auction-item-meta">
+            <span>Ставка: ${lot.currentBid} GCOIN</span>
+            <span>Лидер: ${lot.highestBidder === state.username ? 'Вы' : lot.highestBidder}</span>
+            <span>До конца: ${Math.max(0, Math.ceil((lot.timeEnd - Date.now()) / 1000))} сек</span>
           </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
-            <button class="modal-btn confirm" onclick="raiseAuctionBid('${lot.id}')">🔥 +15</button>
-            <button class="modal-btn cancel" onclick="viewLot('${lot.id}')">👁️</button>
+          <div class="auction-item-controls">
+            <button class="primary-btn" type="button" onclick="raiseAuctionBid('${lot.id}')">🔥 +10</button>
+            <button class="secondary-btn" type="button" onclick="viewLot('${lot.id}')">👁️ Смотреть</button>
           </div>
         </div>
       `).join('');
     }
-
     function raiseAuctionBid(lotId) {
       const lot = state.auctionLots.find(item => item.id === lotId);
       if (!lot) return;
-      const increment = 15;
+      const increment = 10;
       if (state.ghostCoin < increment) {
-        showToast('Недостаточно GCOIN');
+        showToast('Недостаточно Ghost Coins');
         return;
       }
       state.ghostCoin -= increment;
@@ -2330,9 +2009,9 @@
       saveState();
       renderAuctionList();
       renderProfilePage();
-      showToast(`Ставка +${increment} GCOIN`);
+      showToast('✅ Ставка увеличена');
+      triggerHaptic('impactOccurred', 'medium');
     }
-
     function startAuctionBotsForLot(lotId) {
       if (auctionIntervals[lotId]) return;
       auctionIntervals[lotId] = setInterval(() => {
@@ -2348,84 +2027,72 @@
           finalizeAuctionLot(lotId);
           return;
         }
-        const priceStep = 15;
-        if (Math.random() < 0.65) {
+        if (Math.random() < 0.65 && lot.highestBidder === state.username) {
           const bot = auctionBots[Math.floor(Math.random() * auctionBots.length)];
-          if (lot.highestBidder !== bot) {
-            lot.currentBid += priceStep;
-            lot.highestBidder = bot;
-            lot.timeEnd = Math.max(lot.timeEnd, Date.now() + 25 * 1000);
-            saveState();
-            renderAuctionList();
-          }
+          lot.currentBid += 15;
+          lot.highestBidder = bot;
+          lot.timeEnd = Math.max(lot.timeEnd, Date.now() + 25 * 1000);
+          saveState();
+          renderAuctionList();
         }
       }, 12000);
     }
-
     function finalizeAuctionLot(lotId) {
-      const lotIndex = state.auctionLots.findIndex(item => item.id === lotId);
-      if (lotIndex === -1) return;
-      const lot = state.auctionLots[lotIndex];
+      const index = state.auctionLots.findIndex(item => item.id === lotId);
+      if (index === -1) return;
+      const lot = state.auctionLots[index];
       if (lot.owner === state.username) {
         if (lot.highestBidder === state.username) {
-          state.pass.inventory.push(lot.itemData);
+          state.pass.inventory.unshift(lot.itemData);
           state.notifications.unshift(`Лот ${lot.name} не продан, возвращён в рюкзак`);
-          showToast(`Лот ${lot.name} не продан`);
+          showToast(`Лот ${lot.name} вернулся в рюкзак`);
         } else {
           const payout = Math.max(1, Math.round(lot.currentBid * 0.9));
           state.ghostCoin += payout;
-          state.notifications.unshift(`Лот ${lot.name} продан за ${lot.currentBid} GCOIN`);
-          showToast(`Ваш лот продан за ${lot.currentBid} GCOIN`);
+          state.notifications.unshift(`Ваш лот ${lot.name} продан за ${lot.currentBid} GCOIN`);
+          showToast(`Вы получили ${payout} GCOIN`);
         }
       } else if (lot.highestBidder === state.username) {
-        state.pass.inventory.push(lot.itemData);
+        state.pass.inventory.unshift(lot.itemData);
         state.notifications.unshift(`Вы выиграли лот ${lot.name}`);
-        showToast(`Вы выиграли лот: ${lot.name}`);
+        showToast(`Вы выиграли ${lot.name}`);
       }
-      state.auctionLots.splice(lotIndex, 1);
+      state.auctionLots.splice(index, 1);
       saveState();
       renderAuctionList();
-      renderInventoryGrids();
+      renderInventory();
       renderProfilePage();
     }
-
     function resumeAuctionTimers() {
       state.auctionLots.forEach(lot => {
-        if (Date.now() >= lot.timeEnd) {
-          finalizeAuctionLot(lot.id);
-        } else {
-          startAuctionBotsForLot(lot.id);
-        }
+        if (Date.now() >= lot.timeEnd) finalizeAuctionLot(lot.id);
+        else startAuctionBotsForLot(lot.id);
       });
     }
-
     function viewLot(lotId) {
       const lot = state.auctionLots.find(item => item.id === lotId);
       if (!lot) return;
-      showModal(`${lot.icon} ${lot.name}`, `Ставка: ${lot.currentBid} GCOIN\nЛидер: ${lot.highestBidder}\nОкончание через ${Math.max(0, Math.ceil((lot.timeEnd - Date.now()) / 1000))} сек`, () => raiseAuctionBid(lotId));
+      showModal(`${lot.icon} ${lot.name}`, `Текущая ставка: ${lot.currentBid} GCOIN\nЛидер: ${lot.highestBidder}\nДо конца: ${Math.max(0, Math.ceil((lot.timeEnd - Date.now()) / 1000))} сек`);
     }
-
     function renderOrdersPage() {
-      const notificationsCard = document.getElementById('notificationsCard');
-      notificationsCard.textContent = state.notifications[0] || 'Уведомлений нет';
-      const ordersHistory = document.getElementById('ordersHistory');
+      document.getElementById('ordersNotification').textContent = state.notifications[0] || 'Новых уведомлений нет';
+      const list = document.getElementById('ordersList');
       if (!state.orders.length) {
-        ordersHistory.classList.add('empty');
-        ordersHistory.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding: 18px;">Заказов нет</div>`;
+        list.innerHTML = '<div class="cart-empty">Покупок ещё не было. Оформите первый донат.</div>';
         return;
       }
-      ordersHistory.classList.remove('empty');
-      ordersHistory.innerHTML = state.orders.map(order => `
-        <div class="payment-item">
-          <div>
-            <div class="payment-item-title">${order.item}</div>
-            <div class="payment-item-detail">${order.date}</div>
-          </div>
-          <div class="payment-item-amount">${order.amount} ₽</div>
-        </div>
+      list.innerHTML = state.orders.map(order => `
+        <button class="order-item" type="button" onclick="showOrderDetails('${order.id}')">
+          <div class="order-item-title">${order.item}</div>
+          <div class="order-item-detail">${order.date} • ${order.amount} ₽</div>
+        </button>
       `).join('');
     }
-
+    function showOrderDetails(orderId) {
+      const order = state.orders.find(item => String(item.id) === String(orderId));
+      if (!order) return;
+      showModal(`Чек: ${order.item}`, `Сумма: ${order.amount} ₽\nДата: ${order.date}\nПолная информация по заказу сохранена в истории.`, null);
+    }
     function renderProfilePage() {
       document.getElementById('profileAvatar').textContent = (state.firstName || 'G').charAt(0).toUpperCase();
       document.getElementById('profileName').textContent = state.firstName || 'Ghost';
@@ -2434,64 +2101,46 @@
       document.getElementById('profileSpent').textContent = `${state.spent} ₽`;
       document.getElementById('profileCoin').textContent = `${state.ghostCoin} GCOIN`;
       document.getElementById('profileCashback').textContent = `${state.cashback} ₽`;
-      document.getElementById('profileStatus').textContent = state.premiumStatus === 'premium_plus' ? '👑 Ghost Premium+' : state.premiumStatus === 'premium' ? '⭐ Ghost Premium' : '🎮 Обычный игрок';
+      document.getElementById('profileSubscription').textContent = state.premiumStatus === 'premium_plus' ? 'Ghost Premium+' : state.premiumStatus === 'premium' ? 'Ghost Premium' : 'Обычный';
       document.getElementById('settingsUID').value = state.savedUID;
       document.getElementById('settingsZoneID').value = state.savedZone;
-      updateToggleButton();
-      updatePremiumSection();
+      document.getElementById('toggleAnimationsText').textContent = state.animationsEnabled ? 'Анимации вкл' : 'Анимации выкл';
+      renderPremiumTiers();
+      renderColorPicker();
+      updateCardUI();
       renderAdminPanel();
-      renderInventoryGrids();
-      renderCatalog();
     }
-
-    function updateToggleButton() {
-      const button = document.getElementById('toggleAnimations');
-      button.textContent = state.animationsEnabled ? 'Анимации вкл' : 'Анимации выкл';
-    }
-
-    function saveSettings() {
-      state.savedUID = document.getElementById('settingsUID').value.trim();
-      state.savedZone = document.getElementById('settingsZoneID').value.trim();
-      saveState();
-      showToast('✅ Настройки сохранены');
-    }
-
-    function toggleAnimations() {
-      state.animationsEnabled = !state.animationsEnabled;
-      saveState();
-      updateToggleButton();
-    }
-
-    function updatePremiumSection() {
-      const container = document.getElementById('premiumSection');
-      const remaining = state.premiumExpires ? msToTime(state.premiumExpires - Date.now()) : '—';
+    function renderPremiumTiers() {
+      const container = document.getElementById('premiumTiersList');
+      if (!container) {
+        console.warn('premiumTiersList не найден');
+        return;
+      }
       if (state.premiumStatus === 'none') {
         container.innerHTML = `
-          <div class="premium-card">
-            <div style="font-size: 15px; font-weight: 800; margin-bottom: 10px;">👑 Перейди на Ghost Premium</div>
-            <div class="premium-info">Кэшбэк, ускоренный Ghost Pass и доступ к эксклюзивным скидкам.</div>
-            <div style="display: grid; gap: 12px;">
-              <button class="premium-btn" onclick="confirmPremium('premium')">Premium — 100 ₽</button>
-              <button class="premium-btn" onclick="confirmPremium('premium_plus')">Premium+ — 300 ₽</button>
-            </div>
-          </div>`;
+          <div class="premium-tier">
+            <div class="premium-tier-name">Ghost Premium</div>
+            <div class="premium-tier-price">100 ₽ / неделя</div>
+            <button class="premium-tier-btn" type="button" onclick="confirmPremium('premium')">🔄 Активировать</button>
+          </div>
+          <div class="premium-tier">
+            <div class="premium-tier-name">Ghost Premium+</div>
+            <div class="premium-tier-price">300 ₽ / неделя</div>
+            <button class="premium-tier-btn" type="button" onclick="confirmPremium('premium_plus')">⚡ Премиум плюс</button>
+          </div>
+        `;
       } else {
+        const tierName = state.premiumStatus === 'premium_plus' ? 'Ghost Premium+' : 'Ghost Premium';
+        const daysLeft = Math.max(0, Math.ceil((state.premiumExpires - Date.now()) / (24 * 60 * 60 * 1000)));
         container.innerHTML = `
-          <div class="premium-card">
-            <div class="premium-status"><span>${state.premiumStatus === 'premium_plus' ? '👑 Ghost Premium+' : '⭐ Ghost Premium'}</span></div>
-            <div class="premium-info">Вы получаете ${state.premiumStatus === 'premium_plus' ? '15%' : '5%'} кэшбэка и доступ к Ghost Pass.</div>
-            <div style="background: rgba(124, 58, 237, 0.08); border: 1px solid var(--border); border-radius: 18px; padding: 14px; margin-bottom: 16px;">
-              <div style="font-size: 13px; font-weight: 700;">Продление через:</div>
-              <div style="font-size: 14px; margin-top: 6px;">${remaining}</div>
-            </div>
-            <div class="premium-actions">
-              <button class="premium-btn" onclick="confirmPremium('${state.premiumStatus}')">🔄 Продлить</button>
-              <button class="premium-btn cancel" onclick="showCancelPremium()">❌ Отменить</button>
-            </div>
-          </div>`;
+          <div class="premium-tier" style="border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.08);">
+            <div class="premium-tier-name">✅ ${tierName}</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Осталось: ${daysLeft} дней</div>
+            <button class="premium-cancel-btn" type="button" onclick="showCancelPremium()">❌ Отменить подписку</button>
+          </div>
+        `;
       }
     }
-
     function confirmPremium(tier) {
       const price = tier === 'premium_plus' ? 300 : 100;
       const name = tier === 'premium_plus' ? 'Ghost Premium+' : 'Ghost Premium';
@@ -2499,9 +2148,8 @@
         showModal('Недостаточно средств', `Для подписки ${name} нужно ещё ${price - state.balance} ₽`, openBalancePanel);
         return;
       }
-      showModal(`Подписка ${name}`, `Списание ${price} ₽. Продолжить?`, () => activatePremium(tier));
+      showModal(`Подписка ${name}`, `Списать ${price} ₽ и активировать подписку?`, () => activatePremium(tier));
     }
-
     function activatePremium(tier) {
       const price = tier === 'premium_plus' ? 300 : 100;
       state.balance -= price;
@@ -2509,15 +2157,14 @@
       state.premiumStatus = tier;
       state.premiumExpires = Date.now() + 7 * 24 * 60 * 60 * 1000;
       saveState();
-      updateHeaderBalance();
-      updateCardUI();
+      renderHeader();
       renderProfilePage();
+      renderConstructor();
       showToast('✅ Подписка активирована');
       triggerHaptic('notificationOccurred', 'success');
     }
-
     function showCancelPremium() {
-      const message = 'Отмена подписки приведёт к потере кэшбэка и доступа к Ghost Pass Premium+. Продолжить?';
+      const message = 'Отмена подписки приведёт к потере кэшбэка и Ghost Pass премиум. Продолжить?';
       if (tg?.showPopup) {
         tg.showPopup({
           title: 'Отмена подписки',
@@ -2533,7 +2180,6 @@
         if (confirm(message)) doCancelPremium();
       }
     }
-
     function doCancelPremium() {
       state.premiumStatus = 'none';
       state.premiumExpires = null;
@@ -2542,140 +2188,40 @@
       showToast('✅ Подписка отменена');
     }
 
-    function msToTime(ms) {
-      if (ms < 0) return '0 д 0 ч';
-      const days = Math.floor(ms / 86400000);
-      const hours = Math.floor((ms % 86400000) / 3600000);
-      return `${days} д ${hours} ч`;
-    }
-
-    function renderAdminPanel() {
-      const panel = document.getElementById('adminPanel');
-      if (state.username === 'henotsosal') {
-        panel.classList.remove('hidden');
-        document.getElementById('adminPromoCode').textContent = state.promoCode || 'Промокод пока не создан';
-      } else {
-        panel.classList.add('hidden');
-      }
-    }
-
-    function generatePromoCode() {
-      const suffix = Math.floor(1000 + Math.random() * 9000);
-      state.promoCode = `GHOST-${suffix}-RAND`;
-      saveState();
-      document.getElementById('adminPromoCode').textContent = state.promoCode;
-      showToast('🎁 Промокод создан');
-    }
-
-    function updateCardUI() {
-      document.getElementById('cardBalance').textContent = `Баланс: ${state.balance} ₽`;
-      document.getElementById('totalSpent').textContent = `${state.spent} ₽`;
-      document.getElementById('accumulatedCashback').textContent = `${state.cashback} ₽`;
-      if (state.cardHidden) {
-        document.getElementById('ghostCard').classList.add('hidden');
-        document.getElementById('cardToggleIcon').classList.add('hidden');
-      } else {
-        document.getElementById('ghostCard').classList.remove('hidden');
-        document.getElementById('cardToggleIcon').classList.remove('hidden');
-      }
-      updateCardStyle();
-    }
-
-    function updateCardStyle() {
-      const card = document.getElementById('ghostCard');
-      card.style.background = `linear-gradient(135deg, ${state.cardColor === 1 ? '#f97316,#ea580c' : state.cardColor === 2 ? '#10b981,#059669' : state.cardColor === 3 ? '#111827,#1f2937' : '#7c3aed,#6366f1'})`;
-      card.style.color = document.documentElement.getAttribute('data-theme') === 'light' ? '#111827' : '#fff';
-    }
-
-    function renderColorPicker() {
-      const picker = document.getElementById('colorPicker');
-      if (!picker) return;
-      picker.innerHTML = [0, 1, 2, 3].map(idx => `
-        <div class="color-dot color-dot-${idx} ${idx === state.cardColor ? 'active' : ''}" onclick="changeCardColor(${idx})"></div>
-      `).join('');
-    }
-
-    function changeCardColor(idx) {
-      state.cardColor = idx;
-      saveState();
-      renderColorPicker();
-      updateCardStyle();
-      showToast('Цвет карты изменён');
-    }
-
-    function toggleCardVisibility() {
-      state.cardHidden = !state.cardHidden;
-      saveState();
-      updateCardUI();
-    }
-
-    function showModal(title, body, action) {
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalBody').textContent = body;
-      window.pendingAction = action || null;
-      document.getElementById('modalBackdrop').classList.remove('hidden');
-      document.getElementById('modalBackdrop').classList.add('visible');
-    }
-
-    function closeModal() {
-      document.getElementById('modalBackdrop').classList.remove('visible');
-      document.getElementById('modalBackdrop').classList.add('hidden');
-      window.pendingAction = null;
-    }
-
-    function showToast(message) {
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 2200);
-    }
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).catch(() => {
-        showToast('Копировать не удалось');
-      });
-    }
-
-    function triggerHaptic(type = 'impactOccurred', style = 'light') {
-      try {
-        if (tg?.HapticFeedback?.[type]) tg.HapticFeedback[type](style);
-      } catch (error) {}
-    }
-
-    function seedAuctionLots() {
-      if (state.auctionLots.length) return;
-      const sample = [
-        { name: 'Void Diamond', icon: '💎', price: 120 },
-        { name: 'Cyber Ghost Mask', icon: '🎭', price: 150 },
-        { name: 'Wraith Core v2.0', icon: '🛠️', price: 180 }
-      ];
-      state.auctionLots = sample.map((item, index) => ({
-        id: 'lot-init-' + index,
-        name: item.name,
-        icon: item.icon,
-        owner: auctionBots[index % auctionBots.length],
-        currentBid: item.price,
-        highestBidder: auctionBots[index % auctionBots.length],
-        rarity: index === 2 ? 'Epic' : 'Legendary',
-        timeEnd: Date.now() + 120000 + index * 20000,
-        itemData: { name: item.name, icon: item.icon, basePrice: item.price, rarity: index === 2 ? 'Epic' : 'Legendary' }
-      }));
-      saveState();
-    }
-
-    window.selectGame = selectGame;
-    window.addToCart = addToCart;
-    window.buyProductQuick = buyProductQuick;
+    window.saveSettings = saveSettings;
+    window.toggleAnimations = toggleAnimations;
+    window.renderAdminPanel = renderAdminPanel;
+    window.generatePromoCode = generatePromoCode;
+    window.updateCardUI = updateCardUI;
+    window.updateCardStyle = updateCardStyle;
+    window.renderColorPicker = renderColorPicker;
+    window.changeCardColor = changeCardColor;
+    window.toggleCardVisibility = toggleCardVisibility;
+    window.showModal = showModal;
+    window.closeModal = closeModal;
+    window.showToast = showToast;
+    window.triggerHaptic = triggerHaptic;
+    window.seedAuctionLots = seedAuctionLots;
+    window.confirmPremium = confirmPremium;
+    window.activatePremium = activatePremium;
+    window.showCancelPremium = showCancelPremium;
+    window.doCancelPremium = doCancelPremium;
+    window.renderPremiumTiers = renderPremiumTiers;
     window.claimQuest = claimQuest;
     window.openExchangeModal = openExchangeModal;
+    window.closeExchangeModal = closeExchangeModal;
     window.handleActivateItem = handleActivateItem;
     window.sellExchangeItem = sellExchangeItem;
     window.listItemToAuction = listItemToAuction;
+    window.createAuctionLot = createAuctionLot;
     window.raiseAuctionBid = raiseAuctionBid;
     window.viewLot = viewLot;
-
-    initApp();
+    window.showOrderDetails = showOrderDetails;
+    window.removeFromCart = removeFromCart;
+    window.selectGame = selectGame;
+    window.openListAuctionPrompt = openListAuctionPrompt;
+    window.addDonationToCart = addDonationToCart;
+    window.buyDonationQuick = buyDonationQuick;
   </script>
 </body>
 </html>
