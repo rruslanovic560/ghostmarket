@@ -27,6 +27,29 @@
       color: #ffffff;
       overflow: hidden;
       position: fixed;
+      --bg-primary: #070814;
+      --bg-secondary: #0f1321;
+      --bg-tertiary: #262149;
+      --accent: #7c3aed;
+      --text-primary: #ffffff;
+      --text-secondary: #b0aac7;
+    }
+
+    body.light-theme {
+      --bg-primary: #f5f5f7;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e8e8ed;
+      --accent: #7c3aed;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+    }
+
+    body.light-theme #app {
+      background-color: var(--bg-primary);
+    }
+
+    body.light-theme .content {
+      background-color: var(--bg-primary);
     }
 
     #app {
@@ -71,230 +94,32 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    /* ===== FLOATING BACKPACK BUTTON ===== */
-    .floating-backpack {
-      position: fixed;
-      bottom: 100px;
-      right: 16px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
-      border: none;
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
-      transition: all 0.3s ease;
-      z-index: 100;
-    }
-
-    .floating-backpack:active {
-      transform: scale(0.95);
-      box-shadow: 0 4px 30px rgba(124, 58, 237, 0.6);
-    }
-
-    /* ===== BACKPACK MODAL ===== */
-    .backpack-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: none;
-      z-index: 1000;
-      animation: fadeIn 0.2s ease;
-    }
-
-    .backpack-modal.active {
-      display: flex;
-      align-items: flex-end;
-    }
-
-    .backpack-modal-content {
-      width: 100%;
-      background: #0f1120;
-      border-radius: 20px 20px 0 0;
-      padding: 20px;
-      max-height: 85vh;
-      overflow-y: auto;
-      animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(100%);
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
-
-    .backpack-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(124, 58, 237, 0.2);
-    }
-
-    .backpack-modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .backpack-modal-close {
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: rgba(124, 58, 237, 0.1);
-      color: #7c3aed;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-
-    .backpack-modal-close:active {
-      background: rgba(124, 58, 237, 0.2);
-      transform: scale(0.95);
-    }
-
-    .backpack-items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .backpack-item-row {
-      display: flex;
       gap: 12px;
-      align-items: center;
-      background: rgba(38, 33, 74, 0.5);
-      border: 1px solid rgba(124, 58, 237, 0.15);
-      border-radius: 12px;
-      padding: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .backpack-item-row:active {
-      background: rgba(124, 58, 237, 0.15);
-      border-color: rgba(124, 58, 237, 0.4);
-    }
-
-    .backpack-item-icon {
-      font-size: 32px;
-      flex-shrink: 0;
-    }
-
-    .backpack-item-info {
-      flex: 1;
-    }
-
-    .backpack-item-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-
-    .backpack-item-meta {
-      display: flex;
-      gap: 12px;
-      font-size: 11px;
-      color: #b0aac7;
-    }
-
-    .backpack-item-actions {
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .backpack-item-btn {
-      padding: 6px 10px;
-      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .backpack-item-btn:active {
-      transform: scale(0.95);
-    }
-
-    .backpack-empty {
-      text-align: center;
-      padding: 40px 20px;
-      color: #b0aac7;
-    }
-
-    .backpack-empty-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-      opacity: 0.5;
     }
 
     .balance-chip {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       background: rgba(112, 66, 192, 0.15);
       border: 1px solid rgba(124, 58, 237, 0.3);
-      border-radius: 20px;
-      padding: 6px 10px;
-      font-size: 11px;
+      border-radius: 24px;
+      padding: 8px 12px;
+      font-size: 13px;
       font-weight: 600;
     }
 
     .balance-chip-icon {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
-      border-radius: 6px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 700;
       color: white;
-    }
-
-    .theme-toggle {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      border: 1px solid rgba(124, 58, 237, 0.3);
-      background: transparent;
-      color: #7c3aed;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-
-    .theme-toggle:active {
-      background: rgba(124, 58, 237, 0.1);
-      transform: scale(0.95);
     }
 
     .add-button {
@@ -1161,6 +986,330 @@
       filter: blur(5px);
     }
 
+    /* ===== FLOATING ACTION BUTTON BACKPACK ===== */
+    .fab-backpack {
+      position: fixed;
+      bottom: 100px;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+      z-index: 100;
+      transition: all 0.3s ease;
+      animation: fabFloat 3s ease-in-out infinite;
+    }
+
+    .fab-backpack:active {
+      transform: scale(0.92);
+      box-shadow: 0 2px 10px rgba(124, 58, 237, 0.6);
+    }
+
+    @keyframes fabFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ===== MODAL BACKPACK ===== */
+    .modal-backpack {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-backpack.active {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .modal-backpack-content {
+      width: 100%;
+      background: var(--bg-secondary);
+      border-radius: 20px 20px 0 0;
+      padding: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-backpack-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-backpack-close {
+      width: 32px;
+      height: 32px;
+      background: rgba(124, 58, 237, 0.2);
+      border: none;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-backpack-close:active {
+      transform: scale(0.9);
+    }
+
+    .backpack-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+    }
+
+    .backpack-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      white-space: nowrap;
+      padding: 8px 12px;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border-color: transparent;
+      color: white;
+    }
+
+    .backpack-items-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .backpack-item {
+      background: rgba(38, 33, 74, 0.6);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .backpack-item:active {
+      transform: scale(0.95);
+      border-color: rgba(124, 58, 237, 0.5);
+      background: rgba(124, 58, 237, 0.1);
+    }
+
+    .backpack-item-icon {
+      font-size: 32px;
+    }
+
+    .backpack-item-name {
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text-primary);
+    }
+
+    .backpack-item-value {
+      font-size: 10px;
+      color: #7c3aed;
+      font-weight: 700;
+    }
+
+    .backpack-item-qty {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* ===== TOP BAR ENHANCEMENTS ===== */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mini-balance {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      font-size: 11px;
+    }
+
+    .mini-balance-item {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .theme-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      background: rgba(124, 58, 237, 0.1);
+      color: var(--accent);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.9);
+      background: rgba(124, 58, 237, 0.2);
+    }
+
+    /* ===== AUCTION MODAL ===== */
+    .modal-auction {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-auction.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-auction-content {
+      width: 90%;
+      max-width: 400px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 20px;
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-auction-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .auction-form-group {
+      margin-bottom: 12px;
+    }
+
+    .auction-form-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: block;
+      font-weight: 600;
+    }
+
+    .auction-form-input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(14, 17, 37, 0.8);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .auction-form-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .auction-commission-info {
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    .auction-modal-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .auction-modal-btn {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .auction-modal-btn-submit {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      color: white;
+    }
+
+    .auction-modal-btn-submit:active {
+      transform: scale(0.95);
+    }
+
+    .auction-modal-btn-cancel {
+      background: rgba(124, 58, 237, 0.15);
+      color: var(--text-primary);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .auction-modal-btn-cancel:active {
+      transform: scale(0.95);
+    }
+
     /* ===== PROFILE PAGE ===== */
     .profile-hero {
       background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
@@ -1668,20 +1817,19 @@
         <div class="header-subtitle">★ 5.0 Premium</div>
       </div>
       <div class="header-right">
-        <div class="balance-chip">
-          <div class="balance-chip-icon">💵</div>
-          <span id="headerRubles">0</span>
+        <div class="mini-balance">
+          <div class="mini-balance-item" id="miniBalance">0 ₽</div>
+          <div class="mini-balance-item" id="miniCoin">0 GC</div>
         </div>
+        <button class="theme-toggle" onclick="window.toggleTheme()" title="Смена темы">
+          <span id="themeIcon">🌙</span>
+        </button>
         <div class="balance-chip">
           <div class="balance-chip-icon">S</div>
           <span id="headerBalance">35 GCOIN</span>
+          <button class="add-button" onclick="window.openBalancePanel()">+</button>
         </div>
-        <button class="theme-toggle" onclick="window.toggleTheme()" title="Переключить тему">
-          <span id="themeIcon">🌙</span>
-        </button>
-        <div class="profile-avatar" onclick="window.switchPage('profile')" style="cursor: pointer;">
-          <span id="headerAvatar">O</span>
-        </div>
+        <div class="profile-avatar" onclick="window.switchPage('profile')">👻</div>
       </div>
     </div>
 
@@ -1892,6 +2040,7 @@
           <button class="pass-tab active" onclick="window.switchPassTab('passContent')">⚙ Пасс</button>
           <button class="pass-tab" onclick="window.switchPassTab('questsContent')">📋 Задания</button>
           <button class="pass-tab" onclick="window.switchPassTab('auctionContent')">🔨 Аукцион</button>
+          <button class="pass-tab" onclick="window.switchPassTab('backpackContent')">🎒 Рюкзак</button>
         </div>
 
         <!-- Pass Content -->
@@ -2021,7 +2170,7 @@
               </div>
 
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button onclick="window.startAuction(state, 'ecto_crate', 200)" style="padding: 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; color: #7c3aed; font-weight: 600; cursor: pointer;">📦 Выставить лот</button>
+                <button onclick="window.openAuctionModal()" style="padding: 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; color: #7c3aed; font-weight: 600; cursor: pointer;">📦 Выставить лот</button>
                 <button onclick="window.finishAuction(state)" style="padding: 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; color: #7c3aed; font-weight: 600; cursor: pointer;">✅ Завершить</button>
               </div>
             </div>
@@ -2050,7 +2199,95 @@
           </div>
         </div>
 
-        <!-- Premium CTA -->
+        <!-- Backpack Content -->
+        <div id="backpackContent" class="pass-content">
+          <div style="padding: 16px;">
+            <div style="font-size: 12px; font-weight: 600; margin-bottom: 12px; color: #b0aac7;">Ваш инвентарь (19 предметов)</div>
+            
+            <div class="rewards-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="reward-item" onclick="window.showItemModal('ghost_coin')" style="cursor: pointer;">
+                <div class="reward-item-icon">👻</div>
+                <div class="reward-item-level">Ghost Coin</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('wraith_ethereum')" style="cursor: pointer;">
+                <div class="reward-item-icon">⚫</div>
+                <div class="reward-item-level">Wraith Eth</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('ecto_dollar')" style="cursor: pointer;">
+                <div class="reward-item-icon">💵</div>
+                <div class="reward-item-level">Ecto-$</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('spectral_asset')" style="cursor: pointer;">
+                <div class="reward-item-icon">📊</div>
+                <div class="reward-item-level">S.Asset</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('crypto_dust')" style="cursor: pointer;">
+                <div class="reward-item-icon">✨</div>
+                <div class="reward-item-level">Crypto Dust</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('wraith_ticket')" style="cursor: pointer;">
+                <div class="reward-item-icon">🎟️</div>
+                <div class="reward-item-level">W. Ticket</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('ecto_crate')" style="cursor: pointer;">
+                <div class="reward-item-icon">📦</div>
+                <div class="reward-item-level">Ecto-Crate</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('data_disk_spike')" style="cursor: pointer;">
+                <div class="reward-item-icon">💿</div>
+                <div class="reward-item-level">Data Disk</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('plasma_battery')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔋</div>
+                <div class="reward-item-level">P. Battery</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('ectoplasm_essence')" style="cursor: pointer;">
+                <div class="reward-item-icon">🧪</div>
+                <div class="reward-item-level">Ectoplasm</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('quantum_vault')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔐</div>
+                <div class="reward-item-level">Q.Vault</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('phantom_key')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔑</div>
+                <div class="reward-item-level">P.Key</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('anomalous_node')" style="cursor: pointer;">
+                <div class="reward-item-icon">⚡</div>
+                <div class="reward-item-level">A.Node</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('anomalous_cipher')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔤</div>
+                <div class="reward-item-level">A.Cipher</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('cyber_ghost_mask')" style="cursor: pointer;">
+                <div class="reward-item-icon">🎭</div>
+                <div class="reward-item-level">C.Mask</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('wraith_core')" style="cursor: pointer;">
+                <div class="reward-item-icon">💎</div>
+                <div class="reward-item-level">W.Core</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('dark_web_ledger')" style="cursor: pointer;">
+                <div class="reward-item-icon">📘</div>
+                <div class="reward-item-level">D.Ledger</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('supernova_spark')" style="cursor: pointer;">
+                <div class="reward-item-icon">⭐</div>
+                <div class="reward-item-level">S.Spark</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('soul_shard')" style="cursor: pointer;">
+                <div class="reward-item-icon">👁️</div>
+                <div class="reward-item-level">Soul Shard</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <button class="premium-cta" onclick="window.confirmPremium('premium_plus')">
           Купить Premium+
           <div class="premium-cta-subtitle">Разблокируй все награды и эксклюзивные предметы</div>
@@ -2239,6 +2476,64 @@
       </div>
     </div>
 
+    <!-- FLOATING ACTION BUTTON BACKPACK -->
+    <button class="fab-backpack" onclick="window.openBackpackModal()" title="Открыть рюкзак">🎒</button>
+
+    <!-- MODAL BACKPACK -->
+    <div class="modal-backpack" id="modalBackpack" onclick="if(event.target.id === 'modalBackpack') window.closeBackpackModal()">
+      <div class="modal-backpack-content">
+        <div class="modal-backpack-header">
+          <span>🎒 Мой рюкзак</span>
+          <button class="modal-backpack-close" onclick="window.closeBackpackModal()">✕</button>
+        </div>
+
+        <div class="backpack-filters">
+          <button class="filter-btn active" onclick="window.filterBackpackBy('all')">Все</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('common')">Обычные</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('rare')">Редкие</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('epic')">Эпики</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('legendary')">Легендарные</button>
+        </div>
+
+        <div class="backpack-items-grid" id="backpackItemsGrid">
+          <!-- Items will be rendered here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL AUCTION - ВЫСТАВИТЬ ЛОТ -->
+    <div class="modal-auction" id="modalAuction" onclick="if(event.target.id === 'modalAuction') window.closeAuctionModal()">
+      <div class="modal-auction-content">
+        <div class="modal-auction-title">📦 Выставить лот на аукцион</div>
+
+        <div class="auction-form-group">
+          <label class="auction-form-label">Выберите предмет:</label>
+          <select class="auction-form-input" id="auctionItemSelect" onchange="window.updateAuctionEstimate()">
+            <option value="">-- Выберите предмет --</option>
+          </select>
+        </div>
+
+        <div class="auction-form-group">
+          <label class="auction-form-label">Стартовая цена (Ghost Coins):</label>
+          <input type="number" class="auction-form-input" id="auctionPrice" placeholder="100" min="10" onchange="window.updateAuctionEstimate()">
+        </div>
+
+        <div class="auction-form-group">
+          <label class="auction-form-label">Длительность: 2 минуты</label>
+        </div>
+
+        <div class="auction-commission-info">
+          <div>💰 Ожидаемая выручка: <strong id="auctionEstimate">-</strong></div>
+          <div style="font-size: 11px; margin-top: 6px;">Комиссия: 10% от финальной цены</div>
+        </div>
+
+        <div class="auction-modal-buttons">
+          <button class="auction-modal-btn auction-modal-btn-submit" onclick="window.submitAuctionLot()">✓ Выставить</button>
+          <button class="auction-modal-btn auction-modal-btn-cancel" onclick="window.closeAuctionModal()">✕ Отмена</button>
+        </div>
+      </div>
+    </div>
+
     <!-- BOTTOM NAVIGATION -->
     <div class="navbar">
       <button class="nav-item active" onclick="window.switchPage('shop')">
@@ -2257,22 +2552,6 @@
         <div class="nav-item-icon">👤</div>
         <div class="nav-item-label">ПРОФИЛЬ</div>
       </button>
-    </div>
-  </div>
-
-  <!-- FLOATING BACKPACK BUTTON -->
-  <button class="floating-backpack" onclick="window.openBackpackModal()" title="Открыть рюкзак">
-    🎒
-  </button>
-
-  <!-- BACKPACK MODAL -->
-  <div class="backpack-modal" id="backpackModal">
-    <div class="backpack-modal-content">
-      <div class="backpack-modal-header">
-        <div class="backpack-modal-title">🎒 Ваш рюкзак</div>
-        <button class="backpack-modal-close" onclick="window.closeBackpackModal()">✕</button>
-      </div>
-      <div class="backpack-items-list" id="backpackItemsList"></div>
     </div>
   </div>
 
@@ -2339,7 +2618,6 @@
       permanent_discount: 0,
       card_hidden: false,
       disable_heavy_animations: false,
-      theme: 'dark',
       orders: [
         { id: 1, game: 'PUBG', amount: 100, price: 89, date: Date.now() - 86400000 },
         { id: 2, game: 'Brawl', amount: 500, price: 119, date: Date.now() - 172800000 },
@@ -2347,11 +2625,7 @@
       backpack: {
         'ghost_coin': 5,
         'crypto_dust': 3,
-        'soul_shard': 2,
-        'wraith_ticket': 1,
-        'ecto_crate': 2,
-        'phantom_key': 1,
-        'quantum_vault': 1
+        'soul_shard': 2
       },
       active_promocodes: [],
       used_promocodes: [],
@@ -2602,8 +2876,8 @@
     // ===== UI UPDATE FUNCTIONS =====
     function updateUI() {
       document.getElementById('headerBalance').textContent = state.ghost_coin + ' GCOIN';
-      document.getElementById('headerRubles').textContent = state.card_balance + ' ₽';
-      document.getElementById('headerAvatar').textContent = state.first_name.charAt(0).toUpperCase();
+      document.getElementById('miniBalance').textContent = state.card_balance.toLocaleString('ru-RU') + ' ₽';
+      document.getElementById('miniCoin').textContent = state.ghost_coin + ' GC';
       document.getElementById('profileName').textContent = state.first_name;
       document.getElementById('profileUsername').textContent = '@' + state.username;
       document.getElementById('profileAvatar').textContent = state.first_name.charAt(0).toUpperCase();
@@ -2845,6 +3119,19 @@
       alert(ordersText);
     }
 
+    function showPromoListModal() {
+      let promoText = 'Ваши промо-коды:\n\n';
+      if (!state.active_promocodes || state.active_promocodes.length === 0) {
+        promoText += 'Промо-коды не созданы';
+      } else {
+        state.active_promocodes.forEach(promo => {
+          const status = promo.used ? '✗' : '✓';
+          promoText += `${status} ${promo.code} (${promo.type})\n`;
+        });
+      }
+      alert(promoText);
+    }
+
     function toggleCard() {
       state.card_hidden = !state.card_hidden;
       const cardVisual = document.querySelector('.card-visual');
@@ -2858,6 +3145,174 @@
       if (tg) {
         tg.openTelegramLink('https://t.me/ghostmarket_support');
       }
+    }
+
+    // ===== THEME TOGGLE =====
+    let currentTheme = localStorage.getItem('ghostmarket_theme') || 'dark';
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('ghostmarket_theme', currentTheme);
+      
+      if (currentTheme === 'light') {
+        document.body.classList.add('light-theme');
+        document.getElementById('themeIcon').textContent = '☀️';
+      } else {
+        document.body.classList.remove('light-theme');
+        document.getElementById('themeIcon').textContent = '🌙';
+      }
+      triggerHaptic('light');
+    }
+
+    // Apply saved theme on load
+    if (currentTheme === 'light') {
+      document.body.classList.add('light-theme');
+      document.getElementById('themeIcon').textContent = '☀️';
+    }
+
+    // ===== BACKPACK MODAL =====
+    let currentBackpackFilter = 'all';
+
+    function openBackpackModal() {
+      document.getElementById('modalBackpack').classList.add('active');
+      renderBackpackItems();
+      triggerHaptic('light');
+    }
+
+    function closeBackpackModal() {
+      document.getElementById('modalBackpack').classList.remove('active');
+    }
+
+    function filterBackpackBy(type) {
+      currentBackpackFilter = type;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event?.target?.classList.add('active');
+      renderBackpackItems();
+    }
+
+    function renderBackpackItems() {
+      const grid = document.getElementById('backpackItemsGrid');
+      grid.innerHTML = '';
+
+      // Создаём массив предметов с их данными
+      let items = [];
+      Object.keys(state.backpack).forEach(itemId => {
+        if (state.backpack[itemId] > 0) {
+          const item = BACKPACK_ITEMS[itemId];
+          items.push({
+            id: itemId,
+            ...item,
+            qty: state.backpack[itemId],
+            rarity: item.rarity
+          });
+        }
+      });
+
+      // Сортируем по ценности (value) в убывающем порядке
+      items.sort((a, b) => b.value - a.value);
+
+      // Фильтруем по типу редкости
+      if (currentBackpackFilter !== 'all') {
+        items = items.filter(item => item.rarity.toLowerCase() === currentBackpackFilter);
+      }
+
+      // Рендерим элементы
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'backpack-item';
+        div.onclick = () => window.showItemModal(item.id);
+        div.innerHTML = `
+          <div class="backpack-item-icon">${item.icon}</div>
+          <div class="backpack-item-name">${item.name}</div>
+          <div class="backpack-item-value">${item.value} GC</div>
+          <div class="backpack-item-qty">${item.qty}</div>
+        `;
+        grid.appendChild(div);
+      });
+
+      if (items.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--text-secondary);">Нет предметов</div>';
+      }
+    }
+
+    // ===== AUCTION MODAL FUNCTIONS =====
+    function openAuctionModal() {
+      document.getElementById('modalAuction').classList.add('active');
+      populateAuctionItemSelect();
+      triggerHaptic('light');
+    }
+
+    function closeAuctionModal() {
+      document.getElementById('modalAuction').classList.remove('active');
+    }
+
+    function populateAuctionItemSelect() {
+      const select = document.getElementById('auctionItemSelect');
+      select.innerHTML = '<option value="">-- Выберите предмет --</option>';
+
+      Object.keys(state.backpack).forEach(itemId => {
+        if (state.backpack[itemId] > 0) {
+          const item = BACKPACK_ITEMS[itemId];
+          const option = document.createElement('option');
+          option.value = itemId;
+          option.textContent = `${item.icon} ${item.name} (${item.rarity})`;
+          select.appendChild(option);
+        }
+      });
+    }
+
+    function updateAuctionEstimate() {
+      const price = Number(document.getElementById('auctionPrice').value) || 0;
+      const commission = Math.floor(price * 0.1);
+      const net = price - commission;
+
+      document.getElementById('auctionEstimate').textContent = `${net} Ghost Coins (комиссия: ${commission})`;
+    }
+
+    function submitAuctionLot() {
+      const itemId = document.getElementById('auctionItemSelect').value;
+      const price = Number(document.getElementById('auctionPrice').value);
+
+      if (!itemId) {
+        showToast('❌ Выберите предмет');
+        return;
+      }
+
+      if (!price || price < 10) {
+        showToast('❌ Цена должна быть от 10 Ghost Coins');
+        return;
+      }
+
+      // Проверяем есть ли предмет в рюкзаке
+      if (!state.backpack[itemId] || state.backpack[itemId] === 0) {
+        showToast('❌ Этого предмета нет в рюкзаке');
+        return;
+      }
+
+      // Выставляем лот
+      removeBackpackItem(state, itemId, 1);
+      
+      state.auction_listings = state.auction_listings || [];
+      state.auction_listings.push({
+        seller: state.username,
+        item: itemId,
+        itemName: BACKPACK_ITEMS[itemId].name,
+        itemIcon: BACKPACK_ITEMS[itemId].icon,
+        startPrice: price,
+        currentBid: price,
+        currentBidder: 'Нет ставок',
+        startTime: Date.now(),
+        endTime: Date.now() + 120000
+      });
+
+      saveState();
+      closeAuctionModal();
+      showToast(`✅ Лот выставлен! Стартовая цена: ${price} GC`);
+      triggerHaptic('success');
+
+      // Очищаем форму
+      document.getElementById('auctionPrice').value = '';
+      document.getElementById('auctionItemSelect').value = '';
     }
 
     // ===== TOAST NOTIFICATIONS =====
@@ -2885,135 +3340,6 @@
     // ===== INITIALIZATION =====
     loadTelegramData();
 
-    // ===== BACKPACK MODAL FUNCTIONS =====
-    function openBackpackModal() {
-      const modal = document.getElementById('backpackModal');
-      if (modal) {
-        modal.classList.add('active');
-        renderBackpackItems();
-      }
-    }
-
-    function closeBackpackModal() {
-      const modal = document.getElementById('backpackModal');
-      if (modal) {
-        modal.classList.remove('active');
-      }
-    }
-
-    function renderBackpackItems() {
-      const list = document.getElementById('backpackItemsList');
-      if (!list) return;
-
-      // Convert backpack to array and sort by value descending
-      const items = Object.entries(state.backpack)
-        .map(([id, qty]) => ({
-          id: id,
-          qty: qty,
-          ...BACKPACK_ITEMS[id]
-        }))
-        .sort((a, b) => (b.value || 0) - (a.value || 0));
-
-      if (items.length === 0) {
-        list.innerHTML = '<div class="backpack-empty"><div class="backpack-empty-icon">🎒</div><div>Рюкзак пуст</div></div>';
-        return;
-      }
-
-      list.innerHTML = items.map(item => `
-        <div class="backpack-item-row" onclick="window.showItemActions('${item.id}')">
-          <div class="backpack-item-icon">${item.icon}</div>
-          <div class="backpack-item-info">
-            <div class="backpack-item-name">${item.name}</div>
-            <div class="backpack-item-meta">
-              <span>${item.rarity}</span>
-              <span>× ${item.qty}</span>
-              <span>${item.value} GC</span>
-            </div>
-          </div>
-          <div class="backpack-item-actions">
-            <button class="backpack-item-btn" onclick="event.stopPropagation(); window.auctionListItem('${item.id}')">🔨</button>
-            <button class="backpack-item-btn" onclick="event.stopPropagation(); window.sellItem('${item.id}')">💸</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function showItemActions(itemId) {
-      const item = BACKPACK_ITEMS[itemId];
-      if (!item) return;
-      
-      const message = `${item.icon} ${item.name}\n\nРедкость: ${item.rarity}\nВценность: ${item.value} GC`;
-      alert(message);
-    }
-
-    function auctionListItem(itemId) {
-      if ((state.backpack[itemId] || 0) <= 0) {
-        showToast('❌ Предмета нет в рюкзаке');
-        return;
-      }
-
-      const item = BACKPACK_ITEMS[itemId];
-      const startPrice = prompt(`Выставить "${item.name}" на аукцион.\n\nСтартовая цена (Ghost Coins):`, item.value.toString());
-      
-      if (startPrice && !isNaN(startPrice) && startPrice > 0) {
-        window.startAuction(state, itemId, Number(startPrice));
-        removeBackpackItem(state, itemId, 1);
-        renderBackpackItems();
-        showToast(`✅ "${item.name}" выставлен на аукцион!`);
-        triggerHaptic('success');
-      }
-    }
-
-    function sellItem(itemId) {
-      if ((state.backpack[itemId] || 0) <= 0) {
-        showToast('❌ Предмета нет в рюкзаке');
-        return;
-      }
-
-      const item = BACKPACK_ITEMS[itemId];
-      const randomChange = (Math.random() - 0.5) * 40; // -20% to +20%
-      const marketValue = Math.round(item.value * (1 + randomChange / 100));
-      
-      const confirmed = confirm(`💸 Продать "${item.name}" на бирже за ${marketValue} Ghost Coins?\n\nСейчас: ${randomChange > 0 ? '📈 +' : '📉 '}${Math.abs(Math.round(randomChange))}%`);
-      
-      if (confirmed) {
-        state.ghost_coin += marketValue;
-        removeBackpackItem(state, itemId, 1);
-        saveState();
-        updateUI();
-        renderBackpackItems();
-        showToast(`✅ Продано за ${marketValue} GC!`);
-        triggerHaptic('success');
-      }
-    }
-
-    // ===== THEME TOGGLE =====
-    function toggleTheme() {
-      state.theme = state.theme === 'dark' ? 'light' : 'dark';
-      applyTheme();
-      saveState();
-      triggerHaptic('light');
-    }
-
-    function applyTheme() {
-      const root = document.documentElement;
-      if (state.theme === 'light') {
-        root.style.setProperty('--bg-dark', '#ffffff');
-        root.style.setProperty('--bg-light', '#f5f5f5');
-        root.style.setProperty('--text-primary', '#000000');
-        root.style.setProperty('--text-secondary', '#666666');
-        document.body.style.backgroundColor = '#f5f5f5';
-        document.getElementById('themeIcon').textContent = '☀️';
-      } else {
-        root.style.setProperty('--bg-dark', '#070814');
-        root.style.setProperty('--bg-light', '#0f1120');
-        root.style.setProperty('--text-primary', '#ffffff');
-        root.style.setProperty('--text-secondary', '#b0aac7');
-        document.body.style.backgroundColor = '#070814';
-        document.getElementById('themeIcon').textContent = '🌙';
-      }
-    }
-
     // Export functions to window
     window.switchPage = switchPage;
     window.filterCategory = filterCategory;
@@ -3027,6 +3353,7 @@
     window.showPromoModal = showPromoModal;
     window.showCreatePromoModal = showCreatePromoModal;
     window.showOrdersModal = showOrdersModal;
+    window.showPromoListModal = showPromoListModal;
     window.toggleCard = toggleCard;
     window.openTelegram = openTelegram;
     window.claimQuest = claimQuest;
@@ -3035,17 +3362,18 @@
     window.addXP = addXP;
     window.startAuction = startAuction;
     window.finishAuction = finishAuction;
+    window.toggleTheme = toggleTheme;
     window.openBackpackModal = openBackpackModal;
     window.closeBackpackModal = closeBackpackModal;
-    window.showItemActions = showItemActions;
-    window.auctionListItem = auctionListItem;
-    window.sellItem = sellItem;
-    window.toggleTheme = toggleTheme;
+    window.filterBackpackBy = filterBackpackBy;
+    window.renderBackpackItems = renderBackpackItems;
+    window.openAuctionModal = openAuctionModal;
+    window.closeAuctionModal = closeAuctionModal;
+    window.populateAuctionItemSelect = populateAuctionItemSelect;
+    window.updateAuctionEstimate = updateAuctionEstimate;
+    window.submitAuctionLot = submitAuctionLot;
 
-    // Initialize
     updateUI();
-    applyTheme();
-    loadTelegramData();
   </script>
 </body>
 </html>
