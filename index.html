@@ -1,0 +1,3379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#070814">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>GhostMarket - Игровая валюта дешевле</title>
+  
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background-color: #070814;
+      color: #ffffff;
+      overflow: hidden;
+      position: fixed;
+      --bg-primary: #070814;
+      --bg-secondary: #0f1321;
+      --bg-tertiary: #262149;
+      --accent: #7c3aed;
+      --text-primary: #ffffff;
+      --text-secondary: #b0aac7;
+    }
+
+    body.light-theme {
+      --bg-primary: #f5f5f7;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e8e8ed;
+      --accent: #7c3aed;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+    }
+
+    body.light-theme #app {
+      background-color: var(--bg-primary);
+    }
+
+    body.light-theme .content {
+      background-color: var(--bg-primary);
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: #070814;
+    }
+
+    .header {
+      padding: 16px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(112, 66, 192, 0.1) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(38, 33, 74, 0.3);
+      flex-shrink: 0;
+      height: 72px;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #8B5CFF 0%, #B89CFF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-subtitle {
+      font-size: 12px;
+      color: #b0aac7;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .balance-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(112, 66, 192, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 24px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .balance-chip-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .add-button {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(124, 58, 237, 0.5);
+      background: transparent;
+      color: #7c3aed;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .add-button:active {
+      background: rgba(124, 58, 237, 0.1);
+      transform: scale(0.95);
+    }
+
+    .profile-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      position: relative;
+      border: 2px solid rgba(124, 58, 237, 0.5);
+    }
+
+    .profile-avatar::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      bottom: 0;
+      right: 0;
+      border: 2px solid #070814;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+
+    .content::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+      background: rgba(124, 58, 237, 0.2);
+      border-radius: 2px;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== SHOP PAGE ===== */
+    .shop-hero {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 16px;
+      position: relative;
+      overflow: hidden;
+      min-height: 200px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .shop-hero::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -100px;
+      right: -100px;
+    }
+
+    .shop-hero-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .shop-hero-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .shop-hero-title-highlight {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .shop-hero-description {
+      font-size: 14px;
+      color: #b0aac7;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .shop-hero-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .shop-hero-button:active {
+      transform: scale(0.98);
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+    }
+
+    .shop-hero-ghost {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.8), rgba(124, 58, 237, 0.4));
+      border-radius: 50% 50% 45% 45%;
+      animation: ghostFloat 4s ease-in-out infinite;
+    }
+
+    .shop-hero-ghost::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #070814;
+      border-radius: 50%;
+      top: 35%;
+      left: 30%;
+    }
+
+    .shop-hero-ghost::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #070814;
+      border-radius: 50%;
+      top: 35%;
+      right: 30%;
+    }
+
+    @keyframes ghostFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-15px) scale(1.05); }
+    }
+
+    .categories {
+      display: flex;
+      gap: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 70px;
+      height: 70px;
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.1);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 8px;
+      flex-shrink: 0;
+    }
+
+    .category-btn:hover,
+    .category-btn.active {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: rgba(124, 58, 237, 0.5);
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+    }
+
+    .category-btn-icon {
+      font-size: 24px;
+    }
+
+    .category-btn-label {
+      font-size: 11px;
+      color: #b0aac7;
+      text-align: center;
+    }
+
+    .category-btn.active .category-btn-label {
+      color: #7c3aed;
+      font-weight: 600;
+    }
+
+    .section-header {
+      padding: 20px 16px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .section-link {
+      font-size: 13px;
+      color: #7c3aed;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .section-link:active {
+      color: #8B5CFF;
+    }
+
+    .games-carousel {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .games-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .game-card {
+      min-width: 140px;
+      background: rgba(38, 33, 74, 0.6);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .game-card:active {
+      transform: scale(0.98);
+      border-color: rgba(124, 58, 237, 0.4);
+      background: rgba(124, 58, 237, 0.1);
+    }
+
+    .game-card-image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(59, 130, 246, 0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card-discount {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .game-card-body {
+      padding: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .game-card-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .game-card-currency {
+      font-size: 11px;
+      color: #b0aac7;
+      margin-bottom: 8px;
+    }
+
+    .game-card-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: #7c3aed;
+      margin-bottom: 8px;
+    }
+
+    .game-card-button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: auto;
+    }
+
+    .game-card-button:active {
+      transform: scale(0.95);
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .benefit-card {
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .benefit-card-icon {
+      font-size: 28px;
+    }
+
+    .benefit-card-text {
+      font-size: 12px;
+      color: #b0aac7;
+      line-height: 1.3;
+    }
+
+    .constructor {
+      margin: 16px;
+      background: rgba(38, 33, 74, 0.6);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .constructor-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .constructor-header-icon {
+      font-size: 20px;
+    }
+
+    .constructor-description {
+      font-size: 13px;
+      color: #b0aac7;
+      margin-bottom: 16px;
+    }
+
+    .constructor-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px;
+      background: rgba(14, 17, 37, 0.8);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .form-input::placeholder {
+      color: #6b7280;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(124, 58, 237, 0.5);
+      background: rgba(14, 17, 37, 0.95);
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.15);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 14px;
+      background: rgba(14, 17, 37, 0.8);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      appearance: none;
+      padding-right: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237c3aed' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: rgba(124, 58, 237, 0.5);
+      background-color: rgba(14, 17, 37, 0.95);
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.15);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .constructor-button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 12px;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .constructor-button:active {
+      transform: scale(0.98);
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+    }
+
+    /* ===== GHOST PASS PAGE ===== */
+    .pass-hero {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3) 0%, rgba(59, 130, 246, 0.15) 100%);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 16px;
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+    }
+
+    .pass-hero::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -100px;
+      right: -100px;
+    }
+
+    .pass-hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .pass-season {
+      font-size: 12px;
+      color: #7c3aed;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .pass-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .pass-description {
+      font-size: 13px;
+      color: #b0aac7;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .pass-timer {
+      font-size: 13px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pass-ghost-icon {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 80px;
+      opacity: 0.7;
+    }
+
+    .pass-level-panel {
+      margin: 16px;
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 60px 1fr 60px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .level-box {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(59, 130, 246, 0.2));
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .level-box-label {
+      font-size: 10px;
+      color: #b0aac7;
+    }
+
+    .level-box-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #7c3aed;
+    }
+
+    .xp-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .xp-label {
+      font-size: 12px;
+      color: #b0aac7;
+    }
+
+    .xp-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(14, 17, 37, 0.8);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .xp-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7c3aed 0%, #8B5CFF 100%);
+      width: 10%;
+      transition: width 0.3s ease;
+    }
+
+    .next-reward {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .next-reward-icon {
+      font-size: 28px;
+    }
+
+    .next-reward-label {
+      font-size: 10px;
+      color: #b0aac7;
+      text-align: center;
+    }
+
+    .pass-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .pass-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pass-tab {
+      white-space: nowrap;
+      padding: 10px 14px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #b0aac7;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pass-tab.active {
+      color: #7c3aed;
+      border-bottom-color: #7c3aed;
+    }
+
+    .pass-content {
+      display: none;
+      padding: 16px;
+    }
+
+    .pass-content.active {
+      display: block;
+    }
+
+    .rewards-track {
+      background: rgba(38, 33, 74, 0.4);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .rewards-track-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rewards-track-icon {
+      font-size: 18px;
+    }
+
+    .rewards-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+
+    .reward-item {
+      aspect-ratio: 1;
+      background: rgba(14, 17, 37, 0.8);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .reward-item:hover {
+      border-color: rgba(124, 58, 237, 0.4);
+      background: rgba(124, 58, 237, 0.05);
+    }
+
+    .reward-item.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .reward-item-icon {
+      font-size: 20px;
+    }
+
+    .reward-item-level {
+      font-size: 11px;
+      color: #b0aac7;
+    }
+
+    .quest-card {
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .quest-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .quest-body {
+      flex: 1;
+    }
+
+    .quest-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .quest-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .quest-progress-bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(14, 17, 37, 0.8);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .quest-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7c3aed 0%, #8B5CFF 100%);
+    }
+
+    .quest-progress-text {
+      font-size: 11px;
+      color: #b0aac7;
+    }
+
+    .quest-reward {
+      font-size: 12px;
+      font-weight: 600;
+      color: #7c3aed;
+    }
+
+    .quest-button {
+      align-self: center;
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      color: #7c3aed;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quest-button:active {
+      transform: scale(0.9);
+    }
+
+    .premium-cta {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+      margin: 16px;
+      width: calc(100% - 32px);
+    }
+
+    .premium-cta:active {
+      transform: scale(0.98);
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+    }
+
+    .premium-cta-subtitle {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .card-visual.hidden {
+      opacity: 0.3;
+      filter: blur(5px);
+    }
+
+    /* ===== FLOATING ACTION BUTTON BACKPACK ===== */
+    .fab-backpack {
+      position: fixed;
+      bottom: 100px;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+      z-index: 100;
+      transition: all 0.3s ease;
+      animation: fabFloat 3s ease-in-out infinite;
+    }
+
+    .fab-backpack:active {
+      transform: scale(0.92);
+      box-shadow: 0 2px 10px rgba(124, 58, 237, 0.6);
+    }
+
+    @keyframes fabFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ===== MODAL BACKPACK ===== */
+    .modal-backpack {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-backpack.active {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .modal-backpack-content {
+      width: 100%;
+      background: var(--bg-secondary);
+      border-radius: 20px 20px 0 0;
+      padding: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-backpack-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-backpack-close {
+      width: 32px;
+      height: 32px;
+      background: rgba(124, 58, 237, 0.2);
+      border: none;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-backpack-close:active {
+      transform: scale(0.9);
+    }
+
+    .backpack-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+    }
+
+    .backpack-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      white-space: nowrap;
+      padding: 8px 12px;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border-color: transparent;
+      color: white;
+    }
+
+    .backpack-items-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .backpack-item {
+      background: rgba(38, 33, 74, 0.6);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .backpack-item:active {
+      transform: scale(0.95);
+      border-color: rgba(124, 58, 237, 0.5);
+      background: rgba(124, 58, 237, 0.1);
+    }
+
+    .backpack-item-icon {
+      font-size: 32px;
+    }
+
+    .backpack-item-name {
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text-primary);
+    }
+
+    .backpack-item-value {
+      font-size: 10px;
+      color: #7c3aed;
+      font-weight: 700;
+    }
+
+    .backpack-item-qty {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* ===== TOP BAR ENHANCEMENTS ===== */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mini-balance {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      font-size: 11px;
+    }
+
+    .mini-balance-item {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .theme-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      background: rgba(124, 58, 237, 0.1);
+      color: var(--accent);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.9);
+      background: rgba(124, 58, 237, 0.2);
+    }
+
+    /* ===== AUCTION MODAL ===== */
+    .modal-auction {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-auction.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-auction-content {
+      width: 90%;
+      max-width: 400px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 20px;
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-auction-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .auction-form-group {
+      margin-bottom: 12px;
+    }
+
+    .auction-form-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: block;
+      font-weight: 600;
+    }
+
+    .auction-form-input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(14, 17, 37, 0.8);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .auction-form-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .auction-commission-info {
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    .auction-modal-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .auction-modal-btn {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .auction-modal-btn-submit {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      color: white;
+    }
+
+    .auction-modal-btn-submit:active {
+      transform: scale(0.95);
+    }
+
+    .auction-modal-btn-cancel {
+      background: rgba(124, 58, 237, 0.15);
+      color: var(--text-primary);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .auction-modal-btn-cancel:active {
+      transform: scale(0.95);
+    }
+
+    /* ===== PROFILE PAGE ===== */
+    .profile-hero {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-hero::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -100px;
+      right: -100px;
+    }
+
+    .profile-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 700;
+      position: relative;
+      flex-shrink: 0;
+      z-index: 2;
+      border: 2px solid rgba(124, 58, 237, 0.5);
+    }
+
+    .profile-info {
+      flex: 1;
+      z-index: 2;
+    }
+
+    .profile-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-username {
+      font-size: 14px;
+      color: #b0aac7;
+      margin-bottom: 8px;
+    }
+
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid rgba(124, 58, 237, 0.4);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8B5CFF;
+    }
+
+    .profile-ghost-image {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 100px;
+      opacity: 0.3;
+      z-index: 1;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 16px;
+    }
+
+    .stat-card {
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #7c3aed;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #b0aac7;
+      line-height: 1.2;
+    }
+
+    .card-block {
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 0 16px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .card-balance {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-balance-label {
+      font-size: 12px;
+      color: #b0aac7;
+    }
+
+    .card-balance-amount {
+      font-size: 24px;
+      font-weight: 700;
+      color: #7c3aed;
+    }
+
+    .card-visual {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      border-radius: 12px;
+      padding: 12px;
+      aspect-ratio: 1.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-visual::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+      border-radius: 12px;
+    }
+
+    .card-visual-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-visual-name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .card-visual-icon {
+      font-size: 20px;
+    }
+
+    .card-visual-bottom {
+      position: relative;
+      z-index: 1;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .card-visual-number {
+      letter-spacing: 2px;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 16px 16px;
+    }
+
+    .action-card {
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-card:active {
+      background: rgba(124, 58, 237, 0.1);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .action-card-icon {
+      font-size: 32px;
+    }
+
+    .action-card-label {
+      font-size: 12px;
+      color: #b0aac7;
+      line-height: 1.2;
+    }
+
+    .subscriptions {
+      padding: 16px;
+    }
+
+    .subscriptions-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #b0aac7;
+    }
+
+    .subscription-card {
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1fr 80px;
+      gap: 12px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .subscription-card.premium-plus {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .subscription-card.premium {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(38, 33, 74, 0.5) 100%);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .subscription-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .subscription-name {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .subscription-benefits {
+      font-size: 11px;
+      color: #b0aac7;
+      line-height: 1.3;
+    }
+
+    .subscription-benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .subscription-status {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .subscription-status-badge {
+      font-size: 10px;
+      padding: 4px 8px;
+      background: rgba(124, 58, 237, 0.2);
+      border-radius: 6px;
+      color: #7c3aed;
+      font-weight: 600;
+    }
+
+    .subscription-status-time {
+      font-size: 10px;
+      color: #b0aac7;
+    }
+
+    .subscription-controls {
+      display: flex;
+      gap: 8px;
+      padding: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .subscription-button {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .subscription-button.extend {
+      background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%);
+      color: white;
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+    }
+
+    .subscription-button.buy {
+      background: rgba(38, 33, 74, 0.8);
+      color: #b0aac7;
+      border: 1px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .subscription-button.cancel {
+      background: rgba(220, 38, 38, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+
+    .subscription-button:active {
+      transform: scale(0.95);
+    }
+
+    /* ===== SUPPORT PAGE ===== */
+    .support-container {
+      padding: 16px;
+    }
+
+    .support-item {
+      background: rgba(38, 33, 74, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .support-item:active {
+      background: rgba(124, 58, 237, 0.1);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .support-item-icon {
+      font-size: 32px;
+      width: 50px;
+      text-align: center;
+    }
+
+    .support-item-content {
+      flex: 1;
+    }
+
+    .support-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .support-item-description {
+      font-size: 12px;
+      color: #b0aac7;
+    }
+
+    .support-item-arrow {
+      font-size: 16px;
+      color: #b0aac7;
+    }
+
+    /* ===== BOTTOM NAVIGATION ===== */
+    .navbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(180deg, rgba(14, 17, 37, 0.8), rgba(7, 8, 20, 0.95));
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(124, 58, 237, 0.15);
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding-top: 8px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 4px;
+      flex: 1;
+      height: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding-top: 6px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      color: #b0aac7;
+    }
+
+    .nav-item.active {
+      color: #7c3aed;
+    }
+
+    .nav-item-icon {
+      font-size: 24px;
+    }
+
+    .nav-item-label {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 16px;
+      right: 16px;
+      background: rgba(14, 17, 37, 0.95);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #ffffff;
+      text-align: center;
+      z-index: 1000;
+      animation: slideUp 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .toast.success {
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .toast.error {
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-height: 600px) {
+      .header {
+        height: 60px;
+      }
+
+      .content {
+        padding-bottom: 70px;
+      }
+
+      .navbar {
+        height: 70px;
+        padding-top: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <div class="header-title">GhostMarket</div>
+        <div class="header-subtitle">★ 5.0 Premium</div>
+      </div>
+      <div class="header-right">
+        <div class="mini-balance">
+          <div class="mini-balance-item" id="miniBalance">0 ₽</div>
+          <div class="mini-balance-item" id="miniCoin">0 GC</div>
+        </div>
+        <button class="theme-toggle" onclick="window.toggleTheme()" title="Смена темы">
+          <span id="themeIcon">🌙</span>
+        </button>
+        <div class="balance-chip">
+          <div class="balance-chip-icon">S</div>
+          <span id="headerBalance">35 GCOIN</span>
+          <button class="add-button" onclick="window.openBalancePanel()">+</button>
+        </div>
+        <div class="profile-avatar" onclick="window.switchPage('profile')">👻</div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+      <!-- SHOP PAGE -->
+      <div id="page-shop" class="page active">
+        <!-- Hero Banner -->
+        <div class="shop-hero">
+          <div class="shop-hero-content">
+            <div class="shop-hero-title">
+              Игровая валюта
+              <div class="shop-hero-title-highlight">дешевле официальных цен</div>
+            </div>
+            <div class="shop-hero-description">
+              Моментальная доставка, безопасно и надежно прямо в Telegram WebApp.
+            </div>
+            <button class="shop-hero-button" onclick="window.openBalancePanel()">Пополнить счёт ❯</button>
+          </div>
+          <div class="shop-hero-ghost"></div>
+        </div>
+
+        <!-- Categories -->
+        <div class="categories">
+          <button class="category-btn active" onclick="window.filterCategory('popular')">
+            <div class="category-btn-icon">🔥</div>
+            <div class="category-btn-label">Популярные</div>
+          </button>
+          <button class="category-btn" onclick="window.filterCategory('mobile')">
+            <div class="category-btn-icon">📱</div>
+            <div class="category-btn-label">Мобильные</div>
+          </button>
+          <button class="category-btn" onclick="window.filterCategory('pc')">
+            <div class="category-btn-icon">💻</div>
+            <div class="category-btn-label">ПК игры</div>
+          </button>
+          <button class="category-btn" onclick="window.filterCategory('subs')">
+            <div class="category-btn-icon">👑</div>
+            <div class="category-btn-label">Подписки</div>
+          </button>
+          <button class="category-btn" onclick="window.filterCategory('gifts')">
+            <div class="category-btn-icon">🎁</div>
+            <div class="category-btn-label">Подарки</div>
+          </button>
+          <button class="category-btn" onclick="window.filterCategory('other')">
+            <div class="category-btn-icon">🎮</div>
+            <div class="category-btn-label">Другое</div>
+          </button>
+        </div>
+
+        <!-- Popular Games Section -->
+        <div class="section-header">
+          <div class="section-title">🔥 Популярные игры</div>
+          <a class="section-link" href="#games">Смотреть все ❯</a>
+        </div>
+        <div class="games-carousel">
+          <div class="game-card">
+            <div class="game-card-image">
+              🎮
+              <div class="game-card-discount">-12%</div>
+            </div>
+            <div class="game-card-body">
+              <div class="game-card-name">PUBG Mobile</div>
+              <div class="game-card-currency">UC</div>
+              <div class="game-card-price">от 89 ₽</div>
+              <button class="game-card-button" onclick="window.quickBuy('pubg')">🛒 Купить</button>
+            </div>
+          </div>
+
+          <div class="game-card">
+            <div class="game-card-image">
+              ⭐
+              <div class="game-card-discount">-15%</div>
+            </div>
+            <div class="game-card-body">
+              <div class="game-card-name">Brawl Stars</div>
+              <div class="game-card-currency">Гемы</div>
+              <div class="game-card-price">от 119 ₽</div>
+              <button class="game-card-button" onclick="window.quickBuy('brawl')">🛒 Купить</button>
+            </div>
+          </div>
+
+          <div class="game-card">
+            <div class="game-card-image">
+              🏰
+              <div class="game-card-discount">-10%</div>
+            </div>
+            <div class="game-card-body">
+              <div class="game-card-name">Clash of Clans</div>
+              <div class="game-card-currency">Гемы</div>
+              <div class="game-card-price">от 99 ₽</div>
+              <button class="game-card-button" onclick="window.quickBuy('clash')">🛒 Купить</button>
+            </div>
+          </div>
+
+          <div class="game-card">
+            <div class="game-card-image">
+              ✨
+              <div class="game-card-discount">-8%</div>
+            </div>
+            <div class="game-card-body">
+              <div class="game-card-name">Genshin Impact</div>
+              <div class="game-card-currency">Кристаллы</div>
+              <div class="game-card-price">от 129 ₽</div>
+              <button class="game-card-button" onclick="window.quickBuy('genshin')">🛒 Купить</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="benefits">
+          <div class="benefit-card">
+            <div class="benefit-card-icon">⚡</div>
+            <div class="benefit-card-text">Моментальная доставка</div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card-icon">🛡️</div>
+            <div class="benefit-card-text">Безопасные платежи</div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card-icon">🏷️</div>
+            <div class="benefit-card-text">Лучшие цены</div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card-icon">🎧</div>
+            <div class="benefit-card-text">Поддержка 24/7</div>
+          </div>
+        </div>
+
+        <!-- Constructor -->
+        <div class="constructor">
+          <div class="constructor-header">
+            <div class="constructor-header-icon">🟩</div>
+            <div>Конструктор доната</div>
+          </div>
+          <div class="constructor-description">
+            Создайте свой донат для любой игры
+          </div>
+          <div class="constructor-form">
+            <input 
+              type="text" 
+              class="form-input" 
+              id="constructorUID" 
+              placeholder="Введите UID / ID / Никнейм"
+            >
+            <select class="form-select" id="constructorGame" onchange="window.updateConstructorPrice()">
+              <option value="">🎮 Выберите игру</option>
+              <option value="pubg">PUBG Mobile</option>
+              <option value="brawl">Brawl Stars</option>
+              <option value="clash">Clash of Clans</option>
+              <option value="mlbb">Mobile Legends</option>
+            </select>
+            <select class="form-select" id="constructorItem" onchange="window.updateConstructorPrice()">
+              <option value="">💰 Выберите товар</option>
+              <option value="100">100 валюты</option>
+              <option value="500">500 валюты</option>
+              <option value="1000">1000 валюты</option>
+              <option value="5000">5000 валюты</option>
+            </select>
+            <div style="padding: 12px; background: rgba(14, 17, 37, 0.8); border-radius: 12px; border: 1px solid rgba(124, 58, 237, 0.2); text-align: center; font-weight: 600; color: #7c3aed;">
+              Итого: <span id="constructorPrice">0 ₽</span>
+            </div>
+            <button class="constructor-button" onclick="window.createOrder()">Создать заказ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GHOST PASS PAGE -->
+      <div id="page-pass" class="page">
+        <!-- Hero Banner -->
+        <div class="pass-hero">
+          <div class="pass-hero-content">
+            <div class="pass-season">Season 1</div>
+            <div class="pass-title">Ghost Pass</div>
+            <div class="pass-description">
+              Выполняй задания, копи XP и получай уникальные награды
+            </div>
+            <div class="pass-timer">
+              <span>⏱</span>
+              <span id="passTimer">31д 12ч осталось</span>
+            </div>
+          </div>
+          <div class="pass-ghost-icon">👻</div>
+        </div>
+
+        <!-- Level Panel -->
+        <div class="pass-level-panel">
+          <div class="level-box">
+            <div class="level-box-label">Уровень</div>
+            <div class="level-box-number" id="passLevel">1</div>
+          </div>
+          <div class="xp-info">
+            <div class="xp-label">
+              <span id="passXpCurrent">10</span> / <span id="passXpMax">100</span> XP
+            </div>
+            <div class="xp-bar">
+              <div class="xp-bar-fill" id="passXpBar" style="width: 10%;"></div>
+            </div>
+          </div>
+          <div class="next-reward">
+            <div class="next-reward-icon">x50</div>
+            <div class="next-reward-label">Free Line</div>
+          </div>
+        </div>
+
+        <!-- Pass Tabs -->
+        <div class="pass-tabs">
+          <button class="pass-tab active" onclick="window.switchPassTab('passContent')">⚙ Пасс</button>
+          <button class="pass-tab" onclick="window.switchPassTab('questsContent')">📋 Задания</button>
+          <button class="pass-tab" onclick="window.switchPassTab('auctionContent')">🔨 Аукцион</button>
+          <button class="pass-tab" onclick="window.switchPassTab('backpackContent')">🎒 Рюкзак</button>
+        </div>
+
+        <!-- Pass Content -->
+        <div id="passContent" class="pass-content active">
+          <!-- Premium+ Rewards -->
+          <div class="rewards-track">
+            <div class="rewards-track-title">
+              <span class="rewards-track-icon">👑</span>
+              <span>Ghost Pass</span>
+            </div>
+            <div class="rewards-grid">
+              <div class="reward-item" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(59, 130, 246, 0.05)); border-color: rgba(124, 58, 237, 0.3);">
+                <div class="reward-item-icon">💎</div>
+                <div class="reward-item-level">1</div>
+              </div>
+              <div class="reward-item" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(59, 130, 246, 0.05)); border-color: rgba(124, 58, 237, 0.3);">
+                <div class="reward-item-icon">🎭</div>
+                <div class="reward-item-level">2</div>
+              </div>
+              <div class="reward-item" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(59, 130, 246, 0.05)); border-color: rgba(124, 58, 237, 0.3);">
+                <div class="reward-item-icon">⚡</div>
+                <div class="reward-item-level">3</div>
+              </div>
+              <div class="reward-item locked" style="background: rgba(38, 33, 74, 0.5); border-color: rgba(124, 58, 237, 0.1);">
+                <div class="reward-item-icon">🔒</div>
+                <div class="reward-item-level">4</div>
+              </div>
+              <div class="reward-item locked" style="background: rgba(38, 33, 74, 0.5); border-color: rgba(124, 58, 237, 0.1);">
+                <div class="reward-item-icon">🔒</div>
+                <div class="reward-item-level">5</div>
+              </div>
+              <div class="reward-item locked" style="background: rgba(38, 33, 74, 0.5); border-color: rgba(124, 58, 237, 0.1);">
+                <div class="reward-item-icon">🔒</div>
+                <div class="reward-item-level">6</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Free Rewards -->
+          <div class="rewards-track">
+            <div class="rewards-track-title">
+              <span class="rewards-track-icon">📥</span>
+              <span>Free Line</span>
+            </div>
+            <div class="rewards-grid">
+              <div class="reward-item">
+                <div class="reward-item-icon">⭐</div>
+                <div class="reward-item-level">1</div>
+              </div>
+              <div class="reward-item">
+                <div class="reward-item-icon">💫</div>
+                <div class="reward-item-level">2</div>
+              </div>
+              <div class="reward-item">
+                <div class="reward-item-icon">✨</div>
+                <div class="reward-item-level">3</div>
+              </div>
+              <div class="reward-item">
+                <div class="reward-item-icon">🌟</div>
+                <div class="reward-item-level">4</div>
+              </div>
+              <div class="reward-item">
+                <div class="reward-item-icon">🎆</div>
+                <div class="reward-item-level">5</div>
+              </div>
+              <div class="reward-item">
+                <div class="reward-item-icon">🎇</div>
+                <div class="reward-item-level">6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quests Content -->
+        <div id="questsContent" class="pass-content">
+          <div style="padding: 0 16px; font-size: 12px; color: #b0aac7; margin-bottom: 16px;">
+            ⏱ Ежедневные задания обновляются в 00:00
+          </div>
+
+          <div class="quest-card">
+            <div class="quest-icon">👥</div>
+            <div class="quest-body">
+              <div class="quest-title">Пригласить друга</div>
+              <div class="quest-reward" style="margin-bottom: 8px;">✅ +10 XP</div>
+              <div style="font-size: 12px; color: #b0aac7;">Приведи товарища на Ghost Market</div>
+            </div>
+            <button class="quest-button" onclick="window.claimQuest('invite_friend')" style="width: 70px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%); color: white; font-weight: 600; border: none; cursor: pointer;">Забрать</button>
+          </div>
+
+          <div class="quest-card">
+            <div class="quest-icon">💳</div>
+            <div class="quest-body">
+              <div class="quest-title">Оформить донат</div>
+              <div class="quest-reward" style="margin-bottom: 8px;">✅ +15 XP</div>
+              <div style="font-size: 12px; color: #b0aac7;">Соверши первый заказ в магазине</div>
+            </div>
+            <button class="quest-button" onclick="window.claimQuest('make_donation')" style="width: 70px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%); color: white; font-weight: 600; border: none; cursor: pointer;">Забрать</button>
+          </div>
+
+          <!-- Premium Quests Section -->
+          <div style="padding: 16px 0 8px 0; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <span>👑</span> <span>Премиум квесты</span>
+          </div>
+
+          <div class="quest-card">
+            <div class="quest-icon">🎮</div>
+            <div class="quest-body">
+              <div class="quest-title">Сыграй 3 боя</div>
+              <div class="quest-reward" style="margin-bottom: 8px;">✅ +25 XP</div>
+              <div style="font-size: 12px; color: #b0aac7;">Только для Premium подписчиков</div>
+            </div>
+            <button class="quest-button" onclick="window.claimQuest('premium_battle')" style="width: 70px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%); color: white; font-weight: 600; border: none; cursor: pointer;">Забрать</button>
+          </div>
+        </div>
+
+        <!-- Auction Content -->
+        <div id="auctionContent" class="pass-content">
+          <div style="padding: 16px 16px 0;">
+            <div style="background: rgba(38, 33, 74, 0.5); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+              <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">🔨 Живой аукцион артефактов</div>
+              <div style="font-size: 12px; color: #b0aac7; margin-bottom: 12px;">Торгуйте артефактами с другими игроками в реальном времени</div>
+              
+              <!-- Active Auction -->
+              <div id="activeAuctionBlock" style="display: none; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
+                <div data-auction-info style="font-size: 12px; color: #7c3aed; font-weight: 600; margin-bottom: 8px;">Текущая ставка: 0 Ghost Coins</div>
+                <button onclick="window.placeBid()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #7c3aed 0%, #8B5CFF 100%); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">🔥 Сделать ставку (+10 Ghost Coins)</button>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button onclick="window.openAuctionModal()" style="padding: 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; color: #7c3aed; font-weight: 600; cursor: pointer;">📦 Выставить лот</button>
+                <button onclick="window.finishAuction(state)" style="padding: 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px; color: #7c3aed; font-weight: 600; cursor: pointer;">✅ Завершить</button>
+              </div>
+            </div>
+
+            <div style="font-size: 12px; font-weight: 600; margin-bottom: 12px; color: #b0aac7;">Текущие лоты</div>
+            
+            <div class="quest-card" style="margin-bottom: 12px;">
+              <div class="quest-icon">📦</div>
+              <div class="quest-body">
+                <div class="quest-title">Ecto-Crate</div>
+                <div style="font-size: 12px; color: #b0aac7;">Продавец: Phantom77</div>
+                <div class="quest-reward">Текущая ставка: 250 Ghost Coins</div>
+              </div>
+              <button class="quest-button" onclick="window.placeBid()" style="width: 60px;">Ставка</button>
+            </div>
+
+            <div class="quest-card" style="margin-bottom: 12px;">
+              <div class="quest-icon">💎</div>
+              <div class="quest-body">
+                <div class="quest-title">Wraith Core v2.0</div>
+                <div style="font-size: 12px; color: #b0aac7;">Продавец: GhostHunter</div>
+                <div class="quest-reward">Текущая ставка: 500 Ghost Coins</div>
+              </div>
+              <button class="quest-button" onclick="window.placeBid()" style="width: 60px;">Ставка</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backpack Content -->
+        <div id="backpackContent" class="pass-content">
+          <div style="padding: 16px;">
+            <div style="font-size: 12px; font-weight: 600; margin-bottom: 12px; color: #b0aac7;">Ваш инвентарь (19 предметов)</div>
+            
+            <div class="rewards-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="reward-item" onclick="window.showItemModal('ghost_coin')" style="cursor: pointer;">
+                <div class="reward-item-icon">👻</div>
+                <div class="reward-item-level">Ghost Coin</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('wraith_ethereum')" style="cursor: pointer;">
+                <div class="reward-item-icon">⚫</div>
+                <div class="reward-item-level">Wraith Eth</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('ecto_dollar')" style="cursor: pointer;">
+                <div class="reward-item-icon">💵</div>
+                <div class="reward-item-level">Ecto-$</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('spectral_asset')" style="cursor: pointer;">
+                <div class="reward-item-icon">📊</div>
+                <div class="reward-item-level">S.Asset</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('crypto_dust')" style="cursor: pointer;">
+                <div class="reward-item-icon">✨</div>
+                <div class="reward-item-level">Crypto Dust</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('wraith_ticket')" style="cursor: pointer;">
+                <div class="reward-item-icon">🎟️</div>
+                <div class="reward-item-level">W. Ticket</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('ecto_crate')" style="cursor: pointer;">
+                <div class="reward-item-icon">📦</div>
+                <div class="reward-item-level">Ecto-Crate</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('data_disk_spike')" style="cursor: pointer;">
+                <div class="reward-item-icon">💿</div>
+                <div class="reward-item-level">Data Disk</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('plasma_battery')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔋</div>
+                <div class="reward-item-level">P. Battery</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('ectoplasm_essence')" style="cursor: pointer;">
+                <div class="reward-item-icon">🧪</div>
+                <div class="reward-item-level">Ectoplasm</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('quantum_vault')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔐</div>
+                <div class="reward-item-level">Q.Vault</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('phantom_key')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔑</div>
+                <div class="reward-item-level">P.Key</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('anomalous_node')" style="cursor: pointer;">
+                <div class="reward-item-icon">⚡</div>
+                <div class="reward-item-level">A.Node</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('anomalous_cipher')" style="cursor: pointer;">
+                <div class="reward-item-icon">🔤</div>
+                <div class="reward-item-level">A.Cipher</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('cyber_ghost_mask')" style="cursor: pointer;">
+                <div class="reward-item-icon">🎭</div>
+                <div class="reward-item-level">C.Mask</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('wraith_core')" style="cursor: pointer;">
+                <div class="reward-item-icon">💎</div>
+                <div class="reward-item-level">W.Core</div>
+              </div>
+              
+              <div class="reward-item" onclick="window.showItemModal('dark_web_ledger')" style="cursor: pointer;">
+                <div class="reward-item-icon">📘</div>
+                <div class="reward-item-level">D.Ledger</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('supernova_spark')" style="cursor: pointer;">
+                <div class="reward-item-icon">⭐</div>
+                <div class="reward-item-level">S.Spark</div>
+              </div>
+              <div class="reward-item" onclick="window.showItemModal('soul_shard')" style="cursor: pointer;">
+                <div class="reward-item-icon">👁️</div>
+                <div class="reward-item-level">Soul Shard</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="premium-cta" onclick="window.confirmPremium('premium_plus')">
+          Купить Premium+
+          <div class="premium-cta-subtitle">Разблокируй все награды и эксклюзивные предметы</div>
+        </button>
+      </div>
+
+      <!-- PROFILE PAGE -->
+      <div id="page-profile" class="page">
+        <!-- Profile Hero -->
+        <div class="profile-hero">
+          <div class="profile-avatar-large" id="profileAvatar">О</div>
+          <div class="profile-info">
+            <div class="profile-name" id="profileName">oooo0</div>
+            <div class="profile-username" id="profileUsername">@henotsosal</div>
+            <div class="profile-badge">👑 Premium</div>
+          </div>
+          <div class="profile-ghost-image">👻</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-value" id="profileOrders">15</div>
+            <div class="stat-label">Заказов</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profileSpent">9200</div>
+            <div class="stat-label">Потрачено ₽</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profileCoin">35</div>
+            <div class="stat-label">GCOIN</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profileCashback">0</div>
+            <div class="stat-label">Кэшбэк ₽</div>
+          </div>
+        </div>
+
+        <!-- Card Block -->
+        <div class="card-block">
+          <div class="card-balance" onclick="window.toggleCard()" style="cursor: pointer;">
+            <div class="card-balance-label">💳 Твоя Ghost Card <span style="font-size: 11px; color: #7c3aed;">(кликни для скрытия)</span></div>
+            <div class="card-balance-amount" id="cardBalance">0 ₽</div>
+          </div>
+          <div class="card-visual" onclick="window.openBalancePanel()" style="cursor: pointer; transition: all 0.3s ease;">
+            <div class="card-visual-top">
+              <div class="card-visual-name">GHOST CARD</div>
+              <div class="card-visual-icon">📳</div>
+            </div>
+            <div class="card-visual-bottom">
+              <div class="card-visual-number">•••• 0000</div>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+            <div style="background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 10px; padding: 10px; text-align: center;">
+              <div style="font-size: 10px; color: #b0aac7; margin-bottom: 4px;">Потрачено всего</div>
+              <div style="font-size: 14px; font-weight: 600; color: #7c3aed;" id="totalSpent">9200 ₽</div>
+            </div>
+            <div style="background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 10px; padding: 10px; text-align: center;">
+              <div style="font-size: 10px; color: #b0aac7; margin-bottom: 4px;">Накоп. кэшбэк</div>
+              <div style="font-size: 14px; font-weight: 600; color: #7c3aed;" id="accumulatedCashback">0 ₽</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions Grid -->
+        <div class="actions-grid">
+          <div class="action-card" onclick="window.showPromoModal()">
+            <div class="action-card-icon">%</div>
+            <div class="action-card-label">Ввести промо-код</div>
+          </div>
+          <div class="action-card" id="adminPromoCard" onclick="window.showCreatePromoModal()" style="display: none;">
+            <div class="action-card-icon">🎁</div>
+            <div class="action-card-label">Создать промо-код</div>
+          </div>
+          <div class="action-card" onclick="window.showOrdersModal()">
+            <div class="action-card-icon">📄</div>
+            <div class="action-card-label">История операций</div>
+          </div>
+          <div class="action-card" onclick="window.showPromoListModal()">
+            <div class="action-card-icon">📋</div>
+            <div class="action-card-label">Мои промо</div>
+          </div>
+        </div>
+
+        <!-- Subscriptions -->
+        <div class="subscriptions">
+          <div class="subscriptions-title">Подписка GhostMarket</div>
+
+          <div class="subscription-card premium-plus">
+            <div class="subscription-info">
+              <div class="subscription-name">Ghost Premium+</div>
+              <div class="subscription-benefits">
+                <div class="subscription-benefit-item">✓ Уникальные награды</div>
+                <div class="subscription-benefit-item">✓ +100% к XP</div>
+                <div class="subscription-benefit-item">✓ Эксклюзивные предметы</div>
+                <div class="subscription-benefit-item">✓ Приоритетная поддержка</div>
+              </div>
+            </div>
+            <div class="subscription-status">
+              <div class="subscription-status-badge">Не активна</div>
+              <div class="subscription-status-time">—</div>
+            </div>
+          </div>
+
+          <div class="subscription-card premium">
+            <div class="subscription-info">
+              <div class="subscription-name">Ghost Premium</div>
+              <div class="subscription-benefits">
+                <div class="subscription-benefit-item">✓ Уникальные награды</div>
+                <div class="subscription-benefit-item">✓ +50% к XP</div>
+                <div class="subscription-benefit-item">✓ Доступ к Premium Line</div>
+              </div>
+            </div>
+            <div class="subscription-status">
+              <div class="subscription-status-badge">Активна</div>
+              <div class="subscription-status-time" id="premiumExpires">30 дней</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subscription Controls -->
+        <div class="subscription-controls">
+          <button class="subscription-button extend" onclick="window.confirmPremium('premium')">
+            🔍 Продлить
+          </button>
+          <button class="subscription-button buy" onclick="window.confirmPremium('premium_plus')">
+            🛒 Купить
+          </button>
+          <button class="subscription-button cancel" onclick="window.cancelSubscription()">
+            🗑 Отменить
+          </button>
+        </div>
+      </div>
+
+      <!-- SUPPORT PAGE -->
+      <div id="page-support" class="page">
+        <div class="support-container">
+          <div class="support-item" onclick="window.openTelegram()">
+            <div class="support-item-icon">💬</div>
+            <div class="support-item-content">
+              <div class="support-item-title">Написать в поддержку</div>
+              <div class="support-item-description">Свяжитесь с нашей командой</div>
+            </div>
+            <div class="support-item-arrow">›</div>
+          </div>
+
+          <div class="support-item">
+            <div class="support-item-icon">❓</div>
+            <div class="support-item-content">
+              <div class="support-item-title">Часто задаваемые вопросы</div>
+              <div class="support-item-description">Найдите ответы на свои вопросы</div>
+            </div>
+            <div class="support-item-arrow">›</div>
+          </div>
+
+          <div class="support-item">
+            <div class="support-item-icon">📱</div>
+            <div class="support-item-content">
+              <div class="support-item-title">Мобильное приложение</div>
+              <div class="support-item-description">Загрузите приложение GhostMarket</div>
+            </div>
+            <div class="support-item-arrow">›</div>
+          </div>
+
+          <div class="support-item">
+            <div class="support-item-icon">📢</div>
+            <div class="support-item-content">
+              <div class="support-item-title">Канал новостей</div>
+              <div class="support-item-description">Будьте в курсе последних обновлений</div>
+            </div>
+            <div class="support-item-arrow">›</div>
+          </div>
+
+          <div class="support-item">
+            <div class="support-item-icon">🔐</div>
+            <div class="support-item-content">
+              <div class="support-item-title">Безопасность</div>
+              <div class="support-item-description">Информация о защите ваших данных</div>
+            </div>
+            <div class="support-item-arrow">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLOATING ACTION BUTTON BACKPACK -->
+    <button class="fab-backpack" onclick="window.openBackpackModal()" title="Открыть рюкзак">🎒</button>
+
+    <!-- MODAL BACKPACK -->
+    <div class="modal-backpack" id="modalBackpack" onclick="if(event.target.id === 'modalBackpack') window.closeBackpackModal()">
+      <div class="modal-backpack-content">
+        <div class="modal-backpack-header">
+          <span>🎒 Мой рюкзак</span>
+          <button class="modal-backpack-close" onclick="window.closeBackpackModal()">✕</button>
+        </div>
+
+        <div class="backpack-filters">
+          <button class="filter-btn active" onclick="window.filterBackpackBy('all')">Все</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('common')">Обычные</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('rare')">Редкие</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('epic')">Эпики</button>
+          <button class="filter-btn" onclick="window.filterBackpackBy('legendary')">Легендарные</button>
+        </div>
+
+        <div class="backpack-items-grid" id="backpackItemsGrid">
+          <!-- Items will be rendered here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL AUCTION - ВЫСТАВИТЬ ЛОТ -->
+    <div class="modal-auction" id="modalAuction" onclick="if(event.target.id === 'modalAuction') window.closeAuctionModal()">
+      <div class="modal-auction-content">
+        <div class="modal-auction-title">📦 Выставить лот на аукцион</div>
+
+        <div class="auction-form-group">
+          <label class="auction-form-label">Выберите предмет:</label>
+          <select class="auction-form-input" id="auctionItemSelect" onchange="window.updateAuctionEstimate()">
+            <option value="">-- Выберите предмет --</option>
+          </select>
+        </div>
+
+        <div class="auction-form-group">
+          <label class="auction-form-label">Стартовая цена (Ghost Coins):</label>
+          <input type="number" class="auction-form-input" id="auctionPrice" placeholder="100" min="10" onchange="window.updateAuctionEstimate()">
+        </div>
+
+        <div class="auction-form-group">
+          <label class="auction-form-label">Длительность: 2 минуты</label>
+        </div>
+
+        <div class="auction-commission-info">
+          <div>💰 Ожидаемая выручка: <strong id="auctionEstimate">-</strong></div>
+          <div style="font-size: 11px; margin-top: 6px;">Комиссия: 10% от финальной цены</div>
+        </div>
+
+        <div class="auction-modal-buttons">
+          <button class="auction-modal-btn auction-modal-btn-submit" onclick="window.submitAuctionLot()">✓ Выставить</button>
+          <button class="auction-modal-btn auction-modal-btn-cancel" onclick="window.closeAuctionModal()">✕ Отмена</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="navbar">
+      <button class="nav-item active" onclick="window.switchPage('shop')">
+        <div class="nav-item-icon">🛍️</div>
+        <div class="nav-item-label">МАГАЗИН</div>
+      </button>
+      <button class="nav-item" onclick="window.switchPage('support')">
+        <div class="nav-item-icon">📞</div>
+        <div class="nav-item-label">ПОДДЕРЖКА</div>
+      </button>
+      <button class="nav-item" onclick="window.switchPage('pass')">
+        <div class="nav-item-icon">🏆</div>
+        <div class="nav-item-label">GHOST PASS</div>
+      </button>
+      <button class="nav-item" onclick="window.switchPage('profile')">
+        <div class="nav-item-icon">👤</div>
+        <div class="nav-item-label">ПРОФИЛЬ</div>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ===== TELEGRAM WEB APP INIT =====
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      tg.setBackgroundColor('#070814');
+      tg.setHeaderColor('#070814');
+    }
+
+    // ===== BACKPACK ITEMS DATABASE =====
+    const BACKPACK_ITEMS = {
+      'ghost_coin': { name: 'Ghost Coin', icon: '👻', rarity: 'Common', value: 1 },
+      'wraith_ethereum': { name: 'Wraith Ethereum', icon: '⚫', rarity: 'Rare', value: 50 },
+      'ecto_dollar': { name: 'Ecto-Dollar', icon: '💵', rarity: 'Common', value: 10 },
+      'spectral_asset': { name: 'Spectral Asset', icon: '📊', rarity: 'Rare', value: 75 },
+      'crypto_dust': { name: 'Crypto Dust', icon: '✨', rarity: 'Common', value: 5 },
+      'wraith_ticket': { name: 'Wraith Ticket', icon: '🎟️', rarity: 'Rare', value: 100 },
+      'ecto_crate': { name: 'Ecto-Crate', icon: '📦', rarity: 'Epic', value: 200 },
+      'data_disk_spike': { name: 'Data Disk "Spike"', icon: '💿', rarity: 'Epic', value: 250 },
+      'plasma_battery': { name: 'Plasma Battery', icon: '🔋', rarity: 'Rare', value: 120 },
+      'ectoplasm_essence': { name: 'Ectoplasm Essence', icon: '🧪', rarity: 'Epic', value: 300 },
+      'quantum_vault': { name: 'Quantum Vault', icon: '🔐', rarity: 'Legendary', value: 500 },
+      'phantom_key': { name: 'Phantom Key', icon: '🔑', rarity: 'Legendary', value: 400 },
+      'anomalous_node': { name: 'Anomalous Node', icon: '⚡', rarity: 'Epic', value: 280 },
+      'anomalous_cipher': { name: 'Anomalous Cipher', icon: '🔤', rarity: 'Rare', value: 150 },
+      'cyber_ghost_mask': { name: 'Cyber Ghost Mask', icon: '🎭', rarity: 'Epic', value: 350 },
+      'wraith_core': { name: 'Wraith Core v2.0', icon: '💎', rarity: 'Legendary', value: 600 },
+      'dark_web_ledger': { name: 'Dark Web Ledger', icon: '📘', rarity: 'Rare', value: 200 },
+      'supernova_spark': { name: 'Supernova Spark', icon: '⭐', rarity: 'Epic', value: 320 },
+      'soul_shard': { name: 'Soul Shard', icon: '👁️', rarity: 'Legendary', value: 450 }
+    };
+
+    // ===== PROMO CODES DATABASE =====
+    const PROMO_TYPES = {
+      'discount': { name: 'Скидка', apply: (state) => state.active_discount = 0.10 },
+      'rubles': { name: 'Рубли', apply: (state) => state.card_balance += 100 },
+      'coins': { name: 'Ghost Coins', apply: (state) => state.ghost_coin += 50 },
+      'xp': { name: 'XP', apply: (state) => addXP(state, 25) },
+      'item': { name: 'Предмет', apply: (state) => addBackpackItem(state, 'ghost_coin', 5) },
+      'premium': { name: 'Подписка', apply: (state) => { state.premium_status = 'Premium'; state.premium_expires = Date.now() + 30*24*60*60*1000; } }
+    };
+
+    // ===== AUCTION BOTS NAMES =====
+    const BOT_NAMES = ['Phantom77', 'GhostHunter', 'SpectralBid', 'EctoTrader', 'WraithMaster', 'CryptoGhost'];
+
+    // ===== STATE MANAGEMENT =====
+    const defaultState = {
+      username: 'guest',
+      first_name: 'User',
+      card_balance: 0,
+      ghost_coin: 35,
+      rubles_spent: 9200,
+      cashback: 0,
+      pass_level: 1,
+      pass_xp: 10,
+      pass_xp_max: 100,
+      premium_status: 'Premium',
+      premium_expires: Date.now() + 2592000000,
+      active_discount: 0,
+      permanent_discount: 0,
+      card_hidden: false,
+      disable_heavy_animations: false,
+      orders: [
+        { id: 1, game: 'PUBG', amount: 100, price: 89, date: Date.now() - 86400000 },
+        { id: 2, game: 'Brawl', amount: 500, price: 119, date: Date.now() - 172800000 },
+      ],
+      backpack: {
+        'ghost_coin': 5,
+        'crypto_dust': 3,
+        'soul_shard': 2
+      },
+      active_promocodes: [],
+      used_promocodes: [],
+      auction_listings: [],
+      quests_daily: {
+        'invite_friend': { done: false, xp_reward: 10 },
+        'make_donation': { done: false, xp_reward: 15 }
+      },
+      auction_active: null,
+      uid_zone_id: { uid: '', zone_id: '' }
+    };
+
+    let state = JSON.parse(localStorage.getItem('ghostmarket_state')) || defaultState;
+
+    function saveState() {
+      localStorage.setItem('ghostmarket_state', JSON.stringify(state));
+    }
+
+    // ===== TELEGRAM DATA INIT =====
+    function loadTelegramData() {
+      try {
+        if (tg && tg.initDataUnsafe?.user) {
+          const user = tg.initDataUnsafe.user;
+          state.first_name = user.first_name || 'User';
+          state.username = user.username || 'guest';
+          saveState();
+        }
+      } catch (e) {
+        console.log('Telegram data not available');
+      }
+    }
+
+    // ===== HAPTIC FEEDBACK =====
+    function triggerHaptic(type) {
+      if (tg?.HapticFeedback) {
+        try {
+          if (type === 'light') tg.HapticFeedback.impactOccurred('light');
+          else if (type === 'medium') tg.HapticFeedback.impactOccurred('medium');
+          else if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+        } catch (e) {}
+      }
+    }
+
+    // ===== BACKPACK FUNCTIONS =====
+    function addBackpackItem(state, itemId, quantity = 1) {
+      if (!state.backpack[itemId]) state.backpack[itemId] = 0;
+      state.backpack[itemId] += quantity;
+      saveState();
+    }
+
+    function removeBackpackItem(state, itemId, quantity = 1) {
+      if (state.backpack[itemId]) {
+        state.backpack[itemId] -= quantity;
+        if (state.backpack[itemId] <= 0) delete state.backpack[itemId];
+      }
+      saveState();
+    }
+
+    // ===== XP & PASS FUNCTIONS =====
+    function addXP(state, amount) {
+      state.pass_xp += amount;
+      while (state.pass_xp >= state.pass_xp_max) {
+        state.pass_xp -= state.pass_xp_max;
+        state.pass_level += 1;
+        triggerHaptic('success');
+        showToast(`🎉 Уровень ${state.pass_level}!`);
+      }
+      saveState();
+      updatePassUI();
+    }
+
+    function claimQuest(questId) {
+      if (state.quests_daily[questId] && !state.quests_daily[questId].done) {
+        state.quests_daily[questId].done = true;
+        const xp = state.quests_daily[questId].xp_reward;
+        if (state.premium_status.includes('Premium')) addXP(state, xp * 1.5);
+        else addXP(state, xp);
+        triggerHaptic('medium');
+        showToast(`✅ +${xp} XP`);
+        saveState();
+      }
+    }
+
+    // ===== ITEM USAGE FUNCTIONS =====
+    function useSoulShard(state) {
+      if ((state.backpack['soul_shard'] || 0) >= 5) {
+        removeBackpackItem(state, 'soul_shard', 5);
+        state.active_discount = 0.10;
+        saveState();
+        showToast('✅ Скидка 10% активирована!');
+        return true;
+      }
+      return false;
+    }
+
+    function useQuantumVault(state) {
+      if (state.backpack['phantom_key'] && state.backpack['phantom_key'] > 0) {
+        removeBackpackItem(state, 'quantum_vault', 1);
+        removeBackpackItem(state, 'phantom_key', 1);
+        const code = 'GHOST-GIFT-' + Math.floor(Math.random() * 999);
+        state.active_promocodes.push({
+          code: code,
+          type: 'coins',
+          value: 100,
+          used: false
+        });
+        saveState();
+        showToast(`🎁 Промо создан: ${code}`);
+        return true;
+      }
+      return false;
+    }
+
+    function useAnomalousCipher(state) {
+      showToast('📱 Начислено 20 Telegram Stars! Передайте ID админу');
+      return true;
+    }
+
+    function useWraithTicket(state) {
+      removeBackpackItem(state, 'wraith_ticket', 1);
+      state.weekly_raffle = state.username;
+      saveState();
+      showToast('🎟️ Вы добавлены в еженедельный розыгрыш!');
+      return true;
+    }
+
+    function useCyberGhostMask(state) {
+      state.permanent_discount = 0.05;
+      saveState();
+      showToast('🎭 Постоянная скидка 5% активирована!');
+      return true;
+    }
+
+    // ===== AUCTION FUNCTIONS =====
+    const SAMPLE_AUCTION_ITEMS = [
+      { seller: 'Phantom77', item: 'ecto_crate', currentBid: 250, leader: 'Phantom77' },
+      { seller: 'GhostHunter', item: 'wraith_core', currentBid: 500, leader: 'GhostHunter' },
+      { seller: 'SpectralBid', item: 'soul_shard', currentBid: 150, leader: 'SpectralBid' }
+    ];
+
+    function startAuction(state, itemId, startPrice) {
+      state.auction_active = {
+        item: itemId,
+        currentPrice: startPrice,
+        currentBidder: state.username,
+        seller: state.username,
+        startTime: Date.now(),
+        endTime: Date.now() + 120000
+      };
+      saveState();
+
+      // Auto-bidding for Epic/Legendary items
+      if (['ecto_crate', 'data_disk_spike', 'ectoplasm_essence', 'anomalous_node', 'cyber_ghost_mask', 'supernova_spark', 'quantum_vault', 'phantom_key', 'wraith_core'].includes(itemId)) {
+        const autoBidInterval = setInterval(() => {
+          if (state.auction_active && Date.now() < state.auction_active.endTime) {
+            const botName = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
+            state.auction_active.currentPrice += 15;
+            state.auction_active.currentBidder = botName;
+            saveState();
+            updateAuctionUI();
+          } else {
+            clearInterval(autoBidInterval);
+          }
+        }, 12000);
+      }
+    }
+
+    function placeBid(state) {
+      if (state.auction_active && state.ghost_coin >= 10) {
+        state.ghost_coin -= 10;
+        state.auction_active.currentBidder = state.username;
+        saveState();
+        updateAuctionUI();
+        triggerHaptic('light');
+        showToast('✅ Ставка сделана!');
+      } else {
+        showToast('❌ Недостаточно Ghost Coins');
+      }
+    }
+
+    function finishAuction(state) {
+      if (state.auction_active) {
+        const commission = state.auction_active.currentPrice * 0.1;
+        const reward = state.auction_active.currentPrice - commission;
+        state.ghost_coin += reward;
+        removeBackpackItem(state, state.auction_active.item, 1);
+        state.auction_active = null;
+        saveState();
+        showToast(`✅ Продано на ${reward} Ghost Coins!`);
+      }
+    }
+
+    // ===== PROMO CODE FUNCTIONS =====
+    function createPromoCode(state, type, value) {
+      const code = `GHOST-${String(Math.random()).substring(2, 6).toUpperCase()}-RAND`;
+      state.active_promocodes.push({
+        code: code,
+        type: type,
+        value: value,
+        used: false,
+        created_by: state.username
+      });
+      saveState();
+      return code;
+    }
+
+    function applyPromoCode(state, code) {
+      const promo = state.active_promocodes.find(p => p.code === code && !p.used);
+      if (!promo) {
+        showToast('❌ Промо-код не найден или использован');
+        return false;
+      }
+
+      promo.used = true;
+      state.used_promocodes.push(code);
+
+      switch (promo.type) {
+        case 'discount':
+          state.active_discount = 0.10;
+          showToast('✅ Скидка 10% активирована!');
+          break;
+        case 'rubles':
+          state.card_balance += promo.value;
+          showToast(`✅ +${promo.value} ₽`);
+          break;
+        case 'coins':
+          state.ghost_coin += promo.value;
+          showToast(`✅ +${promo.value} Ghost Coins`);
+          break;
+        case 'xp':
+          addXP(state, promo.value);
+          break;
+        case 'item':
+          addBackpackItem(state, 'ghost_coin', promo.value);
+          showToast(`✅ +${promo.value} Ghost Coins`);
+          break;
+        case 'premium':
+          state.premium_status = 'Premium+';
+          state.premium_expires = Date.now() + 30*24*60*60*1000;
+          showToast('✅ Premium+ активирован!');
+          break;
+      }
+
+      saveState();
+      return true;
+    }
+
+    // ===== UI UPDATE FUNCTIONS =====
+    function updateUI() {
+      document.getElementById('headerBalance').textContent = state.ghost_coin + ' GCOIN';
+      document.getElementById('miniBalance').textContent = state.card_balance.toLocaleString('ru-RU') + ' ₽';
+      document.getElementById('miniCoin').textContent = state.ghost_coin + ' GC';
+      document.getElementById('profileName').textContent = state.first_name;
+      document.getElementById('profileUsername').textContent = '@' + state.username;
+      document.getElementById('profileAvatar').textContent = state.first_name.charAt(0).toUpperCase();
+      document.getElementById('profileOrders').textContent = state.orders.length;
+      document.getElementById('profileSpent').textContent = state.rubles_spent.toLocaleString('ru-RU');
+      document.getElementById('profileCoin').textContent = state.ghost_coin;
+      document.getElementById('profileCashback').textContent = state.cashback;
+      document.getElementById('cardBalance').textContent = state.card_balance + ' ₽';
+      document.getElementById('totalSpent').textContent = state.rubles_spent.toLocaleString('ru-RU') + ' ₽';
+      document.getElementById('accumulatedCashback').textContent = state.cashback.toLocaleString('ru-RU') + ' ₽';
+
+      if (state.username.toLowerCase() === 'henotsosal') {
+        const adminCard = document.getElementById('adminPromoCard');
+        if (adminCard) adminCard.style.display = 'flex';
+      }
+
+      const now = Date.now();
+      const daysLeft = Math.ceil((state.premium_expires - now) / (1000 * 60 * 60 * 24));
+      const premiumExpires = document.getElementById('premiumExpires');
+      if (premiumExpires) premiumExpires.textContent = Math.max(0, daysLeft) + ' дней';
+
+      updatePassUI();
+    }
+
+    function updatePassUI() {
+      document.getElementById('passLevel').textContent = state.pass_level;
+      document.getElementById('passXpCurrent').textContent = state.pass_xp;
+      const xpPercent = (state.pass_xp / state.pass_xp_max) * 100;
+      document.getElementById('passXpBar').style.width = Math.min(100, xpPercent) + '%';
+    }
+
+    function updateAuctionUI() {
+      if (state.auction_active) {
+        const auctionInfo = document.querySelector('[data-auction-info]');
+        if (auctionInfo) {
+          auctionInfo.textContent = `Текущая ставка: ${state.auction_active.currentPrice} Ghost Coins | Лидер: ${state.auction_active.currentBidder}`;
+        }
+      }
+    }
+
+    // ===== PAGE NAVIGATION =====
+    function switchPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page)?.classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      event?.target?.closest('.nav-item')?.classList.add('active');
+
+      triggerHaptic('light');
+      updateUI();
+    }
+
+    // ===== SHOP FUNCTIONS =====
+    function filterCategory(category) {
+      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+      event?.target?.closest('.category-btn')?.classList.add('active');
+      showToast(`📁 ${category}`);
+    }
+
+    function updateConstructorPrice() {
+      const game = document.getElementById('constructorGame').value;
+      const item = document.getElementById('constructorItem').value;
+
+      let price = 0;
+      if (game && item) {
+        const itemAmount = Number(item);
+        const multipliers = { pubg: 0.15, brawl: 0.18, clash: 0.12, mlbb: 0.16 };
+        const mult = multipliers[game] || 0.15;
+        price = Math.round(itemAmount * mult);
+        const finalPrice = Math.round(price * (1 - state.active_discount - state.permanent_discount));
+        document.getElementById('constructorPrice').textContent = finalPrice + ' ₽';
+      } else {
+        document.getElementById('constructorPrice').textContent = '0 ₽';
+      }
+    }
+
+    function createOrder() {
+      const uid = document.getElementById('constructorUID').value.trim();
+      const game = document.getElementById('constructorGame').value;
+      const item = document.getElementById('constructorItem').value;
+
+      if (!uid) { showToast('❌ Введи UID'); return; }
+      if (!game) { showToast('❌ Выбери игру'); return; }
+      if (!item) { showToast('❌ Выбери товар'); return; }
+
+      const itemAmount = Number(item);
+      const multipliers = { pubg: 0.15, brawl: 0.18, clash: 0.12, mlbb: 0.16 };
+      const mult = multipliers[game] || 0.15;
+      let price = Math.round(itemAmount * mult);
+      const finalPrice = Math.round(price * (1 - state.active_discount - state.permanent_discount));
+
+      if (state.card_balance < finalPrice) {
+        showToast('❌ Недостаточно средств');
+        return;
+      }
+
+      state.card_balance -= finalPrice;
+      state.rubles_spent += finalPrice;
+      state.cashback += Math.round(finalPrice * 0.05);
+      state.orders.push({
+        id: state.orders.length + 1,
+        game: game,
+        uid: uid,
+        amount: itemAmount,
+        price: finalPrice,
+        date: Date.now(),
+      });
+
+      state.active_discount = 0;
+      triggerHaptic('success');
+      saveState();
+      updateUI();
+      showToast('✅ Заказ создан!');
+
+      document.getElementById('constructorUID').value = '';
+      document.getElementById('constructorGame').value = '';
+      document.getElementById('constructorItem').value = '';
+      document.getElementById('constructorPrice').textContent = '0 ₽';
+    }
+
+    // ===== GHOST PASS FUNCTIONS =====
+    function switchPassTab(tabId) {
+      document.querySelectorAll('.pass-tab').forEach(t => t.classList.remove('active'));
+      event?.target?.classList.add('active');
+
+      document.querySelectorAll('.pass-content').forEach(c => c.classList.remove('active'));
+      document.getElementById(tabId)?.classList.add('active');
+      triggerHaptic('light');
+    }
+
+    function showItemModal(itemId) {
+      const item = BACKPACK_ITEMS[itemId];
+      if (!item) return;
+      
+      const quantity = state.backpack[itemId] || 0;
+      let message = `${item.icon} ${item.name}\n\n`;
+      message += `Редкость: ${item.rarity}\n`;
+      message += `Кол-во: ${quantity}\n`;
+      message += `Ценность: ${item.value} Ghost Coins\n\n`;
+      
+      if (itemId === 'soul_shard') {
+        message += '⚡ Активировать: 5 Soul Shards = 10% скидка\n';
+      } else if (itemId === 'quantum_vault') {
+        message += '🔐 Требует Phantom Key для открытия\n';
+      } else if (itemId === 'anomalous_cipher') {
+        message += '📱 Еженедельная награда: 20 Telegram Stars\n';
+      } else if (itemId === 'wraith_ticket') {
+        message += '🎟️ Участие в еженедельном розыгрыше 50 ТГ Звёзд\n';
+      } else if (itemId === 'cyber_ghost_mask') {
+        message += '🎭 Постоянная скидка 5% на все покупки\n';
+      }
+      
+      message += '\n💸 Продать на бирже';
+      alert(message);
+    }
+
+    function rewardItemClick(level, isPremium) {
+      if (state.pass_level >= level) {
+        const itemId = isPremium ? 'premium_reward_' + level : 'free_reward_' + level;
+        addBackpackItem(state, 'ghost_coin', 10);
+        showToast('✅ Предмет добавлен в рюкзак!');
+        triggerHaptic('medium');
+      }
+    }
+
+    // ===== MODAL FUNCTIONS =====
+    function openBalancePanel() {
+      const amount = prompt('Введите сумму пополнения (₽):', '');
+      if (amount && !isNaN(amount) && Number(amount) > 0) {
+        state.card_balance += Number(amount);
+        saveState();
+        updateUI();
+        triggerHaptic('success');
+        showToast(`✅ Счет пополнен на ${amount} ₽`);
+      }
+    }
+
+    function confirmPremium(type) {
+      const prices = { premium: 299, premium_plus: 599 };
+      const price = prices[type];
+      const finalPrice = Math.round(price * (1 - state.permanent_discount));
+
+      if (state.card_balance >= finalPrice) {
+        state.card_balance -= finalPrice;
+        state.premium_status = type === 'premium' ? 'Premium' : 'Premium+';
+        state.premium_expires = Date.now() + 30 * 24 * 60 * 60 * 1000;
+        saveState();
+        updateUI();
+        triggerHaptic('success');
+        showToast(`✅ Подписка активирована на 30 дней!`);
+      } else {
+        showToast(`❌ Недостаточно средств. Нужно ${finalPrice} ₽`);
+      }
+    }
+
+    function cancelSubscription() {
+      if (tg?.showPopup) {
+        tg.showPopup({
+          title: '⚠️ Отменить подписку?',
+          message: 'Вы потеряете скидку 5% и привилегии Premium.',
+          buttons: [
+            { id: 'ok', type: 'ok', text: 'Отменить подписку' },
+            { id: 'cancel', type: 'cancel', text: 'Остаться' }
+          ]
+        }, (id) => {
+          if (id === 'ok') {
+            state.premium_status = 'none';
+            state.premium_expires = 0;
+            state.permanent_discount = 0;
+            saveState();
+            updateUI();
+            showToast('❌ Подписка отменена');
+          }
+        });
+      }
+    }
+
+    function showPromoModal() {
+      const code = prompt('Введите промо-код:');
+      if (code) {
+        applyPromoCode(state, code.toUpperCase());
+      }
+    }
+
+    function showCreatePromoModal() {
+      const type = prompt('Тип награды (discount/rubles/coins/xp/item/premium):');
+      if (type && PROMO_TYPES[type]) {
+        const value = type === 'discount' ? 0 : Number(prompt('Значение:'));
+        const code = createPromoCode(state, type, value);
+        showToast(`✅ Код создан: ${code}`);
+      }
+    }
+
+    function showOrdersModal() {
+      let ordersText = 'Ваши последние заказы:\n\n';
+      state.orders.slice(-5).reverse().forEach(order => {
+        ordersText += `${order.game}: ${order.amount} валюты - ${order.price} ₽\n`;
+      });
+      alert(ordersText);
+    }
+
+    function showPromoListModal() {
+      let promoText = 'Ваши промо-коды:\n\n';
+      if (!state.active_promocodes || state.active_promocodes.length === 0) {
+        promoText += 'Промо-коды не созданы';
+      } else {
+        state.active_promocodes.forEach(promo => {
+          const status = promo.used ? '✗' : '✓';
+          promoText += `${status} ${promo.code} (${promo.type})\n`;
+        });
+      }
+      alert(promoText);
+    }
+
+    function toggleCard() {
+      state.card_hidden = !state.card_hidden;
+      const cardVisual = document.querySelector('.card-visual');
+      if (cardVisual) {
+        cardVisual.classList.toggle('hidden', state.card_hidden);
+      }
+      saveState();
+    }
+
+    function openTelegram() {
+      if (tg) {
+        tg.openTelegramLink('https://t.me/ghostmarket_support');
+      }
+    }
+
+    // ===== THEME TOGGLE =====
+    let currentTheme = localStorage.getItem('ghostmarket_theme') || 'dark';
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('ghostmarket_theme', currentTheme);
+      
+      if (currentTheme === 'light') {
+        document.body.classList.add('light-theme');
+        document.getElementById('themeIcon').textContent = '☀️';
+      } else {
+        document.body.classList.remove('light-theme');
+        document.getElementById('themeIcon').textContent = '🌙';
+      }
+      triggerHaptic('light');
+    }
+
+    // Apply saved theme on load
+    if (currentTheme === 'light') {
+      document.body.classList.add('light-theme');
+      document.getElementById('themeIcon').textContent = '☀️';
+    }
+
+    // ===== BACKPACK MODAL =====
+    let currentBackpackFilter = 'all';
+
+    function openBackpackModal() {
+      document.getElementById('modalBackpack').classList.add('active');
+      renderBackpackItems();
+      triggerHaptic('light');
+    }
+
+    function closeBackpackModal() {
+      document.getElementById('modalBackpack').classList.remove('active');
+    }
+
+    function filterBackpackBy(type) {
+      currentBackpackFilter = type;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event?.target?.classList.add('active');
+      renderBackpackItems();
+    }
+
+    function renderBackpackItems() {
+      const grid = document.getElementById('backpackItemsGrid');
+      grid.innerHTML = '';
+
+      // Создаём массив предметов с их данными
+      let items = [];
+      Object.keys(state.backpack).forEach(itemId => {
+        if (state.backpack[itemId] > 0) {
+          const item = BACKPACK_ITEMS[itemId];
+          items.push({
+            id: itemId,
+            ...item,
+            qty: state.backpack[itemId],
+            rarity: item.rarity
+          });
+        }
+      });
+
+      // Сортируем по ценности (value) в убывающем порядке
+      items.sort((a, b) => b.value - a.value);
+
+      // Фильтруем по типу редкости
+      if (currentBackpackFilter !== 'all') {
+        items = items.filter(item => item.rarity.toLowerCase() === currentBackpackFilter);
+      }
+
+      // Рендерим элементы
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'backpack-item';
+        div.onclick = () => window.showItemModal(item.id);
+        div.innerHTML = `
+          <div class="backpack-item-icon">${item.icon}</div>
+          <div class="backpack-item-name">${item.name}</div>
+          <div class="backpack-item-value">${item.value} GC</div>
+          <div class="backpack-item-qty">${item.qty}</div>
+        `;
+        grid.appendChild(div);
+      });
+
+      if (items.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--text-secondary);">Нет предметов</div>';
+      }
+    }
+
+    // ===== AUCTION MODAL FUNCTIONS =====
+    function openAuctionModal() {
+      document.getElementById('modalAuction').classList.add('active');
+      populateAuctionItemSelect();
+      triggerHaptic('light');
+    }
+
+    function closeAuctionModal() {
+      document.getElementById('modalAuction').classList.remove('active');
+    }
+
+    function populateAuctionItemSelect() {
+      const select = document.getElementById('auctionItemSelect');
+      select.innerHTML = '<option value="">-- Выберите предмет --</option>';
+
+      Object.keys(state.backpack).forEach(itemId => {
+        if (state.backpack[itemId] > 0) {
+          const item = BACKPACK_ITEMS[itemId];
+          const option = document.createElement('option');
+          option.value = itemId;
+          option.textContent = `${item.icon} ${item.name} (${item.rarity})`;
+          select.appendChild(option);
+        }
+      });
+    }
+
+    function updateAuctionEstimate() {
+      const price = Number(document.getElementById('auctionPrice').value) || 0;
+      const commission = Math.floor(price * 0.1);
+      const net = price - commission;
+
+      document.getElementById('auctionEstimate').textContent = `${net} Ghost Coins (комиссия: ${commission})`;
+    }
+
+    function submitAuctionLot() {
+      const itemId = document.getElementById('auctionItemSelect').value;
+      const price = Number(document.getElementById('auctionPrice').value);
+
+      if (!itemId) {
+        showToast('❌ Выберите предмет');
+        return;
+      }
+
+      if (!price || price < 10) {
+        showToast('❌ Цена должна быть от 10 Ghost Coins');
+        return;
+      }
+
+      // Проверяем есть ли предмет в рюкзаке
+      if (!state.backpack[itemId] || state.backpack[itemId] === 0) {
+        showToast('❌ Этого предмета нет в рюкзаке');
+        return;
+      }
+
+      // Выставляем лот
+      removeBackpackItem(state, itemId, 1);
+      
+      state.auction_listings = state.auction_listings || [];
+      state.auction_listings.push({
+        seller: state.username,
+        item: itemId,
+        itemName: BACKPACK_ITEMS[itemId].name,
+        itemIcon: BACKPACK_ITEMS[itemId].icon,
+        startPrice: price,
+        currentBid: price,
+        currentBidder: 'Нет ставок',
+        startTime: Date.now(),
+        endTime: Date.now() + 120000
+      });
+
+      saveState();
+      closeAuctionModal();
+      showToast(`✅ Лот выставлен! Стартовая цена: ${price} GC`);
+      triggerHaptic('success');
+
+      // Очищаем форму
+      document.getElementById('auctionPrice').value = '';
+      document.getElementById('auctionItemSelect').value = '';
+    }
+
+    // ===== TOAST NOTIFICATIONS =====
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 9999;
+        max-width: 80%;
+        text-align: center;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ===== INITIALIZATION =====
+    loadTelegramData();
+
+    // Export functions to window
+    window.switchPage = switchPage;
+    window.filterCategory = filterCategory;
+    window.updateConstructorPrice = updateConstructorPrice;
+    window.createOrder = createOrder;
+    window.switchPassTab = switchPassTab;
+    window.showItemModal = showItemModal;
+    window.openBalancePanel = openBalancePanel;
+    window.confirmPremium = confirmPremium;
+    window.cancelSubscription = cancelSubscription;
+    window.showPromoModal = showPromoModal;
+    window.showCreatePromoModal = showCreatePromoModal;
+    window.showOrdersModal = showOrdersModal;
+    window.showPromoListModal = showPromoListModal;
+    window.toggleCard = toggleCard;
+    window.openTelegram = openTelegram;
+    window.claimQuest = claimQuest;
+    window.rewardItemClick = rewardItemClick;
+    window.placeBid = placeBid;
+    window.addXP = addXP;
+    window.startAuction = startAuction;
+    window.finishAuction = finishAuction;
+    window.toggleTheme = toggleTheme;
+    window.openBackpackModal = openBackpackModal;
+    window.closeBackpackModal = closeBackpackModal;
+    window.filterBackpackBy = filterBackpackBy;
+    window.renderBackpackItems = renderBackpackItems;
+    window.openAuctionModal = openAuctionModal;
+    window.closeAuctionModal = closeAuctionModal;
+    window.populateAuctionItemSelect = populateAuctionItemSelect;
+    window.updateAuctionEstimate = updateAuctionEstimate;
+    window.submitAuctionLot = submitAuctionLot;
+
+    updateUI();
+  </script>
+</body>
+</html>
