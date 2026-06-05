@@ -2638,7 +2638,9 @@
       uid_zone_id: { uid: '', zone_id: '' }
     };
 
-    let state = JSON.parse(localStorage.getItem('ghostmarket_state')) || defaultState;
+    let state = JSON.parse(localStorage.getItem('ghostmarket_state')) || {};
+    // Merge with defaultState to ensure all fields exist
+    state = { ...defaultState, ...state };
 
     function saveState() {
       localStorage.setItem('ghostmarket_state', JSON.stringify(state));
@@ -2875,19 +2877,50 @@
 
     // ===== UI UPDATE FUNCTIONS =====
     function updateUI() {
-      document.getElementById('headerBalance').textContent = state.ghost_coin + ' GCOIN';
-      document.getElementById('miniBalance').textContent = state.card_balance.toLocaleString('ru-RU') + ' ₽';
-      document.getElementById('miniCoin').textContent = state.ghost_coin + ' GC';
-      document.getElementById('profileName').textContent = state.first_name;
-      document.getElementById('profileUsername').textContent = '@' + state.username;
-      document.getElementById('profileAvatar').textContent = state.first_name.charAt(0).toUpperCase();
-      document.getElementById('profileOrders').textContent = state.orders.length;
-      document.getElementById('profileSpent').textContent = state.rubles_spent.toLocaleString('ru-RU');
-      document.getElementById('profileCoin').textContent = state.ghost_coin;
-      document.getElementById('profileCashback').textContent = state.cashback;
-      document.getElementById('cardBalance').textContent = state.card_balance + ' ₽';
-      document.getElementById('totalSpent').textContent = state.rubles_spent.toLocaleString('ru-RU') + ' ₽';
-      document.getElementById('accumulatedCashback').textContent = state.cashback.toLocaleString('ru-RU') + ' ₽';
+      // Ensure state has all required fields
+      if (!state.ghost_coin) state.ghost_coin = defaultState.ghost_coin;
+      if (!state.card_balance) state.card_balance = defaultState.card_balance;
+      if (!state.rubles_spent) state.rubles_spent = defaultState.rubles_spent;
+      if (!state.cashback) state.cashback = defaultState.cashback;
+
+      const headerBalance = document.getElementById('headerBalance');
+      if (headerBalance) headerBalance.textContent = state.ghost_coin + ' GCOIN';
+      
+      const miniBalance = document.getElementById('miniBalance');
+      if (miniBalance) miniBalance.textContent = state.card_balance.toLocaleString('ru-RU') + ' ₽';
+      
+      const miniCoin = document.getElementById('miniCoin');
+      if (miniCoin) miniCoin.textContent = state.ghost_coin + ' GC';
+      
+      const profileName = document.getElementById('profileName');
+      if (profileName) profileName.textContent = state.first_name;
+      
+      const profileUsername = document.getElementById('profileUsername');
+      if (profileUsername) profileUsername.textContent = '@' + state.username;
+      
+      const profileAvatar = document.getElementById('profileAvatar');
+      if (profileAvatar) profileAvatar.textContent = state.first_name.charAt(0).toUpperCase();
+      
+      const profileOrders = document.getElementById('profileOrders');
+      if (profileOrders) profileOrders.textContent = state.orders.length;
+      
+      const profileSpent = document.getElementById('profileSpent');
+      if (profileSpent) profileSpent.textContent = state.rubles_spent.toLocaleString('ru-RU');
+      
+      const profileCoin = document.getElementById('profileCoin');
+      if (profileCoin) profileCoin.textContent = state.ghost_coin;
+      
+      const profileCashback = document.getElementById('profileCashback');
+      if (profileCashback) profileCashback.textContent = state.cashback;
+      
+      const cardBalance = document.getElementById('cardBalance');
+      if (cardBalance) cardBalance.textContent = state.card_balance + ' ₽';
+      
+      const totalSpent = document.getElementById('totalSpent');
+      if (totalSpent) totalSpent.textContent = state.rubles_spent.toLocaleString('ru-RU') + ' ₽';
+      
+      const accumulatedCashback = document.getElementById('accumulatedCashback');
+      if (accumulatedCashback) accumulatedCashback.textContent = state.cashback.toLocaleString('ru-RU') + ' ₽';
 
       if (state.username.toLowerCase() === 'henotsosal') {
         const adminCard = document.getElementById('adminPromoCard');
